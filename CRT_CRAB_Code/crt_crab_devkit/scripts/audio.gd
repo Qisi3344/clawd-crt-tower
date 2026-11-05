@@ -35,3 +35,12 @@ func play(kind: String) -> void:
 	cursor += 1
 	voice.stream = sounds[kind]
 	voice.play()
+
+func stop_all() -> void:
+	for voice in voices:
+		voice.stop()
+		voice.stream = null
+
+func _exit_tree() -> void:
+	stop_all()
+	sounds.clear()

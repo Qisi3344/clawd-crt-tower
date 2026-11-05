@@ -1,4 +1,47 @@
 [
-  {"id":"boot_archive", "from":"BOOT", "to":"ARCHIVE", "position":[5.2,0,-4.8], "entry":[-4.5,0.4,4.5], "requires":"signal", "label":"前往丢失档案"},
-  {"id":"archive_boot", "from":"ARCHIVE", "to":"BOOT", "position":[-5.2,0,4.8], "entry":[4.3,0.4,-3.5], "requires":"", "label":"返回启动区"}
+  {
+    "id": "boot_archive",
+    "from": "BOOT",
+    "to": "ARCHIVE",
+    "source_computer_id": "crt_boot_00",
+    "target_computer_id": "crt_archive_05",
+    "spawn_id": "entrance",
+    "position": [
+      592,
+      208
+    ],
+    "requires": "boot_access",
+    "label": "前往档案仓库",
+    "locked_hint": "先推箱压板开门，再爬梯开启启动宝箱。"
+  },
+  {
+    "id": "archive_boot",
+    "from": "ARCHIVE",
+    "to": "BOOT",
+    "source_computer_id": "crt_archive_05",
+    "target_computer_id": "crt_boot_00",
+    "spawn_id": "return",
+    "position": [
+      40,
+      208
+    ],
+    "requires": "",
+    "label": "返回启动区 · 查看远端信号门",
+    "locked_hint": ""
+  },
+  {
+    "id": "archive_exit",
+    "from": "ARCHIVE",
+    "to": "BOOT",
+    "source_computer_id": "crt_archive_05",
+    "target_computer_id": "crt_boot_00",
+    "spawn_id": "return",
+    "position": [
+      736,
+      208
+    ],
+    "requires": "archive_key",
+    "label": "携档案密钥返回 BOOT",
+    "locked_hint": "先开启档案宝箱取得密钥。"
+  }
 ]

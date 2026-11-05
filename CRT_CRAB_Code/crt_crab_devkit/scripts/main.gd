@@ -4,7 +4,7 @@ var shell: Node3D
 var devices: Array[MonitorDevice] = []
 var director: ShellDirector
 var viewport: SubViewport
-var world: ScreenWorld
+var world: SideWorld
 var hud: GameHUD
 var audio: GameAudio
 var save := SaveStore.new()
@@ -14,9 +14,11 @@ var active_id := "BOOT"
 var transitioning := false
 var test_mode := false
 var autosave := 0.0
+enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED }
+var input_mode := InputMode.PLAY_2D
 
 func _ready() -> void:
-	test_mode = "--qa" in OS.get_cmdline_user_args()
+	test_mode = "--qa" in OS.get_cmdline_user_args() or "--perf" in OS.get_cmdline_user_args()
 	save.enabled = not test_mode
 	save.load_progress()
 	manifest = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_manifest.json"))
@@ -27,13 +29,16 @@ func _ready() -> void:
 	add_child(director)
 	viewport = SubViewport.new()
 	viewport.name = "ActiveScreenViewport"
-	viewport.size = Vector2i(480,360)
+	viewport.size = Vector2i(320,240)
+	viewport.disable_3d = true
+	viewport.world_2d = World2D.new()
 	viewport.own_world_3d = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport.msaa_3d = Viewport.MSAA_DISABLED
 	add_child(viewport)
 	audio = GameAudio.new()
 	add_child(audio)
+	if test_mode and DisplayServer.get_name()=="headless": audio.enabled = false
 	hud = GameHUD.new()
 	add_child(hud)
 	hud.pause_changed.connect(func(_v: bool): _control_state())
@@ -41,6 +46,10 @@ func _ready() -> void:
 	hud.audio_changed.connect(func(v: bool): audio.enabled = v)
 	hud.motion_changed.connect(func(v: bool): director.reduced_motion = v)
 	hud.quit_requested.connect(_quit)
+	hud.reset_requested.connect(func():
+		hud.set_paused(false)
+		world.reset_puzzle()
+	)
 	get_tree().auto_accept_quit = false
 	get_tree().root.min_size = Vector2i(640,480)
 	get_tree().root.size_changed.connect(_resize_ui)
@@ -50,7 +59,7 @@ func _ready() -> void:
 	_control_state()
 	if test_mode:
 		var harness := Node.new()
-		harness.set_script(load("res://tests/runtime_qa.gd"))
+		harness.set_script(load("res://tests/performance_probe.gd" if "--perf" in OS.get_cmdline_user_args() else "res://tests/sideview_qa.gd"))
 		add_child(harness)
 	else:
 		_intro()
@@ -80,46 +89,46 @@ func _build_shell() -> void:
 	env.background_color = Color("121a22")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color("91acba")
-	env.ambient_light_energy = 0.34
+	env.ambient_light_energy = 0.28
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	environment.environment = env
 	shell.add_child(environment)
 	var key := DirectionalLight3D.new()
 	key.rotation_degrees = Vector3(-45,-25,0)
 	key.light_color = Color("d4e5e4")
-	key.light_energy = 1.05
+	key.light_energy = 0.70
 	key.shadow_enabled = true
 	key.directional_shadow_max_distance = 60
 	shell.add_child(key)
 	var rim := DirectionalLight3D.new()
 	rim.rotation_degrees = Vector3(-20,155,0)
 	rim.light_color = Color("6b91bf")
-	rim.light_energy = 0.5
+	rim.light_energy = 0.35
 	shell.add_child(rim)
-	Craft.box(shell,Vector3(0,-1.3,0),Vector3(25,0.3,25),Color("242b32"),0.1)
-	for i in range(-12,13):
-		Craft.box(shell,Vector3(i,-1.14,0),Vector3(0.022,0.01,25),Color("343d41"),0.001)
-		Craft.box(shell,Vector3(0,-1.14,i),Vector3(25,0.01,0.022),Color("343d41"),0.001)
+	Craft.box(shell,Vector3(0,-1.7,0),Vector3(25,1.2,25),Color("1c2731"),0.4)
 	var layout: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/monitor_layout.json"))
 	for item in layout:
 		var device := MonitorDevice.new()
 		device.device_index = int(item.index)
 		device.model = int(item.model)
 		device.has_keyboard = item.get("keyboard",false)
+		device.computer_id = item.computer_id
 		device.screen_id = item.screen
 		device.position = ScreenWorld._vec(item.position)
 		device.rotation_degrees = ScreenWorld._vec(item.rotation)
 		shell.add_child(device)
 		devices.append(device)
-		var back := device.to_global(Vector3(0,-0.8,-1.9))
-		Craft.cable(shell,PackedVector3Array([back,back+Vector3(0,-1.8,-0.3),Vector3(back.x*0.6,-0.9,back.z*0.6)]),Color("11191d"),0.065)
 	# Stacked speaker cabinets make the reference's media tower silhouette.
 	for layer in range(3):
 		var p := Vector3(-2.5+layer*1.7,1.2+layer*4.5,0)
 		Craft.box(shell,p,Vector3(2.6,4.0,2.5),Color("232c34"),0.09)
 		for y in [-0.9,0.9]:
 			_speaker(p+Vector3(0,y,1.27))
-	Craft.label(shell,"SCREEN ISLANDS",Vector3(0,-0.87,10.5),Color("a9b555"),0.021,48).rotation_degrees.x = -90
+	var dressing := Node3D.new()
+	dressing.name = "ExteriorDressing"
+	shell.add_child(dressing)
+	ExteriorDressing.build(dressing,devices)
+	Craft.batch_static(dressing)
 
 func _speaker(p: Vector3) -> void:
 	for radius in [0.92,0.68,0.34]:
@@ -135,22 +144,25 @@ func _speaker(p: Vector3) -> void:
 		node.position = p+Vector3(0,0,(1-radius)*0.14)
 		shell.add_child(node)
 
-func _load_world(id: String, entry: Array = []) -> void:
+func _load_world(id: String, spawn_id: String = "") -> bool:
+	var config := _level_definition(id)
+	if config.is_empty(): return false
 	active_id = id
-	world = ScreenWorld.new()
+	world = SideWorld.new()
 	world.name = "ScreenWorld_"+id
 	world.screen_id = id
+	world.level_id = manifest[id].level_id
+	world.definition = config
+	world.session = save.data
 	world.flags = save.data.flags
-	var saved = save.data.worlds.get(id,{})
+	var saved = save.data.worlds.get(world.level_id,{})
 	world.state = saved.duplicate(true) if saved is Dictionary else {}
 	world.links = links
 	viewport.add_child(world)
-	var position_data = entry if not entry.is_empty() else world.state.get("position",manifest[id].spawn)
-	if position_data is Array and position_data.size() == 3 and position_data.all(func(v): return v is float or v is int):
-		var p := ScreenWorld._vec(position_data)
-		if p.is_finite() and absf(p.x)<7 and absf(p.z)<7 and p.y > -1 and p.y < 6:
-			world.player.position = p
-	world.player.spawn = ScreenWorld._vec(manifest[id].spawn)
+	var spawn_point := SideWorld.point(config.spawns.get(spawn_id,config.spawns.entrance))
+	world.player.spawn = spawn_point
+	world.player.position = spawn_point if spawn_id!="" else SideWorld.point(world.state.get("position"),spawn_point)
+	if world.player.test_move(world.player.transform,Vector2.ZERO): world.player.position = spawn_point
 	var saved_health = save.data.get("health",3)
 	world.player.health = clampi(int(saved_health),1,3) if saved_health is float or saved_health is int else 3
 	world._snap_camera()
@@ -164,12 +176,25 @@ func _load_world(id: String, entry: Array = []) -> void:
 	_device(id).set_texture(viewport.get_texture())
 	hud.set_health(world.player.health)
 	_progress()
+	return true
+
+func _level_definition(id: String) -> Dictionary:
+	if not manifest.has(id): return {}
+	if not FileAccess.file_exists(manifest[id].definition): return {}
+	var config = JSON.parse_string(FileAccess.get_file_as_string(manifest[id].definition))
+	if not config is Dictionary or not config.get("spawns") is Dictionary: return {}
+	for field in ["platforms","ladders","blocks","plates","doors","chests","crystals","breakables","enemies","terminals"]:
+		if not config.get(field) is Array: return {}
+	return config
 
 func _travel(link: Dictionary) -> void:
 	if transitioning or hud.paused or director.overview or link.from != active_id:
 		return
-	if not manifest.has(link.to) or _device(link.to) == null:
+	if not manifest.has(link.to) or _device(link.to) == null or _level_definition(link.to).is_empty() or not _level_definition(link.to).spawns.has(link.spawn_id):
 		hud.show_message("目标屏幕暂时没有响应，连接已安全取消。")
+		return
+	if _device(link.to).computer_id!=link.target_computer_id:
+		hud.show_message("设备与关卡映射不匹配，连接已取消。")
 		return
 	transitioning = true
 	_control_state()
@@ -183,10 +208,16 @@ func _travel(link: Dictionary) -> void:
 			var image := viewport.get_texture().get_image()
 			_device(active_id).set_texture(ImageTexture.create_from_image(image))
 		_device(active_id).screen_material.set_shader_parameter("interference",0.0)
-		viewport.remove_child(world)
-		world.free()
-		_load_world(link.to,link.entry)
+		var previous := world
+		viewport.remove_child(previous)
+		if _load_world(link.to,link.spawn_id): previous.free()
+		else:
+			world = previous
+			viewport.add_child(previous)
+			_device(active_id).set_texture(viewport.get_texture())
+			world.last_prompt = ""
 	)
+	director.focus(_device(active_id),true)
 	transitioning = false
 	_control_state()
 	_checkpoint()
@@ -226,8 +257,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if director.overview and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			director.orbit -= event.relative.x*0.007
-		elif not hud.paused and not transitioning and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			world.target_yaw = clampf(world.target_yaw-event.relative.x*0.003,-0.6,0.6)
 	if event is InputEventMouseButton and director.overview:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP: director.elevation = clampf(director.elevation-1,5,30)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: director.elevation = clampf(director.elevation+1,5,30)
@@ -241,6 +270,7 @@ func _toggle_overview() -> void:
 	_control_state()
 
 func _control_state() -> void:
+	input_mode = InputMode.TRANSITION_3D if transitioning else (InputMode.PAUSED if hud.paused else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D))
 	if is_instance_valid(world):
 		var allowed := not transitioning and not hud.paused and not director.overview
 		world.enabled = allowed
@@ -248,14 +278,18 @@ func _control_state() -> void:
 		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED
 
 func _progress() -> void:
-	hud.update_progress(active_id,save.data.flags)
+	hud.update_progress(active_id,save.data)
+	for device in devices:
+		device.set_status("ACTIVE" if device.screen_id==active_id else ("CONNECTED" if device.screen_id in ["BOOT","ARCHIVE"] and save.data.flags.get("boot_access",false) else "SLEEP"))
 	_checkpoint()
 
 func _checkpoint() -> void:
 	if not is_instance_valid(world): return
 	save.data.active = active_id
+	save.data.computer_id = manifest[active_id].computer_id
+	save.data.level_id = manifest[active_id].level_id
 	save.data.health = world.player.health
-	save.data.worlds[active_id] = world.snapshot()
+	save.data.worlds[world.level_id] = world.snapshot()
 	if not save.write(): hud.show_message("进度未能写入磁盘，请检查存储空间。")
 
 func _device(id: String) -> MonitorDevice:
@@ -270,10 +304,12 @@ func _notification(what: int) -> void:
 
 func _quit() -> void:
 	_checkpoint()
+	audio.stop_all()
+	await get_tree().create_timer(0.08).timeout
 	get_tree().quit()
 
 func _input_map() -> void:
-	var map := {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"move_up":[KEY_W,KEY_UP],"move_down":[KEY_S,KEY_DOWN],"jump":[KEY_SPACE],"attack":[KEY_J],"dash":[KEY_SHIFT],"interact":[KEY_E],"overview":[KEY_TAB],"pause":[KEY_ESCAPE],"debug":[KEY_F3]}
+	var map := {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"move_up":[KEY_W,KEY_UP],"move_down":[KEY_S,KEY_DOWN],"jump":[KEY_SPACE],"attack":[KEY_J],"dash":[KEY_SHIFT],"interact":[KEY_E,KEY_K],"reset_puzzle":[KEY_R],"overview":[KEY_TAB],"pause":[KEY_ESCAPE],"debug":[KEY_F3]}
 	for action in map:
 		InputMap.add_action(action)
 		for key in map[action]:

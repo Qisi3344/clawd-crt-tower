@@ -88,19 +88,25 @@ static func label(parent: Node3D, text: String, pos: Vector3, color: Color, pixe
 	return node
 
 static func cable(parent: Node3D, points: PackedVector3Array, color: Color, radius: float = 0.04) -> void:
+	var key := "cable:"+str(radius)
+	var mesh: CylinderMesh
+	if meshes.has(key): mesh = meshes[key]
+	else:
+		mesh = CylinderMesh.new()
+		mesh.top_radius = radius
+		mesh.bottom_radius = radius
+		mesh.height = 1.0
+		mesh.radial_segments = 6
+		meshes[key] = mesh
 	for i in range(points.size() - 1):
 		var a := points[i]
 		var b := points[i+1]
 		var segment := MeshInstance3D.new()
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = radius
-		mesh.bottom_radius = radius
-		mesh.height = a.distance_to(b)
-		mesh.radial_segments = 6
 		segment.mesh = mesh
 		segment.material_override = material(color)
 		parent.add_child(segment)
 		segment.position = (a + b) / 2
+		segment.scale.y = a.distance_to(b)
 		var direction := (b - a).normalized()
 		if absf(direction.dot(Vector3.UP)) < 0.999:
 			segment.quaternion = Quaternion(Vector3.UP, direction)

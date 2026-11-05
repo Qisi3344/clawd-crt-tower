@@ -1,4 +1,16 @@
 {
-  "BOOT":{"name":"启动区", "subtitle":"唤醒一条沉睡的信号", "color":"52d5b1", "spawn":[-4.5,0.4,4.8]},
-  "ARCHIVE":{"name":"丢失档案", "subtitle":"击退弹窗虫，找回遗失的记录", "color":"b09af1", "spawn":[-4.5,0.4,4.5]}
+  "BOOT": {
+    "name": "启动区",
+    "computer_id": "crt_boot_00",
+    "level_id": "boot_01",
+    "definition": "res://data/levels/boot_01.json",
+    "color": "52d5b1"
+  },
+  "ARCHIVE": {
+    "name": "档案仓库",
+    "computer_id": "crt_archive_05",
+    "level_id": "archive_01",
+    "definition": "res://data/levels/archive_01.json",
+    "color": "b09af1"
+  }
 }

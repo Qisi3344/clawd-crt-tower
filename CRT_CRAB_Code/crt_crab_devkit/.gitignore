@@ -2,6 +2,7 @@
 .tools/
 artifacts/*
 !artifacts/.gitkeep
+!artifacts/.gdignore
 *.log
 *.tmp
 __pycache__/

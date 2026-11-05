@@ -1,0 +1,14 @@
+{
+ "size":[768,240],"background":"boot",
+ "spawns":{"entrance":[48,208],"return":[576,208]},
+ "platforms":[[0,208,128,48],[128,224,32,32],[160,208,608,48],[432,176,32,16],[464,144,96,16]],
+ "ladders":[{"x":480,"top":144,"bottom":208}],
+ "blocks":[{"id":"boot_box","position":[240,200],"weight":1}],
+ "plates":[{"id":"boot_plate","position":[320,208],"weight":1,"flag":"boot_gate_open"}],
+ "doors":[{"id":"boot_door","position":[400,208],"height":64,"requires":"boot_gate_open"},{"id":"remote_vault","position":[656,208],"height":64,"requires":"signal_archive_gate"}],
+ "chests":[{"id":"boot_access","position":[512,144],"crystals":2,"flag":"boot_access"},{"id":"boot_remote","position":[704,208],"crystals":4,"flag":"remote_reward"}],
+ "crystals":[{"id":"boot_c1","position":[80,194]},{"id":"boot_c2","position":[112,194]},{"id":"boot_c3","position":[176,194]}],
+ "breakables":[],"enemies":[],
+ "terminals":[{"position":[96,208],"type":"heal"}],
+ "signs":[[48,176,"A D  MOVE"],[128,174,"SPACE"],[240,170,"HOLD E + A/D"],[320,160,"WEIGHT 1"],[480,108,"W  CLIMB"],[656,122,"ARCHIVE LINK"]]
+}

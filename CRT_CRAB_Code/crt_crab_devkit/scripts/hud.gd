@@ -6,9 +6,11 @@ signal overview_requested
 signal audio_changed(value: bool)
 signal motion_changed(value: bool)
 signal quit_requested
+signal reset_requested
 var health_label: Label
 var title_label: Label
 var objective: Label
+var collection_label: Label
 var prompt_label: Label
 var toast_label: Label
 var overview_panel: PanelContainer
@@ -56,6 +58,8 @@ func _ready() -> void:
 	column.add_child(title_label)
 	objective = _label("去左后方终端，按 E 唤醒信号",20,Color("e1e2d6"))
 	column.add_child(objective)
+	collection_label = _label("",18,Color("dce65b"))
+	column.add_child(collection_label)
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	space.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -68,7 +72,7 @@ func _ready() -> void:
 	column.add_child(prompt_label)
 	var bottom := HBoxContainer.new()
 	column.add_child(bottom)
-	var help := _label("WASD 移动   空格 跳跃   J / 左键 螯击   Shift 闪避",17,Color("c1c7c3"))
+	var help := _label("AD 移动   空格 跳跃   W/S 梯子   按住 E 推拉   J 螯击   R 复位",17,Color("c1c7c3"))
 	help.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	bottom.add_child(help)
@@ -122,6 +126,10 @@ func _build_pause(root: Control) -> void:
 	resume_button.text = "继续冒险"
 	resume_button.pressed.connect(func(): set_paused(false))
 	column.add_child(resume_button)
+	var reset := Button.new()
+	reset.text = "重置当前箱石谜题（保留宝箱）"
+	reset.pressed.connect(func(): reset_requested.emit())
+	column.add_child(reset)
 	var sound := CheckButton.new()
 	sound.text = "交互音效"
 	sound.button_pressed = true
@@ -131,7 +139,7 @@ func _build_pause(root: Control) -> void:
 	motion.text = "减少转场动态"
 	motion.toggled.connect(func(v: bool): motion_changed.emit(v))
 	column.add_child(motion)
-	column.add_child(_label("右键拖动：微调屏幕内视角\nF3：性能面板 · 进度自动保存",18,Color("c1c7c3")))
+	column.add_child(_label("E / K：开箱、传送 · 按住可推拉\nF3：性能面板 · 进度自动保存",18,Color("c1c7c3")))
 	var quit := Button.new()
 	quit.text = "保存并退出"
 	quit.pressed.connect(func(): quit_requested.emit())
@@ -160,17 +168,21 @@ func set_paused(value: bool) -> void:
 		resume_button.release_focus()
 	pause_changed.emit(value)
 
-func update_progress(id: String, flags: Dictionary) -> void:
-	title_label.text = "01 / BOOT  启动区" if id == "BOOT" else "02 / ARCHIVE  丢失档案"
-	if flags.get("record",false):
-		objective.text = "遗失记录已找回 · 试着回到启动区"
-	elif id == "ARCHIVE":
-		objective.text = "清除两只病毒，拾取右后方的记录"
-	elif flags.get("signal",false):
-		objective.text = "信号已接通 · 到右后方接口按 E 跨屏"
+func update_progress(id: String, session: Dictionary) -> void:
+	var flags: Dictionary = session.flags
+	title_label.text = "01 / BOOT  启动区" if id == "BOOT" else "02 / ARCHIVE  档案仓库"
+	collection_label.text = "◇ %d 晶体   ▣ 宝箱 %d / 4"%[session.crystals,session.collected.size()]
+	if id=="ARCHIVE":
+		objective.text = "档案密钥已记录 · 可回访 BOOT 的远端门" if flags.get("archive_key",false) else ("重压板已接通 · 通过右侧机关门取得档案密钥" if flags.get("signal_archive_gate",false) else "爬上档案台 · 右推重石落到 WEIGHT 2 压板")
+	elif flags.get("slice_complete",false):
+		objective.text = "两屏切片完成 · 四个宝箱已记录，可以继续探索"
+	elif flags.get("signal_archive_gate",false):
+		objective.text = "ARCHIVE 重压板已接通 · 右侧远端宝库已开"
+	elif flags.get("boot_access",false):
+		objective.text = "启动密钥已记录 · 向右连接 ARCHIVE"
 	else:
-		objective.text = "去左后方终端，按 E 唤醒信号"
-	route_label.text = "  %s BOOT  ⇄  %s ARCHIVE\n  %s"%["●" if id == "BOOT" else "○","●" if id == "ARCHIVE" else "○","信号已连通" if flags.get("signal",false) else "唤醒信号后开启连接"]
+		objective.text = "按住 E 推箱压板 → 开门 → W 爬梯开箱"
+	route_label.text = "  %s BOOT  ⇄  %s ARCHIVE\n  远端重压板：%s"%["●" if id=="BOOT" else "○","●" if id=="ARCHIVE" else "○","接通" if flags.get("signal_archive_gate",false) else "未接通"]
 
 func _label(text: String, size: int, color := Color("f0f0df")) -> Label:
 	var label := Label.new()

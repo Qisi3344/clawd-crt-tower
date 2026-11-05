@@ -5,15 +5,23 @@ var screen: MeshInstance3D
 var screen_material: ShaderMaterial
 var indicator: MeshInstance3D
 var screen_id := ""
+var computer_id := ""
 var device_index := 0
 var model := 0
 var has_keyboard := true
 var accent := Color("52d5b1")
+var status := "SLEEP"
+var status_label: Label3D
+var rear_z := -1.97
 
 func _ready() -> void:
-	var colors := [Color("363f42"),Color("626b61"),Color("252d35")]
+	var colors := [Color("aba897"),Color("87958d"),Color("293340"),Color("916c84")]
 	var shell: Color = colors[model]
-	Craft.box(self,Vector3(0,0,-0.25),Vector3(5.2,4.55,3.4),shell,0.25)
+	if model==2:
+		Craft.box(self,Vector3(0,0,0.25),Vector3(5.2,4.55,2.4),shell,0.13)
+		rear_z = -0.98
+	else:
+		Craft.box(self,Vector3(0,0,-0.25),Vector3(5.2,4.55,3.4),shell,0.25 if model!=3 else 0.4)
 	Craft.box(self,Vector3(0,0,1.48),Vector3(4.78,3.85,0.3),shell.darkened(0.22),0.18)
 	# Four separate front bezel pieces leave a genuine recessed screen opening.
 	for side in [-1,1]:
@@ -63,7 +71,40 @@ func _ready() -> void:
 	elif model == 1:
 		scale = Vector3(0.88,1.08,0.92)
 		Craft.box(self,Vector3(-1.65,-2.72,1.65),Vector3(1.1,0.1,0.1),Color("273335"),0.01)
+		Craft.box(self,Vector3(0,-2.27,0.9),Vector3(4.2,0.65,1.6),shell.darkened(0.05),0.10)
+		Craft.box(self,Vector3(0.65,-2.22,1.73),Vector3(1.6,0.1,0.04),Color("273335"),0.01)
+	elif model==3:
+		scale = Vector3.ONE*0.88
+		for x in [-1.3,1.3]: Craft.box(self,Vector3(x,2.43,-0.25),Vector3(0.25,0.6,0.4),Color("313a43"),0.06)
+		Craft.box(self,Vector3(0,2.69,-0.25),Vector3(2.8,0.25,0.4),Color("313a43"),0.06)
+		Craft.box(self,Vector3(-1.3,-1.9,1.89),Vector3(1.3,0.26,0.04),Color("54cfc3"),0.02)
+	# Original silk-screen labels, fasteners, tape, case seams, and rear socket.
+	for x in [-2.2,2.2]:
+		for y in [-1.62,1.91]: Craft.box(self,Vector3(x,y,1.89),Vector3(0.08,0.08,0.025),Color("a0aaa0"),0.012)
+	Craft.box(self,Vector3(-1.5,1.8,1.9),Vector3(0.8,0.28,0.025),Color("dce65b"),0.01)
+	Craft.label(self,"PORT_%02d"%device_index,Vector3(-1.5,1.8,1.92),Color("293340"),0.0015,28)
+	var tape := Craft.box(self,Vector3(1.6,1.82,1.91),Vector3(0.6,0.17,0.025),Color("d5c7a8"),0.004)
+	tape.rotation_degrees.z = -14
+	Craft.box(self,Vector3(0,1.1,rear_z),Vector3(3.3,0.04,0.03),shell.darkened(0.4),0.005)
+	Craft.box(self,Vector3(0,-0.8,rear_z),Vector3(0.9,0.35,0.12),Color("263640"),0.025)
+	for x in [-0.3,0,0.3]: Craft.box(self,Vector3(x,-0.8,rear_z-0.07),Vector3(0.12,0.1,0.03),Color("9ca58f"),0.008)
+	var rear_label := Craft.label(self,"DATA / %02d"%device_index,Vector3(0,-0.25,rear_z-0.08),Color("bdc5af"),0.003,28)
+	rear_label.rotation_degrees.y = 180
+	status_label = Craft.label(self,"",Vector3(0,2.15,1.86),accent,0.002,28)
+	var screen_aspect: float = (4.0/3.0)*absf(scale.x/scale.y)
+	var fit := Vector2(1,screen_aspect/(4.0/3.0)) if screen_aspect<4.0/3.0 else Vector2((4.0/3.0)/screen_aspect,1)
+	screen_material.set_shader_parameter("content_scale",fit)
 	Craft.batch_static(self,[indicator])
+
+func cable_anchor() -> Vector3:
+	return to_global(Vector3(0,-0.8,rear_z-0.08))
+
+func set_status(value: String) -> void:
+	status = value
+	var color := Color("54cfc3") if status=="ACTIVE" else (Color("dce65b") if status=="CONNECTED" else Color("52686b"))
+	indicator.material_override = Craft.material(color,0.5)
+	status_label.text = screen_id+" / "+status if status in ["ACTIVE","CONNECTED"] else ""
+	status_label.modulate = color
 
 func _build_keyboard(shell: Color) -> void:
 	var keyboard := Node3D.new()
@@ -85,32 +126,11 @@ func focus_point() -> Vector3:
 func focus_position() -> Vector3:
 	var rect := get_viewport().get_visible_rect().size
 	var aspect: float = rect.x / maxf(rect.y,1)
-	var distance: float = 7.88 * maxf(1,1.2/aspect)
+	var distance: float = 6.4 * maxf(1,1.35/aspect)
 	return to_global(Vector3(0.18,0.58,1.72+distance))
 
 func set_texture(texture: Texture2D) -> void:
 	screen_material.set_shader_parameter("screen_texture",texture)
 
-func _standby_texture() -> ImageTexture:
-	var image := Image.create(256,192,false,Image.FORMAT_RGB8)
-	image.fill(Color("182134"))
-	var base: Color = [Color("52d5b1"),Color("ad92e7"),Color("ef609d"),Color("ebc269")][device_index%4]
-	for y in range(192):
-		for x in range(256):
-			var col := Color("182134")
-			match device_index%4:
-				0:
-					if x%24 < 1 or y%24 < 1: col = base.darkened(0.74)
-					if x > 42 and x < 212 and y > 70 and y < 117: col = base.darkened(0.40)
-				1:
-					if int(sqrt(pow(x-128,2)+pow(y-96,2)))%26 < 3: col = base.darkened(0.24)
-				2:
-					if (x/16+y/16+device_index)%7 == 0: col = base.darkened(0.56)
-				3:
-					if y > 32 and y < 160 and y%14 < 3 and x > 30 and x < 55+(y*17)%160: col = base.darkened(0.35)
-			image.set_pixel(x,y,col)
-	# Every device carries its own pixel signature, including sleeping devices.
-	for i in range(8):
-		if (device_index+1) & (1 << i):
-			image.fill_rect(Rect2i(18+i*8,170,5,7),base)
-	return ImageTexture.create_from_image(image)
+func _standby_texture() -> Texture2D:
+	return load("res://assets/pixel/standby_%d.png"%device_index)

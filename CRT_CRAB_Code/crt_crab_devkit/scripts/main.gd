@@ -14,6 +14,7 @@ var active_id := "BOOT"
 var transitioning := false
 var test_mode := false
 var autosave := 0.0
+var surroundings: EnvironmentSurroundings
 enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED }
 var input_mode := InputMode.PLAY_2D
 
@@ -27,6 +28,7 @@ func _ready() -> void:
 	_build_shell()
 	director = ShellDirector.new()
 	add_child(director)
+	if surroundings!=null: surroundings.configure(director,devices)
 	viewport = SubViewport.new()
 	viewport.name = "ActiveScreenViewport"
 	viewport.size = Vector2i(320,240)
@@ -45,6 +47,9 @@ func _ready() -> void:
 	hud.overview_requested.connect(_toggle_overview)
 	hud.audio_changed.connect(func(v: bool): audio.enabled = v)
 	hud.motion_changed.connect(func(v: bool): director.reduced_motion = v)
+	hud.environment_motion_changed.connect(func(v: bool):
+		if surroundings!=null: surroundings.set_micro_motion(v)
+	)
 	hud.quit_requested.connect(_quit)
 	hud.reset_requested.connect(func():
 		hud.set_paused(false)
@@ -129,6 +134,9 @@ func _build_shell() -> void:
 	shell.add_child(dressing)
 	ExteriorDressing.build(dressing,devices)
 	Craft.batch_static(dressing)
+	if "--no-surroundings" not in OS.get_cmdline_user_args():
+		surroundings = (load("res://scenes/environment/surroundings_root.tscn") as PackedScene).instantiate() as EnvironmentSurroundings
+		shell.add_child(surroundings)
 
 func _speaker(p: Vector3) -> void:
 	for radius in [0.92,0.68,0.34]:

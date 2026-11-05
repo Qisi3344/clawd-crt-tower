@@ -1,0 +1,422 @@
+[
+  {
+    "id": "mini-arcade__arcade-machine",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/mini-arcade",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/mini-arcade/arcade-machine.glb",
+    "sha256": "90e346f68873daae2b4ce6e8e48f9f85486d537c07527b0516191b8f6eda787b",
+    "triangles": 392,
+    "optimized": "assets/environment/optimized/mini-arcade__arcade-machine.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      3.366,
+      6.1,
+      4.522
+    ],
+    "optimized_sha256": "159cbd14930c8fbf408d85ed4cfc89a2e668fb65e9eed4894a2f5fc9407f6dce",
+    "scene": "scenes/environment/arcade_cabinet.tscn",
+    "runtime_instances": 2,
+    "additional_credit": "Fleur Keijsers; Guus Vermeulen"
+  },
+  {
+    "id": "mini-arcade__vending-machine",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/mini-arcade",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/mini-arcade/vending-machine.glb",
+    "sha256": "da92281856adbdc438f006c2381f586664d50890467d25ee3ee431e9502b2daa",
+    "triangles": 176,
+    "optimized": "assets/environment/optimized/mini-arcade__vending-machine.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      4.333,
+      6.5,
+      4.117
+    ],
+    "optimized_sha256": "1671d0eeb567805ec0b4951407adb1c77efbc2a044c57fa33573f8ff1efbe12b",
+    "scene": "scenes/environment/vending_machine.tscn",
+    "runtime_instances": 1,
+    "additional_credit": "Fleur Keijsers; Guus Vermeulen"
+  },
+  {
+    "id": "mini-arcade__ticket-machine",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/mini-arcade",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/mini-arcade/ticket-machine.glb",
+    "sha256": "f3795c03bc37aeddc954a97d4f10cbaf80081152e5e21c98d101909d747d9cf0",
+    "triangles": 277,
+    "optimized": "assets/environment/optimized/mini-arcade__ticket-machine.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      1.341,
+      3.1,
+      1.327
+    ],
+    "optimized_sha256": "d4bb609580f1796b5c648587e9cfd69abab5125a155b779be1f0caed7bbaeec4",
+    "scene": "scenes/environment/ticket_machine.tscn",
+    "runtime_instances": 1,
+    "additional_credit": "Fleur Keijsers; Guus Vermeulen"
+  },
+  {
+    "id": "furniture-kit__desk",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/desk.glb",
+    "sha256": "0164fe828f028b321730fb8c74502e353583f751be74da1682d42fff7d3c5a42",
+    "triangles": 198,
+    "optimized": "assets/environment/optimized/furniture-kit__desk.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      5.923,
+      3.1,
+      3.164
+    ],
+    "optimized_sha256": "4854b988191efc3bd95aa1745b4aa2ea4b3de0311d595b6680ae3332afdf70bc",
+    "scene": "scenes/environment/repair_workbench.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "furniture-kit__bookcaseOpen",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/bookcaseOpen.glb",
+    "sha256": "750702218d68c062b15dfef6ab06a4014d1cfa8bd05f02e57c53b7e13bec157c",
+    "triangles": 320,
+    "optimized": "assets/environment/optimized/furniture-kit__bookcaseOpen.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      2.636,
+      5.8,
+      1.648
+    ],
+    "optimized_sha256": "49013cc4a6f716f0c5736c65a81f1e2990585e891f1168546b17f0e133492d20",
+    "scene": "scenes/environment/repair_shelf.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "furniture-kit__chairDesk",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/chairDesk.glb",
+    "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6",
+    "triangles": 588,
+    "optimized": "assets/environment/optimized/furniture-kit__chairDesk.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      1.929,
+      3.5,
+      1.81
+    ],
+    "optimized_sha256": "496a5e6bcb6653116cdb98a55819b89575d91538df46afab53587814a11c6d4d",
+    "scene": "scenes/environment/repair_chair.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "furniture-kit__computerKeyboard",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/computerKeyboard.glb",
+    "sha256": "9d9135789de2120e9f41ce3f0a56dd1b15f40adcc7888739bb842a2d820da322",
+    "triangles": 32,
+    "optimized": "assets/environment/optimized/furniture-kit__computerKeyboard.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      1.639,
+      0.16,
+      0.686
+    ],
+    "optimized_sha256": "2d790391e4b1af562e67da86c6d8f0ad2701da2e61fa7fb83a29be6c6d792fa2",
+    "scene": "scenes/environment/repair_keyboard.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "furniture-kit__computerScreen",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/computerScreen.glb",
+    "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643",
+    "triangles": 72,
+    "optimized": "assets/environment/optimized/furniture-kit__computerScreen.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      2.002,
+      1.5,
+      0.53
+    ],
+    "optimized_sha256": "5a9591c4d71285a85599aff31396b03d6425cfacc8a459b531dff27b103996f1",
+    "scene": "scenes/environment/repair_terminal.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "furniture-kit__cardboardBoxOpen",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/cardboardBoxOpen.glb",
+    "sha256": "960da412564774c75e7b32f9af0100895e1edb877fc1e70dd34ee2422a2196d4",
+    "triangles": 60,
+    "optimized": "assets/environment/optimized/furniture-kit__cardboardBoxOpen.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      1.588,
+      1.2,
+      0.907
+    ],
+    "optimized_sha256": "de4a9031bf59058eeb3cb86793973085927769a50b07d24765ed1914211aaf1b",
+    "scene": "scenes/environment/parts_box.tscn",
+    "runtime_instances": 2,
+    "additional_credit": null
+  },
+  {
+    "id": "furniture-kit__lampRoundTable",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/furniture-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/furniture-kit/lampRoundTable.glb",
+    "sha256": "75bb644caaa3da003b4fcad7a931722dd61cd2858aab70cf660021d5061fa1b2",
+    "triangles": 76,
+    "optimized": "assets/environment/optimized/furniture-kit__lampRoundTable.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      0.774,
+      1.6,
+      0.894
+    ],
+    "optimized_sha256": "358021d117db977f217d96a0f78450af7f74dbb0f83e497c720feb26f9bb70e5",
+    "scene": "scenes/environment/repair_lamp.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__machine",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/machine.glb",
+    "sha256": "a39e3042bcb7789274428357383317d70e1c31906e5301c99e7d9e90ac584863",
+    "triangles": 268,
+    "optimized": "assets/environment/optimized/factory-kit__machine.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      5.078,
+      5.5,
+      6.347
+    ],
+    "optimized_sha256": "d3e1a1185f33229a81f3f4208274ae81ac45db30eb803cb1dfa5e30fbd60b186",
+    "scene": "scenes/environment/distribution_box.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__machine-fortified",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/machine-fortified.glb",
+    "sha256": "0907f6616f49bbdaa20241ac4b568b780f30352f204851c53568b8e7df59b528",
+    "triangles": 320,
+    "optimized": "assets/environment/optimized/factory-kit__machine-fortified.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      5.598,
+      6.3,
+      7.464
+    ],
+    "optimized_sha256": "eb36cfd2297ad8598dff026c3f9ae31ee95e74c33fc3e09207b5b65801bb8557",
+    "scene": "scenes/environment/server_cabinet.tscn",
+    "runtime_instances": 2,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__pipe-large-long",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/pipe-large-long.glb",
+    "sha256": "8e6650cc662695c28fffb1ffa10f190255f7d9c6c1d4a2a48d375e9bbb89b04f",
+    "triangles": 292,
+    "optimized": "assets/environment/optimized/factory-kit__pipe-large-long.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      6.0,
+      3,
+      3.0
+    ],
+    "optimized_sha256": "8331d833fc49e0a7ca8d0f628768cddfb7680f260fc32897d65825f127cd256d",
+    "scene": null,
+    "runtime_instances": 0,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__pipe-large-bend",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/pipe-large-bend.glb",
+    "sha256": "e234cba2e29bd825b9acdab56c0ff36504a6ceea4c74b21dafbbd98e84bb793b",
+    "triangles": 448,
+    "optimized": "assets/environment/optimized/factory-kit__pipe-large-bend.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      3.419,
+      1.8,
+      3.419
+    ],
+    "optimized_sha256": "86b31f3042ba49d09547e32de9a5e6db658c9a3f017ee19b7f0a6ac585ffdba9",
+    "scene": "scenes/environment/pipe_bend.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__pipe-large-valve",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/pipe-large-valve.glb",
+    "sha256": "57126374dce5b172e06d5d6f8cbaab97c9cffe3e5e726060eb14c50a5bd519b6",
+    "triangles": 456,
+    "optimized": "assets/environment/optimized/factory-kit__pipe-large-valve.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      2.0,
+      2,
+      2.031
+    ],
+    "optimized_sha256": "b8579695bad45b56f3c2b344cdf46275372de0e08c35e42fbfdc458655191a55",
+    "scene": "scenes/environment/pipe_valve.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__structure-high",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/structure-high.glb",
+    "sha256": "3893a7eac2e676d40283372754aba868d6cdc2bc0894f68f3d558f0878d242c2",
+    "triangles": 268,
+    "optimized": "assets/environment/optimized/factory-kit__structure-high.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      1.6,
+      8,
+      5.867
+    ],
+    "optimized_sha256": "cfadc440909831d83e8671cdb7ad67e7ddcec96a41bc575a0058c1849ee7155e",
+    "scene": null,
+    "runtime_instances": 0,
+    "additional_credit": null
+  },
+  {
+    "id": "factory-kit__catwalk-straight",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/factory-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/factory-kit/catwalk-straight.glb",
+    "sha256": "85797c6ce53e3f4373bc59ecd3ce951a3f6b707651def5e0bae46756051cd18d",
+    "triangles": 328,
+    "optimized": "assets/environment/optimized/factory-kit__catwalk-straight.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      0.998,
+      0.6,
+      1.253
+    ],
+    "optimized_sha256": "e3a3b3a4cdbb12aff84df7b084f552e5b09f172e790b30f969108ec56c46a9f7",
+    "scene": null,
+    "runtime_instances": 0,
+    "additional_credit": null
+  },
+  {
+    "id": "survival-kit__workbench",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/survival-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/survival-kit/workbench.glb",
+    "sha256": "bf72d2d535fa29127e5078a6c4c2023a74fa5cd7d02d91ad550e897e088e1dc8",
+    "triangles": 236,
+    "optimized": "assets/environment/optimized/survival-kit__workbench.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      5.113,
+      4.5,
+      4.642
+    ],
+    "optimized_sha256": "19b36ff1f95bd757f6371082e58e1fe16b98a7f50a2b52a9f259906b60162a6c",
+    "scene": null,
+    "runtime_instances": 0,
+    "additional_credit": null
+  },
+  {
+    "id": "survival-kit__tool-hammer",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/survival-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/survival-kit/tool-hammer.glb",
+    "sha256": "9b27f03c26dabd49a7ea358615e63fe65e1c3d0157887d4ee1ecdfa1f0e688f3",
+    "triangles": 52,
+    "optimized": "assets/environment/optimized/survival-kit__tool-hammer.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      0.352,
+      0.6,
+      0.156
+    ],
+    "optimized_sha256": "2dca851f326749c63f0a415ea6a27095946e787e687479cca89c516994dd2ee4",
+    "scene": "scenes/environment/repair_hammer.tscn",
+    "runtime_instances": 1,
+    "additional_credit": null
+  },
+  {
+    "id": "survival-kit__metal-panel-screws",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/survival-kit",
+    "downloaded": "2026-11-05",
+    "original": "assets/environment/originals/survival-kit/metal-panel-screws.glb",
+    "sha256": "c7b5bcea3aa19ebbcfdbfdc2d52cbb0120176f798186b137231d3f9102e75932",
+    "triangles": 320,
+    "optimized": "assets/environment/optimized/survival-kit__metal-panel-screws.glb",
+    "modification": "uniform scale, ground pivot, palette tint, matte materials; original geometry retained",
+    "size": [
+      3.0,
+      3,
+      0.375
+    ],
+    "optimized_sha256": "46c2345560f1329d4d06fb513446fd898089a0549fcb618fbcbc94c2c137be43",
+    "scene": "scenes/environment/background_panel.tscn",
+    "runtime_instances": 8,
+    "additional_credit": null
+  }
+]

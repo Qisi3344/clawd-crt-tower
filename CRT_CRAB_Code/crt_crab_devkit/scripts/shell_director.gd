@@ -6,7 +6,8 @@ var active: MonitorDevice
 var overview := false
 var reduced_motion := false
 var orbit := 0.5
-var elevation := 16.0
+var elevation := 20.0
+var overview_radius := 35.0
 var busy := false
 
 func _ready() -> void:
@@ -20,7 +21,7 @@ func _process(delta: float) -> void:
 	if busy or not is_instance_valid(active):
 		return
 	if overview:
-		var target := Vector3(sin(orbit)*29,elevation,cos(orbit)*29)
+		var target := Vector3(sin(orbit)*overview_radius,elevation,cos(orbit)*overview_radius)
 		camera.position = camera.position.lerp(target,1-exp(-delta*5))
 		camera.look_at(Vector3(0,6,0))
 	else:

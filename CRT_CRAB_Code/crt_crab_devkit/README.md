@@ -1,6 +1,6 @@
 # CRT小蟹闯塔记
 
-一只橙色小螃蟹，在一座 360° 旧电脑塔的屏幕之间冒险。当前版本完成新版规范的 **BOOT + ARCHIVE 两屏侧视动作解谜切片**，并整合了四类机壳、工业底座与电子设备装饰样板。
+一只橙色小螃蟹，在一座 360° 旧电脑塔的屏幕之间冒险。当前版本完成 **BOOT + ARCHIVE 两屏侧视动作解谜切片**；塔周边新增维修工位、电玩/贩卖角、供电储存区与顶部梁架。螃蟹始终只在 CRT 内部的 2D 屏幕活动。
 
 仓库：[clawd-crt-tower](https://github.com/Qisi3344/clawd-crt-tower)。正式中文游戏名：**CRT小蟹闯塔记**。改名后仍使用原存档目录，已有进度不受名称变更影响。
 
@@ -24,7 +24,7 @@ Windows 双击 **PLAY.cmd**。本机便携 Godot 已准备好，不需要 npm、
 | Tab | 阵列观察；拖动环绕、滚轮调高度；再按 Tab 回屏幕 |
 | Esc / F3 | 暂停设置 / 性能面板 |
 
-Shift 已保留输入，但冲刺是后续能力，本切片未开放。暂停菜单可重置箱石谜题、静音、减少转场动态、保存退出。失焦自动暂停。
+Shift 已保留输入，但冲刺是后续能力，本切片未开放。暂停菜单可重置箱石谜题、静音、减少转场动态、开关环境微动态、查看素材署名、保存退出。设置开关在本次会话生效。失焦自动暂停。
 
 ## 最短可复现路线
 
@@ -46,9 +46,12 @@ Shift 已保留输入，但冲刺是后续能力，本切片未开放。暂停�
 - `scripts/main.gd`：会话、输入模式、路由、校验/回滚与存档联动。
 - `side_world.gd`、`side_crab.gd`、`puzzle_block.gd`、`data_bug.gd`：2D 关卡与连续物理、网格步距机关、敌人。
 - `monitor_device.gd`、`shell_director.gd`、`exterior_dressing.gd`：3D CRT、外部相机与装饰；键盘仅由布局字段决定。
+- `scenes/environment/`、`environment_surroundings.gd`：四个独立外围分区、共享模型、遮挡隐藏与三种微动态。新布景不参与关卡碰撞与交互。
 - `data/levels/`、`screen_manifest.json`、`screen_links.json`：关卡内容、身份映射与出生点连接。
 - `assets/pixel/`：实际 PNG 图集、背景和待机画面。作者工具 `tools/build_pixel_assets.py` 可用 Pillow 复现图集；运行游戏不需要 Python/Pillow。
 - `docs/M0_AUDIT.md`、`docs/IMPLEMENTATION_PROGRESS.md`、`docs/ASSET_CREDITS.md`：迁移边界、真实验证与素材来源。
+
+外围实际采用 [Kenney](https://kenney.nl/assets) 四套 CC0 资源，16 种 GLB / 26 个实例，保留原始模型和许可。Mini Arcade 同时致谢 Fleur Keijsers、Guus Vermeulen。尺寸、材质、色板与部分用途经过修改；[逐项来源](docs/ASSET_CREDITS.md) / [改动记录](docs/ENVIRONMENT_CHANGELOG.md) / [画面与性能证据](docs/ENVIRONMENT_QA.md)。策划书 SF-01～04 因官方下载需要登录而受阻，没有冒称已导入。
 
 ## 验证
 
@@ -59,11 +62,15 @@ Shift 已保留输入，但冲刺是后续能力，本切片未开放。暂停�
 --headless --path . --fixed-fps 60 -- --qa
 --path . --fixed-fps 60 -- --qa
 --path . -- --perf
+--headless --path . --fixed-fps 60 -- --qa --environment-qa
+--path . --fixed-fps 60 -- --qa --environment-qa
 ```
 
 第一条检查导入；第二条验证实际物理与流程；第三条用真实 GPU 渲染同一流程并输出屏幕/阵列/转场/竖窗口截图；第四条独立做墙钟性能采样。QA 的固定时间步 FPS 不视为性能基准。结果在 `artifacts/sideview-qa-*.json`、`performance.json`。
 
 QA 不访问正式存档，只使用按进程号命名、测试后移除的独立文件。两屏主线走跳、推拉、攀梯、机关、开箱和往返均通过正常游戏输入测试；战斗与重量阈值另有独立定位场景，没有直接修改宝箱或解锁旗标来伪造通关。
+
+`--environment-qa` 追加模型/预算、72 方位环绕、真实跨屏镜头、遮挡恢复、微动态菜单与素材署名检查，并输出五视图、三组同机位前后对照、三个分区近景。`--no-surroundings` 可与 `--perf` 合用作环境关闭对照，不是玩家功能。
 
 ## 当前边界
 

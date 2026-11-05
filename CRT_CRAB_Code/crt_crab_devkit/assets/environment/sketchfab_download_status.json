@@ -1,0 +1,50 @@
+[
+  {
+    "model_id": "db01789d438149f4b4e3eeb1a868234f",
+    "status": "BLOCKED_DOWNLOAD",
+    "http_status": 401,
+    "reason": "Official download endpoint requires authenticated access; viewer data was not extracted.",
+    "code": "SF-01",
+    "url": "https://sketchfab.com/3d-models/low-poly-arcade-assets-db01789d438149f4b4e3eeb1a868234f",
+    "author": "trigatti (@trigattiagustin)",
+    "page_license": "CC BY 4.0 (page checked; download not obtained)",
+    "manual_target": "assets/environment/originals/sketchfab_pending/arcade/",
+    "checked": "2026-11-05"
+  },
+  {
+    "model_id": "01c0b5991ad448ed917845df202867c2",
+    "status": "BLOCKED_DOWNLOAD",
+    "http_status": 401,
+    "reason": "Official download endpoint requires authenticated access; viewer data was not extracted.",
+    "code": "SF-02",
+    "url": "https://sketchfab.com/3d-models/workbench-low-poly-01c0b5991ad448ed917845df202867c2",
+    "author": "MaX3Dd",
+    "page_license": "CC BY 4.0 (page checked; download not obtained)",
+    "manual_target": "assets/environment/originals/sketchfab_pending/workbench/",
+    "checked": "2026-11-05"
+  },
+  {
+    "model_id": "1348f8c5313f4059b9a2b5b3f37c81f3",
+    "status": "BLOCKED_DOWNLOAD",
+    "http_status": 401,
+    "reason": "Official download endpoint requires authenticated access; viewer data was not extracted.",
+    "code": "SF-03",
+    "url": "https://sketchfab.com/3d-models/server-rack-1348f8c5313f4059b9a2b5b3f37c81f3",
+    "author": "Anaïs3Dcraft (@anais.fernandez)",
+    "page_license": "CC BY 4.0 (page checked; download not obtained)",
+    "manual_target": "assets/environment/originals/sketchfab_pending/server/",
+    "checked": "2026-11-05"
+  },
+  {
+    "model_id": "de13c96dad014bf098df03030f314fee",
+    "status": "BLOCKED_DOWNLOAD",
+    "http_status": 401,
+    "reason": "Official download endpoint requires authenticated access; viewer data was not extracted.",
+    "code": "SF-04",
+    "url": "https://sketchfab.com/3d-models/industrial-electrical-box-de13c96dad014bf098df03030f314fee",
+    "author": "Krystofeles",
+    "page_license": "CC BY 4.0 (page checked; download not obtained)",
+    "manual_target": "assets/environment/originals/sketchfab_pending/electrical/",
+    "checked": "2026-11-05"
+  }
+]

@@ -1,0 +1,5 @@
+file 'environment-compare-front-before.png'
+duration 2
+file 'environment-front.png'
+duration 2
+file 'environment-compare-front-before.png'

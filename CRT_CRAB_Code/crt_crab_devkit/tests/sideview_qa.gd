@@ -5,6 +5,8 @@ var results: Array[Dictionary] = []
 var captures: Array[Dictionary] = []
 var failed := false
 var visual := false
+var transition_samples := 0
+var transition_camera_clips := 0
 
 func _ready() -> void:
 	game = get_parent()
@@ -17,7 +19,13 @@ func check(label: String, condition: bool) -> void:
 	failed = failed or not condition
 
 func frames(n: int) -> void:
-	for i in range(n): await get_tree().physics_frame
+	for i in range(n):
+		await get_tree().physics_frame
+		if game.transitioning and game.surroundings!=null:
+			transition_samples += 1
+			for item in game.surroundings.occluders:
+				if item.node.is_visible_in_tree() and item.bounds.has_point(game.director.camera.global_position):
+					transition_camera_clips += 1
 
 func press(action: String, n: int = 2) -> void:
 	Input.action_press(action)
@@ -237,6 +245,8 @@ func _run() -> void:
 		await frames(3)
 		await capture("m2-pause")
 		check("pause menu has focused resume",game.hud.resume_button.has_focus())
+	if "--environment-qa" in OS.get_cmdline_user_args() and game.surroundings!=null:
+		await (load("res://tests/environment_qa.gd").new()).run(self)
 	finish()
 
 func disk_checks() -> void:

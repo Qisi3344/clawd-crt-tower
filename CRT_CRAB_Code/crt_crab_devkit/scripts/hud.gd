@@ -5,6 +5,7 @@ signal pause_changed(value: bool)
 signal overview_requested
 signal audio_changed(value: bool)
 signal motion_changed(value: bool)
+signal environment_motion_changed(value: bool)
 signal quit_requested
 signal reset_requested
 var health_label: Label
@@ -17,6 +18,8 @@ var overview_panel: PanelContainer
 var route_label: Label
 var pause_panel: Control
 var resume_button: Button
+var credits_button: Button
+var credits_dialog: AcceptDialog
 var debug_label: Label
 var veil: ColorRect
 var paused := false
@@ -139,6 +142,22 @@ func _build_pause(root: Control) -> void:
 	motion.text = "减少转场动态"
 	motion.toggled.connect(func(v: bool): motion_changed.emit(v))
 	column.add_child(motion)
+	var surroundings := CheckButton.new()
+	surroundings.text = "环境微动态"
+	surroundings.button_pressed = true
+	surroundings.toggled.connect(func(v: bool): environment_motion_changed.emit(v))
+	column.add_child(surroundings)
+	credits_dialog = AcceptDialog.new()
+	credits_dialog.title = "素材署名 / CREDITS"
+	credits_dialog.dialog_autowrap = true
+	credits_dialog.dialog_text = "外围模型：Kenney · CC0 1.0\nMini Arcade 1.2 / Furniture Kit 2.0\nFactory Kit 3.0 / Survival Kit 2.0\nMini Arcade 同时致谢 Fleur Keijsers、Guus Vermeulen。\n\n本项目修改：尺寸、底部轴心、统一色板、哑光材质；工业机柜改为供电与储存设施。\n来源：kenney.nl/assets\n完整逐项路径与许可：docs/ASSET_CREDITS.md\n\n小蟹形体参考：Qisi3344 / 绮思 · clawd-motion\n像素图与场景标识：本工程原创\n引擎：Godot Engine · MIT · godotengine.org/license"
+	credits_dialog.confirmed.connect(func(): credits_button.grab_focus())
+	credits_dialog.canceled.connect(func(): credits_button.grab_focus())
+	pause_panel.add_child(credits_dialog)
+	credits_button = Button.new()
+	credits_button.text = "素材署名 / CREDITS"
+	credits_button.pressed.connect(func(): credits_dialog.popup_centered(Vector2i(580,420)))
+	column.add_child(credits_button)
 	column.add_child(_label("E / K：开箱、传送 · 按住可推拉\nF3：性能面板 · 进度自动保存",18,Color("c1c7c3")))
 	var quit := Button.new()
 	quit.text = "保存并退出"
@@ -165,6 +184,7 @@ func set_paused(value: bool) -> void:
 	if value:
 		resume_button.grab_focus()
 	else:
+		credits_dialog.hide()
 		resume_button.release_focus()
 	pause_changed.emit(value)
 

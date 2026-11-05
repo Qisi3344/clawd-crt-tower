@@ -57,3 +57,9 @@
 早期 MadeByYeshe、fizyman、Tomitos、Tobalation、Drillimpact、NobleCrowDev 仍为历史候选；旧阶段的“下载 0 / 导入 0”只描述当时原创 CRT 样板，不适用于本次外围环境。
 
 新策划书 SF-01～04 已核对模型页作者及 CC BY 4.0 标识；官方下载端点均返回 HTTP 401，记录为 **BLOCKED_DOWNLOAD**，没有导入、没有提取网页查看器缓存。逐项页面、作者、原因及人工落盘目录见 [待下载说明](../assets/environment/originals/sketchfab_pending/README.md) 和 [下载状态](../assets/environment/sketchfab_download_status.json)。SF-05～08 为可选候选，本轮未下载，也不声称完成；已有 CC0 管道、柜体、货架与贩卖机满足当前布景。
+
+## 用户提供的音乐与平面装饰（2026-11-05）
+
+用户明确指定使用工作区 `NO SIGNAL .mp3` 完整版（209 秒），原样复制到 `assets/audio/no_signal_full.mp3`；未使用 1分58秒 32k 版。循环播放，音效独立，默认音乐音量 35%（另有 -12dB 混音衰减），暂停菜单可关闭或调节。设置仅保存在 `user://audio.cfg`，QA/性能模式不读取、不写入该文件，也不自动播放音乐。
+
+用户提供 `一些装饰.zip`，选用其中 CRT 标识、BOOT OK、NO SIGNAL、ARCHIVE LINK、CRT 海报、404 和爪痕，放在维修背板、街机下部和后侧工业板；图像保存在 `assets/environment/decals/user/`，为原图直接使用，未覆盖活动玻璃。其余图片留在用户原压缩包中。音乐与这些图片的来源为用户提供，作者/外部分发许可未附说明，不归入 Kenney CC0，也不更改它们的权属。

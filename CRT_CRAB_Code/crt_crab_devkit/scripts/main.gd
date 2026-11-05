@@ -45,7 +45,12 @@ func _ready() -> void:
 	add_child(hud)
 	hud.pause_changed.connect(func(_v: bool): _control_state())
 	hud.overview_requested.connect(_toggle_overview)
-	hud.audio_changed.connect(func(v: bool): audio.enabled = v)
+	hud.sfx_toggle.set_pressed_no_signal(audio.enabled)
+	hud.music_toggle.set_pressed_no_signal(audio.music_enabled)
+	hud.music_slider.set_value_no_signal(audio.music_volume)
+	hud.audio_changed.connect(audio.set_sfx_enabled)
+	hud.music_changed.connect(audio.set_music_enabled)
+	hud.music_volume_changed.connect(audio.set_music_volume)
 	hud.motion_changed.connect(func(v: bool): director.reduced_motion = v)
 	hud.environment_motion_changed.connect(func(v: bool):
 		if surroundings!=null: surroundings.set_micro_motion(v)

@@ -23,6 +23,22 @@ func _sign(parent: Node3D, text: String, p: Vector3, size: Vector2, color: Color
 	Craft.box(parent,p+Vector3(-size.x/2+0.08,0,0.075),Vector3(0.09,size.y-0.18,0.025),color,0.01,0.1)
 	Craft.label(parent,text,p+Vector3(0,0,0.08),color,0.0085,36)
 
+func _decal(parent: Node3D, asset: String, p: Vector3, width: float) -> void:
+	var texture := load("res://assets/environment/decals/user/"+asset+".png") as Texture2D
+	var mesh := QuadMesh.new()
+	mesh.size = Vector2(width,width*texture.get_height()/float(texture.get_width()))
+	var node := MeshInstance3D.new()
+	node.mesh = mesh
+	node.position = p
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = texture
+	material.albedo_color = Color(0.72,0.72,0.72,1)
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	material.roughness = 1
+	node.material_override = material
+	parent.add_child(node)
+
 func _repair() -> void:
 	_model("repair_workbench",Vector3(0,0,0),0)
 	_model("repair_shelf",Vector3(-4.5,0,-2.1),12)
@@ -42,6 +58,7 @@ func _repair() -> void:
 		var note := Craft.box(self,Vector3(-1.4+i*1.25,3.5,-2.26),Vector3(0.85,0.95,0.025),Color("c5c7ae"),0.005)
 		note.rotation_degrees.z = (i-1)*5
 	Craft.label(self,"CRT SERVICE / UNIT 07",Vector3(0,3.5,-2.22),Color("27333d"),0.0025,28)
+	_decal(self,"no_signal",Vector3(-1.4,3.5,-2.14),1.05)
 	# Swing-arm lamp: foot, two real pivots and a connected head.
 	Craft.cable(self,PackedVector3Array([Vector3(2.1,3.12,-0.8),Vector3(2.1,4.2,-0.8),Vector3(0.8,4.8,-0.8)]),Color("6c817c"),0.08)
 	Craft.box(self,Vector3(0.8,4.75,-0.8),Vector3(1.0,0.25,0.65),Color("a8b5a3"),0.05)
@@ -84,6 +101,8 @@ func _screen(parent: Node3D, p: Vector3, size: Vector2, index: int, pitch: float
 func _arcade() -> void:
 	var a := _model("arcade_cabinet",Vector3(-2.0,0,0),-8)
 	var b := _model("arcade_cabinet",Vector3(2.5,0,-1.8),17)
+	_decal(a,"crt_crab",Vector3(0,0.85,1.34),1.25)
+	_decal(b,"boot_ok",Vector3(0,0.85,1.34),1.7)
 	var vending := _model("vending_machine",Vector3(6.1,0,-3.8),-4)
 	# A shallow, stocked insert sits in front of the imported curved glass.
 	Craft.box(vending,Vector3(-0.325,4.13,2.12),Vector3(2.5,3.7,0.08),Color("1d3038"),0.04)
@@ -150,6 +169,11 @@ func _overhead() -> void:
 		for z in [-16,-12,-10]:
 			Craft.box(self,Vector3(x,19.45,z),Vector3(2.4,0.25,0.8),Color("3d5157"),0.04)
 			Craft.box(self,Vector3(x,19.29,z),Vector3(2.0,0.04,0.5),Color("9eb7ad"),0.01,0.18)
+	# Posters and graffiti sit on the existing rear metal panels.
+	_decal(self,"archive_link",Vector3(13,2.5,-24.20),2.5)
+	_decal(self,"crt_poster",Vector3(-5,2.7,-24.20),2.3)
+	_decal(self,"404",Vector3(-13,1.9,-24.20),2.8)
+	_decal(self,"claws",Vector3(5,2.2,-24.20),2.1)
 	# An open ladder-style cable tray, with a supported rail at either side.
 	for x in [-0.5,0.5]: Craft.box(self,Vector3(x,18.9,-18),Vector3(0.08,0.3,14),Color("5b6a6d"),0.012)
 	for i in range(17): Craft.box(self,Vector3(0,18.8,-24+i*0.75),Vector3(1.05,0.08,0.1),Color("566569"),0.012)

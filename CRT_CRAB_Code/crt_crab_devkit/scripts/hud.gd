@@ -4,6 +4,11 @@ extends CanvasLayer
 signal pause_changed(value: bool)
 signal overview_requested
 signal audio_changed(value: bool)
+signal music_changed(value: bool)
+signal music_volume_changed(value: float)
+var music_toggle: CheckButton
+var music_slider: HSlider
+var sfx_toggle: CheckButton
 signal motion_changed(value: bool)
 signal environment_motion_changed(value: bool)
 signal quit_requested
@@ -122,7 +127,7 @@ func _build_pause(root: Control) -> void:
 	panel.custom_minimum_size = Vector2(390,0)
 	center.add_child(panel)
 	var column := VBoxContainer.new()
-	column.add_theme_constant_override("separation",18)
+	column.add_theme_constant_override("separation",12)
 	panel.add_child(column)
 	column.add_child(_label("信号暂存 / PAUSED",27,Color("d4e852")))
 	resume_button = Button.new()
@@ -134,10 +139,28 @@ func _build_pause(root: Control) -> void:
 	reset.pressed.connect(func(): reset_requested.emit())
 	column.add_child(reset)
 	var sound := CheckButton.new()
+	sfx_toggle = sound
 	sound.text = "交互音效"
 	sound.button_pressed = true
 	sound.toggled.connect(func(v: bool): audio_changed.emit(v))
 	column.add_child(sound)
+	music_toggle = CheckButton.new()
+	music_toggle.text = "背景音乐 · NO SIGNAL"
+	music_toggle.button_pressed = true
+	music_toggle.toggled.connect(func(v: bool): music_changed.emit(v))
+	column.add_child(music_toggle)
+	var volume_row := HBoxContainer.new()
+	volume_row.add_child(_label("音乐音量",18))
+	music_slider = HSlider.new()
+	music_slider.min_value = 0
+	music_slider.max_value = 1
+	music_slider.step = 0.01
+	music_slider.value = 0.35
+	music_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	music_slider.custom_minimum_size.x = 150
+	music_slider.value_changed.connect(func(v: float): music_volume_changed.emit(v))
+	volume_row.add_child(music_slider)
+	column.add_child(volume_row)
 	var motion := CheckButton.new()
 	motion.text = "减少转场动态"
 	motion.toggled.connect(func(v: bool): motion_changed.emit(v))

@@ -1,0 +1,46 @@
+{
+  "source": "User supplied 一些装饰.zip",
+  "images": [
+    {
+      "source_entry": "_0001_图层-4.png",
+      "path": "assets/environment/decals/user/crt_crab.png",
+      "sha256": "cd7ba346477ec30a3ee9d672b1095168643970a3cbf141e228946cb57f7e398f"
+    },
+    {
+      "source_entry": "_0010_图层-13.png",
+      "path": "assets/environment/decals/user/boot_ok.png",
+      "sha256": "8012931ac5e40a780d6a9296f793449bb313d6fc27731a11c3864397c83a3444"
+    },
+    {
+      "source_entry": "涂鸦_0003_图层-5.png",
+      "path": "assets/environment/decals/user/claws.png",
+      "sha256": "4a60ca007b36eb15412f76df62965323314e50cb57b13c11f196cb983aecc620"
+    },
+    {
+      "source_entry": "涂鸦_0007_图层-9.png",
+      "path": "assets/environment/decals/user/404.png",
+      "sha256": "8687e07ba43fc7eec66f150c76b05e26ba24f2ce8c9dd225740ad38501d886d7"
+    },
+    {
+      "source_entry": "招贴画_0000_图层-2.png",
+      "path": "assets/environment/decals/user/no_signal.png",
+      "sha256": "d08308afbc155277710a46bcc779256ff9a1c418b7ba014963e5e4155022e6a5"
+    },
+    {
+      "source_entry": "招贴画_0003_图层-1.png",
+      "path": "assets/environment/decals/user/archive_link.png",
+      "sha256": "dcc99adb64a01a79fa11db4621bd0043d7b850e589d59580cfaf5f1516e6f2e4"
+    },
+    {
+      "source_entry": "招贴画_0002_图层-4.png",
+      "path": "assets/environment/decals/user/crt_poster.png",
+      "sha256": "48d6271e0d03d7956820a5d1d418f6f7881110c3c7d57f561a00f0a4b8c23425"
+    }
+  ],
+  "music": {
+    "source": "User supplied NO SIGNAL .mp3 (full version)",
+    "path": "assets/audio/no_signal_full.mp3",
+    "duration_seconds": 209,
+    "sha256": "4365feb6302e5ede2edbc7e37f78081a73c00ec97cfeb66c28bdb231b44fb1d4"
+  }
+}

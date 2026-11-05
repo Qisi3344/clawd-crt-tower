@@ -2,6 +2,24 @@ extends RefCounted
 
 func run(qa: Node) -> void:
 	var game: Node = qa.game
+	qa.check("full 209 second music track loops",game.audio.music.stream is AudioStreamMP3 and game.audio.music.stream.loop and absf(game.audio.music.stream.get_length()-209)<1)
+	game.audio.music.play()
+	await qa.frames(2)
+	game.hud.music_toggle.button_pressed = false
+	qa.check("music switch pauses music independently",game.audio.music.stream_paused)
+	game.hud.music_toggle.button_pressed = true
+	game.hud.music_slider.value = 0
+	qa.check("music volume slider reaches silence",game.audio.music.volume_db<=-80)
+	game.hud.music_slider.value = 0.35
+	qa.check("QA never persists audio preferences",not game.audio.preferences_enabled)
+	game.audio.preferences_path = "user://qa-audio-%d.cfg"%OS.get_process_id()
+	game.audio.preferences_enabled = true
+	game.audio.set_music_volume(0.35)
+	var prefs := ConfigFile.new()
+	qa.check("audio preferences persist separately from progress",prefs.load(game.audio.preferences_path)==OK and is_equal_approx(float(prefs.get_value("audio","volume")),0.35) and prefs.get_value("audio","music")==true)
+	DirAccess.remove_absolute(game.audio.preferences_path)
+	game.audio.preferences_enabled = false
+	game.audio.preferences_path = "user://audio.cfg"
 	var environment: EnvironmentSurroundings = game.surroundings
 	qa.check("environment has four independent zones",environment.zones.size()==4)
 	var props := environment.find_children("*","Node3D",true,false).filter(func(node): return node is EnvironmentProp)

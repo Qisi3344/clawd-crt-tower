@@ -1,0 +1,41 @@
+{
+	"engine": "4.7.2-stable (official)",
+	"gpu": "NVIDIA GeForce RTX 5060 Ti",
+	"method": "wall clock, no fixed-fps; hidden-window forced OpenGL render and GPU image readback, 2.5 seconds per view; readback adds overhead, not an interactive gameplay FPS benchmark",
+	"samples": [
+		{
+			"draw_calls": 841.0,
+			"elapsed_ms": 2500.0,
+			"measured_cycles_per_second": 30.0,
+			"render_cycles": 75,
+			"render_readback_ms_median": 19.01,
+			"render_readback_ms_p95": 19.753,
+			"static_memory_mb": 86.3722305297852,
+			"view": "active"
+		},
+		{
+			"draw_calls": 861.0,
+			"elapsed_ms": 2500.0,
+			"measured_cycles_per_second": 30.0,
+			"render_cycles": 75,
+			"render_readback_ms_median": 19.529,
+			"render_readback_ms_p95": 20.295,
+			"static_memory_mb": 86.4220123291016,
+			"view": "front"
+		},
+		{
+			"draw_calls": 871.0,
+			"elapsed_ms": 2500.0,
+			"measured_cycles_per_second": 30.0,
+			"render_cycles": 75,
+			"render_readback_ms_median": 19.598,
+			"render_readback_ms_p95": 20.203,
+			"static_memory_mb": 86.4244689941406,
+			"view": "back"
+		}
+	],
+	"size": [
+		1280,
+		800
+	]
+}

@@ -1,0 +1,293 @@
+{
+	"captures": [
+		{
+			"draw_calls": 870.0,
+			"fps": 1.0,
+			"memory_mb": 90.4284029006958,
+			"name": "stage2-title",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 803.0,
+			"fps": 44.0,
+			"memory_mb": 87.6856775283813,
+			"name": "stage2-title-portrait",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 895.0,
+			"fps": 44.0,
+			"memory_mb": 90.7718629837036,
+			"name": "stage2-purchase-confirm",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 885.0,
+			"fps": 44.0,
+			"memory_mb": 90.7892694473267,
+			"name": "stage2-wardrobe",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 822.0,
+			"fps": 44.0,
+			"memory_mb": 88.5598001480103,
+			"name": "stage2-wardrobe-portrait",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 871.0,
+			"fps": 61.0,
+			"memory_mb": 96.3184366226196,
+			"name": "stage2-transfer-exit",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 878.0,
+			"fps": 61.0,
+			"memory_mb": 96.3293542861938,
+			"name": "stage2-transfer-link",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 782.0,
+			"fps": 50.0,
+			"memory_mb": 96.5370950698853,
+			"name": "stage2-transfer-enter",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 818.0,
+			"fps": 55.0,
+			"memory_mb": 96.5926446914673,
+			"name": "stage2-transfer-complete",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 897.0,
+			"fps": 59.0,
+			"memory_mb": 96.435284614563,
+			"name": "stage2-settings",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"engine": "4.7.2-stable (official)",
+	"passed": true,
+	"renderer": "Windows",
+	"tests": [
+		{
+			"passed": true,
+			"test": "fresh boot stops at title with no playable world"
+		},
+		{
+			"passed": true,
+			"test": "bootstrap does not create an adventure"
+		},
+		{
+			"passed": true,
+			"test": "title ignores combat reset and overview input"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion holds the title camera still"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 0"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 0"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 5"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 5"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 6"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 6"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 8"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 8"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 14"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 14"
+		},
+		{
+			"passed": true,
+			"test": "both outfits affordable at 14"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 17"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 17"
+		},
+		{
+			"passed": true,
+			"test": "both outfits affordable at 17"
+		},
+		{
+			"passed": true,
+			"test": "disk failure leaves balance and ownership unchanged"
+		},
+		{
+			"passed": true,
+			"test": "invalid or future save never silently overwrites source"
+		},
+		{
+			"passed": true,
+			"test": "invalid or future save never silently overwrites source"
+		},
+		{
+			"passed": true,
+			"test": "invalid or future save never silently overwrites source"
+		},
+		{
+			"passed": true,
+			"test": "v2 migration preserves adventure and makes backup"
+		},
+		{
+			"passed": true,
+			"test": "old hidden treasure unlocks outfit without another reward"
+		},
+		{
+			"passed": true,
+			"test": "unknown equipped skin safely falls back"
+		},
+		{
+			"passed": true,
+			"test": "new game requires confirmation"
+		},
+		{
+			"passed": true,
+			"test": "canceling new game preserves old progress"
+		},
+		{
+			"passed": true,
+			"test": "keyboard opens wardrobe from title"
+		},
+		{
+			"passed": true,
+			"test": "purchase asks before charging"
+		},
+		{
+			"passed": true,
+			"test": "confirmed purchase grants outfit but does not equip"
+		},
+		{
+			"passed": true,
+			"test": "equipment is separate from purchase"
+		},
+		{
+			"passed": true,
+			"test": "restart reloads owned equipped and balance"
+		},
+		{
+			"passed": true,
+			"test": "continue enters saved ARCHIVE in equipped outfit"
+		},
+		{
+			"passed": true,
+			"test": "actions preserve skin and collision dimensions"
+		},
+		{
+			"passed": true,
+			"test": "failed checkpoint keeps paused adventure live"
+		},
+		{
+			"passed": true,
+			"test": "return saves unloads only 2D and preserves tower"
+		},
+		{
+			"passed": true,
+			"test": "continue restores a safe saved horizontal position"
+		},
+		{
+			"passed": true,
+			"test": "new game resets adventure but keeps outfits"
+		},
+		{
+			"passed": true,
+			"test": "exit freezes player and enemies"
+		},
+		{
+			"passed": true,
+			"test": "three phases complete in mode false"
+		},
+		{
+			"passed": true,
+			"test": "transfer retains equipped outfit"
+		},
+		{
+			"passed": true,
+			"test": "exit freezes player and enemies"
+		},
+		{
+			"passed": true,
+			"test": "three phases complete in mode true"
+		},
+		{
+			"passed": true,
+			"test": "transfer retains equipped outfit"
+		},
+		{
+			"passed": true,
+			"test": "blocked destination rolls back visible player flags and input"
+		},
+		{
+			"passed": true,
+			"test": "settings page reachable by mouse"
+		}
+	]
+}

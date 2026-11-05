@@ -1,0 +1,9 @@
+file 'stage2-transfer-exit.png'
+duration 0.25
+file 'stage2-transfer-link.png'
+duration 0.8
+file 'stage2-transfer-enter.png'
+duration 0.3
+file 'stage2-transfer-complete.png'
+duration 0.8
+file 'stage2-transfer-complete.png'

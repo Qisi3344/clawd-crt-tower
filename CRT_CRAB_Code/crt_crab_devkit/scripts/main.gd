@@ -1,0 +1,292 @@
+extends Node3D
+
+var shell: Node3D
+var devices: Array[MonitorDevice] = []
+var director: ShellDirector
+var viewport: SubViewport
+var world: ScreenWorld
+var hud: GameHUD
+var audio: GameAudio
+var save := SaveStore.new()
+var manifest: Dictionary
+var links: Array
+var active_id := "BOOT"
+var transitioning := false
+var test_mode := false
+var autosave := 0.0
+
+func _ready() -> void:
+	test_mode = "--qa" in OS.get_cmdline_user_args()
+	save.enabled = not test_mode
+	save.load_progress()
+	manifest = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_manifest.json"))
+	links = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_links.json"))
+	_input_map()
+	_build_shell()
+	director = ShellDirector.new()
+	add_child(director)
+	viewport = SubViewport.new()
+	viewport.name = "ActiveScreenViewport"
+	viewport.size = Vector2i(480,360)
+	viewport.own_world_3d = true
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.msaa_3d = Viewport.MSAA_DISABLED
+	add_child(viewport)
+	audio = GameAudio.new()
+	add_child(audio)
+	hud = GameHUD.new()
+	add_child(hud)
+	hud.pause_changed.connect(func(_v: bool): _control_state())
+	hud.overview_requested.connect(_toggle_overview)
+	hud.audio_changed.connect(func(v: bool): audio.enabled = v)
+	hud.motion_changed.connect(func(v: bool): director.reduced_motion = v)
+	hud.quit_requested.connect(_quit)
+	get_tree().auto_accept_quit = false
+	get_tree().root.min_size = Vector2i(640,480)
+	get_tree().root.size_changed.connect(_resize_ui)
+	_resize_ui()
+	_load_world(save.data.active)
+	director.focus(_device(active_id),true)
+	_control_state()
+	if test_mode:
+		var harness := Node.new()
+		harness.set_script(load("res://tests/runtime_qa.gd"))
+		add_child(harness)
+	else:
+		_intro()
+
+func _intro() -> void:
+	transitioning = true
+	_control_state()
+	director.busy = true
+	director.camera.position = Vector3(25,19,30)
+	director.camera.look_at(Vector3(0,6,0))
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(director.camera,"position",_device(active_id).focus_position(),2.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_method(func(t: float): director.camera.look_at(Vector3(0,6,0).lerp(_device(active_id).focus_point(),t)),0.0,1.0,2.8)
+	await tween.finished
+	director.busy = false
+	transitioning = false
+	_control_state()
+	hud.show_message("一只小螃蟹，一座由旧屏幕构成的群岛。")
+
+func _build_shell() -> void:
+	shell = Node3D.new()
+	shell.name = "WorldShell"
+	add_child(shell)
+	var environment := WorldEnvironment.new()
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color("121a22")
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color("91acba")
+	env.ambient_light_energy = 0.34
+	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	environment.environment = env
+	shell.add_child(environment)
+	var key := DirectionalLight3D.new()
+	key.rotation_degrees = Vector3(-45,-25,0)
+	key.light_color = Color("d4e5e4")
+	key.light_energy = 1.05
+	key.shadow_enabled = true
+	key.directional_shadow_max_distance = 60
+	shell.add_child(key)
+	var rim := DirectionalLight3D.new()
+	rim.rotation_degrees = Vector3(-20,155,0)
+	rim.light_color = Color("6b91bf")
+	rim.light_energy = 0.5
+	shell.add_child(rim)
+	Craft.box(shell,Vector3(0,-1.3,0),Vector3(25,0.3,25),Color("242b32"),0.1)
+	for i in range(-12,13):
+		Craft.box(shell,Vector3(i,-1.14,0),Vector3(0.022,0.01,25),Color("343d41"),0.001)
+		Craft.box(shell,Vector3(0,-1.14,i),Vector3(25,0.01,0.022),Color("343d41"),0.001)
+	var layout: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/monitor_layout.json"))
+	for item in layout:
+		var device := MonitorDevice.new()
+		device.device_index = int(item.index)
+		device.model = int(item.model)
+		device.has_keyboard = item.get("keyboard",false)
+		device.screen_id = item.screen
+		device.position = ScreenWorld._vec(item.position)
+		device.rotation_degrees = ScreenWorld._vec(item.rotation)
+		shell.add_child(device)
+		devices.append(device)
+		var back := device.to_global(Vector3(0,-0.8,-1.9))
+		Craft.cable(shell,PackedVector3Array([back,back+Vector3(0,-1.8,-0.3),Vector3(back.x*0.6,-0.9,back.z*0.6)]),Color("11191d"),0.065)
+	# Stacked speaker cabinets make the reference's media tower silhouette.
+	for layer in range(3):
+		var p := Vector3(-2.5+layer*1.7,1.2+layer*4.5,0)
+		Craft.box(shell,p,Vector3(2.6,4.0,2.5),Color("232c34"),0.09)
+		for y in [-0.9,0.9]:
+			_speaker(p+Vector3(0,y,1.27))
+	Craft.label(shell,"SCREEN ISLANDS",Vector3(0,-0.87,10.5),Color("a9b555"),0.021,48).rotation_degrees.x = -90
+
+func _speaker(p: Vector3) -> void:
+	for radius in [0.92,0.68,0.34]:
+		var node := MeshInstance3D.new()
+		var mesh := CylinderMesh.new()
+		mesh.top_radius = radius
+		mesh.bottom_radius = radius
+		mesh.height = 0.06
+		mesh.radial_segments = 20
+		node.mesh = mesh
+		node.material_override = Craft.material(Color("43515b") if radius == 0.68 else Color("19232b"))
+		node.rotation_degrees.x = 90
+		node.position = p+Vector3(0,0,(1-radius)*0.14)
+		shell.add_child(node)
+
+func _load_world(id: String, entry: Array = []) -> void:
+	active_id = id
+	world = ScreenWorld.new()
+	world.name = "ScreenWorld_"+id
+	world.screen_id = id
+	world.flags = save.data.flags
+	var saved = save.data.worlds.get(id,{})
+	world.state = saved.duplicate(true) if saved is Dictionary else {}
+	world.links = links
+	viewport.add_child(world)
+	var position_data = entry if not entry.is_empty() else world.state.get("position",manifest[id].spawn)
+	if position_data is Array and position_data.size() == 3 and position_data.all(func(v): return v is float or v is int):
+		var p := ScreenWorld._vec(position_data)
+		if p.is_finite() and absf(p.x)<7 and absf(p.z)<7 and p.y > -1 and p.y < 6:
+			world.player.position = p
+	world.player.spawn = ScreenWorld._vec(manifest[id].spawn)
+	var saved_health = save.data.get("health",3)
+	world.player.health = clampi(int(saved_health),1,3) if saved_health is float or saved_health is int else 3
+	world._snap_camera()
+	world.message.connect(hud.show_message)
+	world.prompt_changed.connect(func(text: String): hud.prompt_label.text = text)
+	world.travel_requested.connect(_travel)
+	world.sound_requested.connect(audio.play)
+	world.progress_changed.connect(_progress)
+	world.player.health_changed.connect(hud.set_health)
+	world.player.health_changed.connect(func(_v: int): _checkpoint())
+	_device(id).set_texture(viewport.get_texture())
+	hud.set_health(world.player.health)
+	_progress()
+
+func _travel(link: Dictionary) -> void:
+	if transitioning or hud.paused or director.overview or link.from != active_id:
+		return
+	if not manifest.has(link.to) or _device(link.to) == null:
+		hud.show_message("目标屏幕暂时没有响应，连接已安全取消。")
+		return
+	transitioning = true
+	_control_state()
+	_checkpoint()
+	hud.prompt_label.text = ""
+	hud.show_message("正在连接："+str(link.to))
+	audio.play("travel")
+	_device(active_id).screen_material.set_shader_parameter("interference",0.7)
+	await director.travel(_device(link.to),func():
+		if DisplayServer.get_name() != "headless":
+			var image := viewport.get_texture().get_image()
+			_device(active_id).set_texture(ImageTexture.create_from_image(image))
+		_device(active_id).screen_material.set_shader_parameter("interference",0.0)
+		viewport.remove_child(world)
+		world.free()
+		_load_world(link.to,link.entry)
+	)
+	transitioning = false
+	_control_state()
+	_checkpoint()
+	hud.show_message("已连接 / "+str(manifest[active_id].name))
+
+func _process(delta: float) -> void:
+	autosave += delta
+	if autosave > 8 and not transitioning:
+		autosave = 0
+		_checkpoint()
+	if hud.debug_label.visible:
+		hud.debug_label.text = "FPS %d   DRAW %d   VIEWPORT 1   PLAYER %d\n%s · %.1f MB"%[Engine.get_frames_per_second(),Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),get_tree().get_nodes_in_group("player").size(),active_id,Performance.get_monitor(Performance.MEMORY_STATIC)/1048576.0]
+	# Hide only a device that intersects the line from shell camera to active glass.
+	if not director.overview and not director.busy:
+		var target := _device(active_id).focus_point()
+		var from := director.camera.position
+		var line := target-from
+		for device in devices:
+			if device.screen_id == active_id:
+				device.visible = true
+				continue
+			var t := clampf((device.global_position-from).dot(line)/line.length_squared(),0,1)
+			device.visible = not (t>0.03 and t<0.94 and (from+line*t).distance_to(device.global_position)<2.9)
+	else:
+		for device in devices: device.visible = true
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause") and not transitioning:
+		if director.overview:
+			_toggle_overview()
+		else:
+			hud.set_paused(not hud.paused)
+	if event.is_action_pressed("overview"):
+		_toggle_overview()
+	if event.is_action_pressed("debug"):
+		hud.debug_label.visible = not hud.debug_label.visible
+	if event is InputEventMouseMotion:
+		if director.overview and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			director.orbit -= event.relative.x*0.007
+		elif not hud.paused and not transitioning and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			world.target_yaw = clampf(world.target_yaw-event.relative.x*0.003,-0.6,0.6)
+	if event is InputEventMouseButton and director.overview:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP: director.elevation = clampf(director.elevation-1,5,30)
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: director.elevation = clampf(director.elevation+1,5,30)
+
+func _toggle_overview() -> void:
+	if transitioning or hud.paused:
+		return
+	director.toggle_overview()
+	hud.overview_panel.visible = director.overview
+	hud.prompt_label.text = ""
+	_control_state()
+
+func _control_state() -> void:
+	if is_instance_valid(world):
+		var allowed := not transitioning and not hud.paused and not director.overview
+		world.enabled = allowed
+		world.player.enabled = allowed
+		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED
+
+func _progress() -> void:
+	hud.update_progress(active_id,save.data.flags)
+	_checkpoint()
+
+func _checkpoint() -> void:
+	if not is_instance_valid(world): return
+	save.data.active = active_id
+	save.data.health = world.player.health
+	save.data.worlds[active_id] = world.snapshot()
+	if not save.write(): hud.show_message("进度未能写入磁盘，请检查存储空间。")
+
+func _device(id: String) -> MonitorDevice:
+	for device in devices:
+		if device.screen_id == id: return device
+	return null
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning:
+		hud.set_paused(true)
+
+func _quit() -> void:
+	_checkpoint()
+	get_tree().quit()
+
+func _input_map() -> void:
+	var map := {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"move_up":[KEY_W,KEY_UP],"move_down":[KEY_S,KEY_DOWN],"jump":[KEY_SPACE],"attack":[KEY_J],"dash":[KEY_SHIFT],"interact":[KEY_E],"overview":[KEY_TAB],"pause":[KEY_ESCAPE],"debug":[KEY_F3]}
+	for action in map:
+		InputMap.add_action(action)
+		for key in map[action]:
+			var event := InputEventKey.new()
+			event.physical_keycode = key
+			InputMap.action_add_event(action,event)
+	var mouse := InputEventMouseButton.new()
+	mouse.button_index = MOUSE_BUTTON_LEFT
+	InputMap.action_add_event("attack",mouse)
+
+func _resize_ui() -> void:
+	var window := get_tree().root
+	var portrait := float(window.size.x)/maxf(window.size.y,1)<1.1
+	var reference := Vector2i(900,1125) if portrait else (Vector2i(960,600) if window.size.x<1000 else Vector2i(1440,900))
+	if window.content_scale_size != reference:
+		window.content_scale_size = reference

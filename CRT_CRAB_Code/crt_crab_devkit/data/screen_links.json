@@ -1,0 +1,4 @@
+[
+  {"id":"boot_archive", "from":"BOOT", "to":"ARCHIVE", "position":[5.2,0,-4.8], "entry":[-4.5,0.4,4.5], "requires":"signal", "label":"前往丢失档案"},
+  {"id":"archive_boot", "from":"ARCHIVE", "to":"BOOT", "position":[-5.2,0,4.8], "entry":[4.3,0.4,-3.5], "requires":"", "label":"返回启动区"}
+]

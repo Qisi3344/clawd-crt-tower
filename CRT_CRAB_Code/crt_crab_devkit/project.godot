@@ -2,7 +2,10 @@
 config_version=5
 
 [application]
-config/name="屏幕群岛 · CRT CRAB"
+config/name="CRT小蟹闯塔记"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Godot/app_userdata/屏幕群岛 · CRT CRAB"
+config/custom_user_dir_name.linux="godot/app_userdata/屏幕群岛 · CRT CRAB"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/description="A little crab. A constellation of old computers."

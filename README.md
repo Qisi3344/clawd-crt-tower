@@ -1,4 +1,4 @@
-# 屏幕群岛 / CRT CRAB
+# CRT小蟹闯塔记
 
 当前工程位于 `CRT_CRAB_Code/crt_crab_devkit/`，以该包的完整手册和 `docs/参考图/` 五张图为准。
 

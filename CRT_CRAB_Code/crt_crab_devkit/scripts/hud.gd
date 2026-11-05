@@ -43,7 +43,7 @@ func _ready() -> void:
 	column.add_child(top)
 	var brand := _panel(Color("d4e852"))
 	top.add_child(brand)
-	brand.add_child(_label("  屏幕群岛  /  CRT CRAB  ",22,Color("16191a")))
+	brand.add_child(_label("  CRT小蟹闯塔记  ",22,Color("16191a")))
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(spacer)

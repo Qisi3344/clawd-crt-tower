@@ -1,0 +1,443 @@
+{
+	"captures": [
+		{
+			"draw_calls": 844.0,
+			"fps": 1.0,
+			"memory_mb": 94.8791904449463,
+			"name": "m1-01-boot",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 845.0,
+			"fps": 60.0,
+			"memory_mb": 95.1443729400635,
+			"name": "m1-02-pressure",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 845.0,
+			"fps": 60.0,
+			"memory_mb": 95.1766490936279,
+			"name": "m1-03-treasure",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 917.0,
+			"fps": 56.0,
+			"memory_mb": 95.5749645233154,
+			"name": "m3-front",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 913.0,
+			"fps": 56.0,
+			"memory_mb": 95.5767269134521,
+			"name": "m3-back",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 862.0,
+			"fps": 56.0,
+			"memory_mb": 95.5775547027588,
+			"name": "m3-left",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 871.0,
+			"fps": 54.0,
+			"memory_mb": 95.5794010162354,
+			"name": "m3-right",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 949.0,
+			"fps": 57.0,
+			"memory_mb": 95.580228805542,
+			"name": "m3-top",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 901.0,
+			"fps": 60.0,
+			"memory_mb": 95.9740581512451,
+			"name": "m2-04-transition",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 769.0,
+			"fps": 55.0,
+			"memory_mb": 95.9093761444092,
+			"name": "m2-05-archive",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 780.0,
+			"fps": 60.0,
+			"memory_mb": 96.0117778778076,
+			"name": "m2-06-heavy-plate",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 787.0,
+			"fps": 60.0,
+			"memory_mb": 96.0173358917236,
+			"name": "m2-07-key",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 852.0,
+			"fps": 60.0,
+			"memory_mb": 95.9827632904053,
+			"name": "m2-08-remote-gate",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 688.0,
+			"fps": 60.0,
+			"memory_mb": 92.7568759918213,
+			"name": "m2-portrait",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 712.0,
+			"fps": 60.0,
+			"memory_mb": 92.8950786590576,
+			"name": "m2-pause",
+			"size": [
+				720,
+				900
+			]
+		}
+	],
+	"engine": "4.7.2-stable (official)",
+	"passed": true,
+	"renderer": "Windows",
+	"tests": [
+		{
+			"passed": true,
+			"test": "M0 exterior twelve devices retained"
+		},
+		{
+			"passed": true,
+			"test": "upper keyboards absent and base configuration retained"
+		},
+		{
+			"passed": true,
+			"test": "real isolated 320x240 2D screen"
+		},
+		{
+			"passed": true,
+			"test": "only player belongs to internal screen"
+		},
+		{
+			"passed": true,
+			"test": "QA disables user save access"
+		},
+		{
+			"passed": true,
+			"test": "W away from a ladder never creates flying movement"
+		},
+		{
+			"passed": true,
+			"test": "walk toward gap"
+		},
+		{
+			"passed": true,
+			"test": "jump crosses gap and lands"
+		},
+		{
+			"passed": true,
+			"test": "walk to crate"
+		},
+		{
+			"passed": true,
+			"test": "push crate using held E"
+		},
+		{
+			"passed": true,
+			"test": "pull crate without changing facing"
+		},
+		{
+			"passed": true,
+			"test": "push to normal pressure plate"
+		},
+		{
+			"passed": true,
+			"test": "weight opens actual collision door"
+		},
+		{
+			"passed": true,
+			"test": "pass opened gate"
+		},
+		{
+			"passed": true,
+			"test": "ladder reaches raised treasure platform"
+		},
+		{
+			"passed": true,
+			"test": "approach BOOT chest"
+		},
+		{
+			"passed": true,
+			"test": "BOOT chest grants unique key and crystals"
+		},
+		{
+			"passed": true,
+			"test": "same chest cannot pay twice"
+		},
+		{
+			"passed": true,
+			"test": "pause freezes 2D control"
+		},
+		{
+			"passed": true,
+			"test": "array mode freezes internal physics"
+		},
+		{
+			"passed": true,
+			"test": "reach first port by normal movement"
+		},
+		{
+			"passed": true,
+			"test": "bad spawn safely refuses travel"
+		},
+		{
+			"passed": true,
+			"test": "mid-transition failure returns live original screen"
+		},
+		{
+			"passed": true,
+			"test": "failed transfer restores visible avatar and failure feedback"
+		},
+		{
+			"passed": true,
+			"test": "transition input is locked"
+		},
+		{
+			"passed": true,
+			"test": "BOOT to ARCHIVE via actual E interaction"
+		},
+		{
+			"passed": true,
+			"test": "unique player after transfer"
+		},
+		{
+			"passed": true,
+			"test": "player weight alone cannot activate heavy plate"
+		},
+		{
+			"passed": true,
+			"test": "two claw strikes defeat data bug"
+		},
+		{
+			"passed": true,
+			"test": "walk to archive box"
+		},
+		{
+			"passed": true,
+			"test": "reach archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "climb archive platform"
+		},
+		{
+			"passed": true,
+			"test": "approach marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "pinch breaks marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "reach heavy stone"
+		},
+		{
+			"passed": true,
+			"test": "push heavy stone off platform"
+		},
+		{
+			"passed": true,
+			"test": "gravity lands heavy stone on persistent plate"
+		},
+		{
+			"passed": true,
+			"test": "walk through heavy-signal gate"
+		},
+		{
+			"passed": true,
+			"test": "archive chest grants persistent key"
+		},
+		{
+			"passed": true,
+			"test": "walk to marked hidden wall"
+		},
+		{
+			"passed": true,
+			"test": "hidden wall can be broken"
+		},
+		{
+			"passed": true,
+			"test": "reach optional archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "reach hidden archive chest"
+		},
+		{
+			"passed": true,
+			"test": "optional archive treasure is collectible"
+		},
+		{
+			"passed": true,
+			"test": "reach archive exit without teleport"
+		},
+		{
+			"passed": true,
+			"test": "return route reaches BOOT"
+		},
+		{
+			"passed": true,
+			"test": "ARCHIVE pressure opens real BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "walk through BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "remote reward obtainable only after cross-screen signal"
+		},
+		{
+			"passed": true,
+			"test": "walk back to outgoing port"
+		},
+		{
+			"passed": true,
+			"test": "BOOT ARCHIVE BOOT ARCHIVE roundtrip"
+		},
+		{
+			"passed": true,
+			"test": "heavy stone and signal persist on revisit"
+		},
+		{
+			"passed": true,
+			"test": "treasure ledger survives revisit"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "R resets current stone and clears supported signal"
+		},
+		{
+			"passed": true,
+			"test": "R keeps unique treasure rewards"
+		},
+		{
+			"passed": true,
+			"test": "damage has invulnerable interval"
+		},
+		{
+			"passed": true,
+			"test": "no chain damage"
+		},
+		{
+			"passed": true,
+			"test": "death keeps collected chests"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "pause menu has focused resume"
+		}
+	]
+}

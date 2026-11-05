@@ -151,23 +151,31 @@ func _build_shell() -> void:
 	var environment := WorldEnvironment.new()
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color("121a22")
+	env.background_color = Color("20171e")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color("91acba")
+	env.ambient_light_color = Color("b4a1b1")
 	env.ambient_light_energy = 0.28
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	# A very mild peach grade; keep black/white endpoints and near-equal luminance.
+	var grade := Gradient.new()
+	grade.offsets = PackedFloat32Array([0,0.25,0.5,0.75,1])
+	grade.colors = PackedColorArray([Color(0,0,0),Color(0.254,0.249,0.244),Color(0.506,0.498,0.492),Color(0.754,0.749,0.744),Color(1,1,1)])
+	var lut := GradientTexture1D.new()
+	lut.gradient = grade
+	env.adjustment_enabled = true
+	env.adjustment_color_correction = lut
 	environment.environment = env
 	shell.add_child(environment)
 	var key := DirectionalLight3D.new()
 	key.rotation_degrees = Vector3(-45,-25,0)
-	key.light_color = Color("d4e5e4")
+	key.light_color = Color("f3deca")
 	key.light_energy = 0.70
 	key.shadow_enabled = true
 	key.directional_shadow_max_distance = 60
 	shell.add_child(key)
 	var rim := DirectionalLight3D.new()
 	rim.rotation_degrees = Vector3(-20,155,0)
-	rim.light_color = Color("6b91bf")
+	rim.light_color = Color("6b94a9")
 	rim.light_energy = 0.35
 	shell.add_child(rim)
 	Craft.box(shell,Vector3(0,-1.7,0),Vector3(25,1.2,25),Color("1c2731"),0.4)

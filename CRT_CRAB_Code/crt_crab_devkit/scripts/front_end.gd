@@ -22,10 +22,10 @@ func _ready() -> void:
 	add_child(root)
 	panel = PanelContainer.new()
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("151923ee")
+	style.bg_color = Color("241c28e0")
 	for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: style.set_content_margin(side,20)
 	style.border_width_left = 4
-	style.border_color = Color("54cfc3")
+	style.border_color = Color("de9b88")
 	panel.add_theme_stylebox_override("panel",style)
 	root.add_child(panel)
 	var scroll := ScrollContainer.new()
@@ -63,6 +63,18 @@ func _label(text: String, size: int = 21, color := Color("ddd4c2")) -> Label:
 func _button(text: String, callback: Callable) -> Button:
 	var button := Button.new()
 	button.text = text
+	# Recolor the existing styles so padding, border widths and focus navigation stay intact.
+	for state in ["normal","hover","pressed","focus"]:
+		var skin := button.get_theme_stylebox(state).duplicate() as StyleBoxFlat
+		if skin==null: continue
+		skin.bg_color = Color("30212bc4") if state=="normal" else Color("68434bdd")
+		if state=="focus": skin.bg_color = Color("ffb38f18")
+		skin.border_color = Color("f5b392")
+		button.add_theme_stylebox_override(state,skin)
+	button.add_theme_color_override("font_color",Color("eadbce"))
+	button.add_theme_color_override("font_focus_color",Color("ffc09e"))
+	button.add_theme_color_override("font_hover_color",Color("ffd4b9"))
+	button.add_theme_color_override("font_pressed_color",Color("ffd4b9"))
 	button.custom_minimum_size.y = 42
 	button.pressed.connect(func(): game.audio.play("select"); callback.call())
 	column.add_child(button)
@@ -73,11 +85,11 @@ func show_page(value: String) -> void:
 	game._control_state()
 	preview = null
 	for child in column.get_children(): column.remove_child(child); child.queue_free()
-	_label("CRT小蟹闯塔记",32,Color("dce65b"))
-	_label("CRT CRAB // SCREEN ADVENTURE",15,Color("54cfc3"))
+	_label("CRT小蟹闯塔记",32,Color("ffc09e"))
+	_label("CRT CRAB // SCREEN ADVENTURE",15,Color("86bdb4"))
 	if value=="title":
 		_label("SYSTEM ONLINE · 两屏冒险试玩",18)
-		_label("◇ %d 晶体 · 宝箱 %d / 4"%[game.save.data.crystals,game.save.data.collected.size()],18,Color("54cfc3"))
+		_label("◇ %d 晶体 · 宝箱 %d / 4"%[game.save.data.crystals,game.save.data.collected.size()],18,Color("86bdb4"))
 		if game.save.data.started:
 			_button("继续冒险",func(): game.begin_adventure(false))
 			_button("新游戏",func(): _ask("将重置关卡、晶体和宝箱；保留已解锁外观与设置。旧进度先备份。",func(): game.begin_adventure(true)))
@@ -91,7 +103,7 @@ func show_page(value: String) -> void:
 		_button("退出游戏",game._quit)
 		if game.save.status not in ["valid","missing"]: _label("原存档暂不可继续，已停止自动覆盖。",18,Color("ea5985"))
 	elif value=="wardrobe":
-		_label("OUTFIT DATA / 晶体 %d · 宝箱 %d/4"%[game.save.data.crystals,game.save.data.collected.size()],20,Color("54cfc3"))
+		_label("OUTFIT DATA / 晶体 %d · 宝箱 %d/4"%[game.save.data.crystals,game.save.data.collected.size()],20,Color("86bdb4"))
 		preview = TextureRect.new()
 		preview.custom_minimum_size = Vector2(160,160)
 		preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -118,7 +130,7 @@ func show_page(value: String) -> void:
 		else: _label("隐藏数据尚未找到",18)
 		_button("返回主菜单",func(): show_page("title"))
 	elif value=="settings":
-		_label("SYSTEM SETTINGS",24,Color("54cfc3"))
+		_label("SYSTEM SETTINGS",24,Color("86bdb4"))
 		_toggle("背景音乐 · NO SIGNAL",game.audio.music_enabled,game.audio.set_music_enabled)
 		_slider("音乐音量",game.audio.music_volume,game.audio.set_music_volume)
 		_toggle("交互音效",game.audio.enabled,game.audio.set_sfx_enabled)
@@ -127,7 +139,7 @@ func show_page(value: String) -> void:
 		_toggle("环境微动态",game.audio.environment_motion,func(v): game.audio.set_visual("environment_motion",v);game.apply_settings())
 		_toggle("全屏显示",game.audio.fullscreen,func(v): game.audio.set_visual("fullscreen",v);game.apply_settings())
 		_button("返回主菜单",func(): show_page("title"))
-	if message!="": _label(message,18,Color("dce65b"))
+	if message!="": _label(message,18,Color("ffc09e"))
 	if value=="wardrobe":
 		for child in column.get_children():
 			if child is Button and child.text.begins_with("▶ "):

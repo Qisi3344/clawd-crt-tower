@@ -103,6 +103,36 @@ for row in range(17):
         atlas.alpha_composite(im,(frame*32,row*32))
 atlas.save(OUT/'sprites.png')
 
+# Costume atlases share the original six animation rows; physics never changes.
+skin_dir = OUT/'skins'
+skin_dir.mkdir(exist_ok=True)
+skin_palettes = {
+    'silver_shell':['#8b9baa','#dce6dc','#536372','#708696','#aebec6','#f3f5d4'],
+    'cyber_crab':['#644775','#64d8c4','#3a2a57','#80559a','#86ede0','#cff5b0'],
+    'glitch_crab':['#402941','#af6fa5','#251c35','#663a69','#76cab3','#e2b4dc'],
+}
+base_colors = ['#d97757','#f4aa76','#a9513f','#c9694b','#e18c62','#f5b486']
+for skin_id in ['classic_orange',*skin_palettes]:
+    skin = atlas.crop((0,0,256,192))
+    if skin_id in skin_palettes:
+        palette = {tuple(bytes.fromhex(a[1:])):tuple(bytes.fromhex(b[1:])) for a,b in zip(base_colors,skin_palettes[skin_id])}
+        skin.putdata([(*palette.get(px[:3],px[:3]),px[3]) for px in skin.getdata()])
+        art = ImageDraw.Draw(skin)
+        for row in range(6):
+            for frame in range(8):
+                x=frame*32
+                y=row*32+10-int(row in (1,4) and frame%4 in (1,3))
+                if skin_id=='silver_shell':
+                    art.rectangle((x+10,y+3,x+21,y+5),fill='#152130');art.point((x+12,y+3),fill='#d5efed')
+                elif skin_id=='cyber_crab':
+                    art.line((x+7,y+1,x+7,y-2,x+24,y-2,x+24,y+1),fill='#54cfc3',width=2)
+                    art.rectangle((x+6,y+2,x+8,y+6),fill='#ad7298')
+                else:
+                    art.line((x+9,y+9,x+14,y+9),fill='#54cfc3')
+                    art.rectangle((x+23,y+3,x+25,y+4),fill='#b26f9f')
+    skin.save(skin_dir/(skin_id+'.png'))
+
+
 tiles=Image.new('RGBA',(128,32))
 d=ImageDraw.Draw(tiles)
 for row in range(2):

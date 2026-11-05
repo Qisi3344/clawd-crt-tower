@@ -52,7 +52,7 @@ func walk_to(x: float, grab: bool = false, limit: int = 600) -> bool:
 
 func capture(label: String) -> void:
 	if not visual: return
-	var expected := Vector2i(720,900) if label in ["m2-portrait","m2-pause"] else Vector2i(1280,800)
+	var expected := Vector2i(720,900) if label in ["m2-portrait","m2-pause","stage2-title-portrait","stage2-wardrobe-portrait"] else Vector2i(1280,800)
 	get_tree().root.size = expected
 	await frames(4)
 	await get_tree().process_frame
@@ -138,6 +138,7 @@ func _run() -> void:
 	await frames(100)
 	game.manifest.ARCHIVE.definition = definition_path
 	check("mid-transition failure returns live original screen",game.active_id=="BOOT" and not game.transitioning and game.world.player.enabled and game._device("BOOT").screen_material.get_shader_parameter("screen_texture")==game.viewport.get_texture())
+	check("failed transfer restores visible avatar and failure feedback",game.world.player.sprite.visible and game.hud.toast_label.text.contains("NO SIGNAL"))
 	await press("interact")
 	check("transition input is locked",game.transitioning and not game.world.player.enabled)
 	await press("interact",8)
@@ -271,7 +272,7 @@ func disk_checks() -> void:
 	check("disk world reload reproduces stone and pressure signal",game.world.blocks[1].position.distance_to(expected_stone)<0.2 and game.save.data.flags.get("signal_archive_gate",false)==expected_flag)
 	var old := {"version":1,"active":"ARCHIVE","health":2,"flags":{"record":true},"worlds":{"ARCHIVE":{"position":[4,1,2]}}}
 	var migrated := SaveStore.migrate(old)
-	check("legacy 3D save preserved with safe 2D spawn",migrated.version==2 and migrated.active=="BOOT" and migrated.health==2 and migrated.legacy_progress==old and migrated.worlds.is_empty())
+	check("legacy 3D save preserved with safe 2D spawn",migrated.version==3 and migrated.active=="BOOT" and migrated.health==2 and migrated.legacy_progress==old and migrated.worlds.is_empty())
 	var corrupt := FileAccess.open(disk.path,FileAccess.WRITE)
 	corrupt.store_string("{bad")
 	corrupt.close()
@@ -292,10 +293,18 @@ func disk_checks() -> void:
 
 func finish() -> void:
 	game.audio.stop_all()
-	if visual: OS.delay_msec(80)
+	OS.delay_msec(80)
 	var report := {"passed":not failed,"engine":Engine.get_version_info().string,"renderer":DisplayServer.get_name(),"tests":results,"captures":captures}
-	var file := FileAccess.open("res://artifacts/sideview-qa-"+("visual" if visual else "headless")+".json",FileAccess.WRITE)
+	var file := FileAccess.open("res://artifacts/"+("stage2-qa-" if "--menu-qa" in OS.get_cmdline_user_args() else "sideview-qa-")+("visual" if visual else "headless")+".json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t"))
 	file.close()
 	print("QA_RESULT "+JSON.stringify(report))
-	get_tree().quit(1 if failed else 0)
+	if "--menu-qa" in OS.get_cmdline_user_args() and not failed:
+		for button in game.front_end.column.get_children():
+			if button is Button and button.text=="退出游戏":
+				print("QA_EXIT_BUTTON")
+				button.pressed.emit()
+				return
+		get_tree().quit(1)
+	else:
+		get_tree().quit(1 if failed else 0)

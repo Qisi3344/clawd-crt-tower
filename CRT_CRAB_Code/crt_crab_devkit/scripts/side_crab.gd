@@ -32,6 +32,7 @@ func _ready() -> void:
 	shape.position.y = -9
 	add_child(shape)
 	sprite = PixelArt.sprite(self,0,Vector2(0,-12))
+	sprite.texture = Cosmetics.frame(str(level.session.wardrobe.equipped),0)
 	floor_snap_length = 3
 	z_index = 8
 
@@ -76,7 +77,7 @@ func _physics_process(delta: float) -> void:
 	if pushing: row = 4
 	if attack_time>0: row = 3
 	if invulnerable>0: row = 5
-	sprite.texture = PixelArt.frame(row,int(animation_time*10))
+	sprite.texture = Cosmetics.frame(str(level.session.wardrobe.equipped),row,int(animation_time*10))
 	sprite.flip_h = facing<0
 	sprite.visible = invulnerable<=0 or int(invulnerable*14)%2==0
 	if position.y>280: take_damage(3,true)

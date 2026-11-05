@@ -50,7 +50,7 @@
 
 原创部分：招牌、工位背板/纸条、摆臂灯、小风扇、盘位/LED、供电线、饮料陈列、梁架/灯轨/电缆桥、地台和两张街机待机 PNG。工具 `tools/prepare_environment_models.py` 使用本机 Blender 统一导出优化 GLB，运行游戏无需 Blender。原始目录由 `.gdignore` 排除 Godot 导入，保留完整可追溯文件。
 
-游戏内路径：Esc → 素材署名 / CREDITS。仓库 README 引用本表。未导入用户目录中的两首 MP3。
+游戏内路径：Esc → 素材署名 / CREDITS。仓库 README 引用本表。环境搭建初期未使用外部音乐；后续用户指定音乐见下文。
 
 ## 候选与受阻项目
 
@@ -63,3 +63,7 @@
 用户明确指定使用工作区 `NO SIGNAL .mp3` 完整版（209 秒），原样复制到 `assets/audio/no_signal_full.mp3`；未使用 1分58秒 32k 版。循环播放，音效独立，默认音乐音量 35%（另有 -12dB 混音衰减），暂停菜单可关闭或调节。设置仅保存在 `user://audio.cfg`，QA/性能模式不读取、不写入该文件，也不自动播放音乐。
 
 用户提供 `一些装饰.zip`，选用其中 CRT 标识、BOOT OK、NO SIGNAL、ARCHIVE LINK、CRT 海报、404 和爪痕，放在维修背板、街机下部和后侧工业板；图像保存在 `assets/environment/decals/user/`，为原图直接使用，未覆盖活动玻璃。其余图片留在用户原压缩包中。音乐与这些图片的来源为用户提供，作者/外部分发许可未附说明，不归入 Kenney CC0，也不更改它们的权属。
+
+## 第二阶段像素外观与音效
+
+`assets/pixel/skins/` 四套 256×192 PNG，均由现有原创角色六行动作图集调色并补眼镜/耳机/静态错位细节。作者工具为 `tools/build_pixel_assets.py`，预览与角色共用 `Cosmetics.frame`；原角色形体参考权利说明仍适用。`PortalFX2D` 按当前动作/服装的真实透明像素采样并分解/重组，位于内部 2D 世界，不导入外部特效资源。新增 start/select/purchase/error/transfer_exit/link/enter 为本工程代码合成电子短音，无真人语音。

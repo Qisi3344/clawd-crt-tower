@@ -35,7 +35,7 @@ func focus(device: MonitorDevice, instant := false) -> void:
 		camera.position = active.focus_position()
 		camera.look_at(active.focus_point())
 
-func travel(device: MonitorDevice, midpoint: Callable) -> void:
+func travel(device: MonitorDevice, midpoint: Callable, progress: Callable = Callable()) -> void:
 	busy = true
 	var old_position := camera.position
 	var new_position := device.focus_position()
@@ -43,7 +43,7 @@ func travel(device: MonitorDevice, midpoint: Callable) -> void:
 	var new_focus := device.focus_point()
 	var a := atan2(old_position.x,old_position.z)
 	var b := a + wrapf(atan2(new_position.x,new_position.z)-a,-PI,PI)
-	var duration := 0.35 if reduced_motion else 1.35
+	var duration := 0.35 if reduced_motion else 1.0
 	var switched := [false]
 	var tween := create_tween()
 	tween.tween_method(func(t: float):
@@ -53,6 +53,10 @@ func travel(device: MonitorDevice, midpoint: Callable) -> void:
 		var angle := lerpf(a,b,q)
 		camera.position = Vector3(sin(angle)*radius,lerpf(old_position.y,new_position.y,q)+lift*5,cos(angle)*radius)
 		camera.look_at(old_focus.lerp(new_focus,q).lerp(Vector3(0,6,0),lift*0.75))
+		if reduced_motion:
+			camera.position = old_position if q<0.5 else new_position
+			camera.look_at(old_focus if q<0.5 else new_focus)
+		if progress.is_valid(): progress.call(q)
 		if q >= 0.5 and not switched[0]:
 			switched[0] = true
 			midpoint.call()
@@ -65,3 +69,11 @@ func toggle_overview() -> void:
 	overview = not overview
 	if overview:
 		orbit = atan2(camera.position.x,camera.position.z)+0.18
+
+func frame_title() -> void:
+	busy = reduced_motion
+	orbit = 0.5
+	elevation = 20
+	overview = true
+	camera.position = Vector3(sin(orbit)*overview_radius,elevation,cos(orbit)*overview_radius)
+	camera.look_at(Vector3(0,6,0))

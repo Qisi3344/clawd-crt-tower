@@ -33,6 +33,23 @@ func _run() -> void:
 		durations.sort()
 		samples.append({"view":view,"render_cycles":durations.size(),"elapsed_ms":elapsed,"measured_cycles_per_second":durations.size()*1000.0/elapsed,"render_readback_ms_median":durations[durations.size()/2],"render_readback_ms_p95":durations[int(durations.size()*0.95)],"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),"static_memory_mb":Performance.get_monitor(Performance.MEMORY_STATIC)/1048576.0})
 	var report := {"engine":Engine.get_version_info().string,"gpu":RenderingServer.get_video_adapter_name(),"size":[1280,800],"method":"wall clock, no fixed-fps; hidden-window forced OpenGL render and GPU image readback, 2.5 seconds per view; readback adds overhead, not an interactive gameplay FPS benchmark","samples":samples}
+	if "--transfer-perf" in OS.get_cmdline_user_args():
+		var phases: Dictionary = {}
+		game._travel(game.links[0])
+		while game.transitioning:
+			var phase: String = game.transfer_phase
+			var before := Time.get_ticks_usec()
+			RenderingServer.force_draw()
+			get_viewport().get_texture().get_image()
+			if not phases.has(phase): phases[phase] = []
+			phases[phase].append((Time.get_ticks_usec()-before)/1000.0)
+			await get_tree().process_frame
+		var measurements: Array = []
+		for phase in phases:
+			var values: Array = phases[phase]
+			values.sort()
+			measurements.append({"phase":phase,"samples":values.size(),"median_ms":values[values.size()/2],"p95_ms":values[int(values.size()*0.95)]})
+		report["transfer_render_readback"] = measurements
 	var file := FileAccess.open("res://artifacts/performance.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t"))
 	file.close()

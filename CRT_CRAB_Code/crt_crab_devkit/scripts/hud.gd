@@ -12,6 +12,7 @@ var sfx_toggle: CheckButton
 signal motion_changed(value: bool)
 signal environment_motion_changed(value: bool)
 signal quit_requested
+signal title_requested
 signal reset_requested
 var health_label: Label
 var title_label: Label
@@ -182,6 +183,10 @@ func _build_pause(root: Control) -> void:
 	credits_button.pressed.connect(func(): credits_dialog.popup_centered(Vector2i(580,420)))
 	column.add_child(credits_button)
 	column.add_child(_label("E / K：开箱、传送 · 按住可推拉\nF3：性能面板 · 进度自动保存",18,Color("c1c7c3")))
+	var title_button := Button.new()
+	title_button.text = "保存并返回主菜单"
+	title_button.pressed.connect(func(): title_requested.emit())
+	column.add_child(title_button)
 	var quit := Button.new()
 	quit.text = "保存并退出"
 	quit.pressed.connect(func(): quit_requested.emit())

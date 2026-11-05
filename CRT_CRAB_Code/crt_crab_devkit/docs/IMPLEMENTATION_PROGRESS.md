@@ -1,5 +1,7 @@
 # CRT CRAB 新版侧视切片：实装与验证
 
+第二阶段正式入口、衣橱/v3 存档和三段传送已实装，当前结果见 [STAGE_TWO_REPORT.md](STAGE_TWO_REPORT.md)；下方 v2 与旧切片数据为历史阶段记录。
+
 更新：2026-11-05。当前主规范为外层 `CRT_CRAB_Code_B` 三份文件；旧手册和历史 3D 原型的完成情况不能代替本版验收。
 
 后续外围环境升级已落地，新增真实 Kenney CC0 模型和四分区；本文件下方 M0～M3 的“第三方模型 0”与旧性能表保留为历史切片记录。**当前实物、最新测试和性能以 [ENVIRONMENT_QA.md](ENVIRONMENT_QA.md) 为准**；[改动与明确未完成项](ENVIRONMENT_CHANGELOG.md)、[当前素材表](ASSET_CREDITS.md)。

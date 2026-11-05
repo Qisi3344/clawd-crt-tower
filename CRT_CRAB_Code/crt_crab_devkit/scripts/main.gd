@@ -14,8 +14,11 @@ var active_id := "BOOT"
 var transitioning := false
 var test_mode := false
 var autosave := 0.0
+var front_end: FrontEnd
+var in_menu := true
+var transfer_phase := ""
 var surroundings: EnvironmentSurroundings
-enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED }
+enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED, MAIN_MENU, WARDROBE, SETTINGS, TRANSITION_EXIT_2D, TRANSITION_ENTER_2D }
 var input_mode := InputMode.PLAY_2D
 
 func _ready() -> void:
@@ -51,11 +54,13 @@ func _ready() -> void:
 	hud.audio_changed.connect(audio.set_sfx_enabled)
 	hud.music_changed.connect(audio.set_music_enabled)
 	hud.music_volume_changed.connect(audio.set_music_volume)
-	hud.motion_changed.connect(func(v: bool): director.reduced_motion = v)
+	hud.motion_changed.connect(func(v: bool): audio.set_visual("reduced_motion",v); apply_settings())
 	hud.environment_motion_changed.connect(func(v: bool):
-		if surroundings!=null: surroundings.set_micro_motion(v)
+		audio.set_visual("environment_motion",v)
+		apply_settings()
 	)
 	hud.quit_requested.connect(_quit)
+	hud.title_requested.connect(return_to_title)
 	hud.reset_requested.connect(func():
 		hud.set_paused(false)
 		world.reset_puzzle()
@@ -64,30 +69,80 @@ func _ready() -> void:
 	get_tree().root.min_size = Vector2i(640,480)
 	get_tree().root.size_changed.connect(_resize_ui)
 	_resize_ui()
-	_load_world(save.data.active)
-	director.focus(_device(active_id),true)
-	_control_state()
-	if test_mode:
+	apply_settings()
+	director.focus(_device("BOOT"),true)
+	if test_mode and "--menu-qa" not in OS.get_cmdline_user_args():
+		in_menu = false
+		_load_world(save.data.active)
+		director.focus(_device(active_id),true)
+		_control_state()
 		var harness := Node.new()
 		harness.set_script(load("res://tests/performance_probe.gd" if "--perf" in OS.get_cmdline_user_args() else "res://tests/sideview_qa.gd"))
 		add_child(harness)
 	else:
-		_intro()
+		front_end = FrontEnd.new()
+		front_end.game = self
+		add_child(front_end)
+		hud.hide()
+		director.frame_title()
+		if test_mode:
+			var harness := Node.new()
+			harness.set_script(load("res://tests/stage2_qa.gd"))
+			add_child(harness)
 
-func _intro() -> void:
-	transitioning = true
-	_control_state()
-	director.busy = true
-	director.camera.position = Vector3(25,19,30)
-	director.camera.look_at(Vector3(0,6,0))
-	var tween := create_tween().set_parallel(true)
-	tween.tween_property(director.camera,"position",_device(active_id).focus_position(),2.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_method(func(t: float): director.camera.look_at(Vector3(0,6,0).lerp(_device(active_id).focus_point(),t)),0.0,1.0,2.8)
-	await tween.finished
+func apply_settings() -> void:
+	director.reduced_motion = audio.reduced_motion
+	if in_menu: director.busy = audio.reduced_motion
+	if surroundings!=null: surroundings.set_micro_motion(audio.environment_motion)
+	if not test_mode: DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if audio.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
+	for button in hud.find_children("*","CheckButton",true,false):
+		if button.text=="减少转场动态": button.set_pressed_no_signal(audio.reduced_motion)
+		if button.text=="环境微动态": button.set_pressed_no_signal(audio.environment_motion)
+	hud.sfx_toggle.set_pressed_no_signal(audio.enabled)
+	hud.music_toggle.set_pressed_no_signal(audio.music_enabled)
+	hud.music_slider.set_value_no_signal(audio.music_volume)
+
+func begin_adventure(reset: bool) -> void:
+	if _level_definition("BOOT" if reset else save.data.active).is_empty():
+		front_end.message = "关卡数据不可用，进度未覆盖。"
+		front_end.show_page("title")
+		return
+	if reset and not save.new_adventure():
+		front_end.message = "备份或保存失败，旧进度保持不变。"
+		front_end.show_page("title")
+		return
+	if not _load_world(save.data.active):
+		front_end.message = "无法安全进入关卡，请检查出生点与关卡数据。"
+		front_end.show_page("title")
+		return
+	in_menu = false
+	front_end.hide()
+	hud.show()
+	hud.set_paused(false)
+	apply_settings()
 	director.busy = false
-	transitioning = false
+	director.focus(_device(active_id),true)
 	_control_state()
-	hud.show_message("一只小螃蟹，一座由旧屏幕构成的群岛。")
+	_checkpoint()
+	audio.play("start")
+
+func return_to_title() -> void:
+	if transitioning or in_menu: return
+	if not _checkpoint(): return
+	in_menu = true
+	hud.set_paused(false)
+	hud.hide()
+	_control_state()
+	if DisplayServer.get_name()!="headless":
+		RenderingServer.force_draw()
+		_device(active_id).set_texture(ImageTexture.create_from_image(viewport.get_texture().get_image()))
+	viewport.remove_child(world)
+	world.free()
+	world = null
+	director.frame_title()
+	front_end.show()
+	front_end.message = "进度已保存。"
+	front_end.show_page("title")
 
 func _build_shell() -> void:
 	shell = Node3D.new()
@@ -160,6 +215,11 @@ func _speaker(p: Vector3) -> void:
 func _load_world(id: String, spawn_id: String = "") -> bool:
 	var config := _level_definition(id)
 	if config.is_empty(): return false
+	var entrance := SideWorld.point(config.spawns.get("entrance"),Vector2(-1,-1))
+	var requested := SideWorld.point(config.spawns.get(spawn_id,config.spawns.get("entrance")),Vector2(-1,-1))
+	if entrance.x<0 or requested.x<0: return false
+	var previous_id := active_id
+	var previous_flags: Dictionary = save.data.flags.duplicate(true)
 	active_id = id
 	world = SideWorld.new()
 	world.name = "ScreenWorld_"+id
@@ -175,7 +235,16 @@ func _load_world(id: String, spawn_id: String = "") -> bool:
 	var spawn_point := SideWorld.point(config.spawns.get(spawn_id,config.spawns.entrance))
 	world.player.spawn = spawn_point
 	world.player.position = spawn_point if spawn_id!="" else SideWorld.point(world.state.get("position"),spawn_point)
-	if world.player.test_move(world.player.transform,Vector2.ZERO): world.player.position = spawn_point
+	if world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
+		if spawn_id=="": world.player.position = entrance
+		if spawn_id!="" or world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
+			viewport.remove_child(world)
+			world.free()
+			world = null
+			active_id = previous_id
+			save.data.flags.clear()
+			save.data.flags.merge(previous_flags,true)
+			return false
 	var saved_health = save.data.get("health",3)
 	world.player.health = clampi(int(saved_health),1,3) if saved_health is float or saved_health is int else 3
 	world._snap_camera()
@@ -200,43 +269,102 @@ func _level_definition(id: String) -> Dictionary:
 		if not config.get(field) is Array: return {}
 	return config
 
+func _pixel_phase(entering: bool) -> void:
+	transfer_phase = "ENTER" if entering else "EXIT"
+	_control_state()
+	var sprite := world.player.sprite
+	if director.reduced_motion:
+		sprite.visible = true
+		sprite.modulate.a = 0 if entering else 1
+		var fade := create_tween()
+		fade.tween_property(sprite,"modulate:a",1.0 if entering else 0.0,0.1)
+		await fade.finished
+	else:
+		var fx := PortalFX2D.new()
+		fx.position = world.player.position+sprite.position
+		fx.scale.x = -1 if sprite.flip_h else 1
+		fx.entering = entering
+		fx.z_index = 12
+		fx.configure(sprite)
+		world.add_child(fx)
+		sprite.visible = false
+		var animation := create_tween()
+		animation.tween_property(fx,"progress",1.0,0.30 if entering else 0.25)
+		await animation.finished
+		fx.queue_free()
+	sprite.visible = entering
+	sprite.modulate = Color.WHITE
+
 func _travel(link: Dictionary) -> void:
-	if transitioning or hud.paused or director.overview or link.from != active_id:
+	if in_menu or transitioning or hud.paused or director.overview or link.from!=active_id: return
+	var destination := _level_definition(link.to)
+	if not manifest.has(link.to) or _device(link.to)==null or destination.is_empty() or not destination.spawns.has(link.spawn_id):
+		hud.show_message("NO SIGNAL / 连接失败，已返回原屏幕")
+		audio.play("error")
 		return
-	if not manifest.has(link.to) or _device(link.to) == null or _level_definition(link.to).is_empty() or not _level_definition(link.to).spawns.has(link.spawn_id):
-		hud.show_message("目标屏幕暂时没有响应，连接已安全取消。")
-		return
-	if _device(link.to).computer_id!=link.target_computer_id:
-		hud.show_message("设备与关卡映射不匹配，连接已取消。")
-		return
+	if _device(link.to).computer_id!=link.target_computer_id: return
+	if not _checkpoint(): return
+	var direction := SideWorld.point(link.position).x-world.player.position.x
+	if absf(direction)>0.1: world.player.facing = int(signf(direction))
+	world.player.sprite.flip_h = world.player.facing<0
 	transitioning = true
 	_control_state()
-	_checkpoint()
 	hud.prompt_label.text = ""
-	hud.show_message("正在连接："+str(link.to))
-	audio.play("travel")
-	_device(active_id).screen_material.set_shader_parameter("interference",0.7)
+	hud.show_message("CONNECTING / "+str(link.to))
+	audio.play("transfer_exit")
+	await _pixel_phase(false)
+	transfer_phase = "LINK"
+	_control_state()
+	audio.play("transfer_link")
+	var signal_root := Node3D.new()
+	add_child(signal_root)
+	var a := _device(active_id).cable_anchor()
+	var b := _device(link.to).cable_anchor()
+	var points := PackedVector3Array()
+	for i in range(13):
+		var t := i/12.0
+		points.append(a.lerp(b,t)+Vector3(0,-sin(PI*t)*0.7,-sin(PI*t)*0.55))
+	if not director.reduced_motion: Craft.cable(signal_root,points,Color("365e62"),0.025)
+	var dot := MeshInstance3D.new()
+	var ball := SphereMesh.new();ball.radius=0.10;ball.height=0.2
+	dot.mesh=ball;dot.material_override=Craft.material(Color("54cfc3"),0.4);dot.visible=not director.reduced_motion
+	signal_root.add_child(dot)
+	var success := [false]
 	await director.travel(_device(link.to),func():
-		if DisplayServer.get_name() != "headless":
-			var image := viewport.get_texture().get_image()
-			_device(active_id).set_texture(ImageTexture.create_from_image(image))
-		_device(active_id).screen_material.set_shader_parameter("interference",0.0)
+		if DisplayServer.get_name()!="headless":
+			RenderingServer.force_draw()
+			_device(active_id).set_texture(ImageTexture.create_from_image(viewport.get_texture().get_image()))
 		var previous := world
 		viewport.remove_child(previous)
-		if _load_world(link.to,link.spawn_id): previous.free()
+		if _load_world(link.to,link.spawn_id):
+			success[0] = true
+			world.player.sprite.visible = false
+			previous.free()
 		else:
 			world = previous
 			viewport.add_child(previous)
 			_device(active_id).set_texture(viewport.get_texture())
 			world.last_prompt = ""
-	)
+	,func(t: float): dot.position = a.lerp(b,t)+Vector3(0,-sin(PI*t)*0.7,-sin(PI*t)*0.55))
+	signal_root.queue_free()
 	director.focus(_device(active_id),true)
+	if success[0]:
+		audio.play("transfer_enter")
+		await _pixel_phase(true)
+	world.player.sprite.visible = true
+	world.player.sprite.modulate = Color.WHITE
 	transitioning = false
+	transfer_phase = ""
 	_control_state()
-	_checkpoint()
-	hud.show_message("已连接 / "+str(manifest[active_id].name))
+	var saved := _checkpoint()
+	hud.show_message("LINK ESTABLISHED / "+str(manifest[active_id].name) if success[0] else "NO SIGNAL / 连接失败，已返回原屏幕")
+	if not saved: hud.show_message("已连接，但进度未保存，请检查存储空间。")
+	if not success[0]: audio.play("error")
 
 func _process(delta: float) -> void:
+	if in_menu:
+		if not director.reduced_motion: director.orbit += delta*0.025
+		return
 	autosave += delta
 	if autosave > 8 and not transitioning:
 		autosave = 0
@@ -258,6 +386,7 @@ func _process(delta: float) -> void:
 		for device in devices: device.visible = true
 
 func _unhandled_input(event: InputEvent) -> void:
+	if in_menu: return
 	if event.is_action_pressed("pause") and not transitioning:
 		if director.overview:
 			_toggle_overview()
@@ -275,7 +404,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: director.elevation = clampf(director.elevation+1,5,30)
 
 func _toggle_overview() -> void:
-	if transitioning or hud.paused:
+	if in_menu or transitioning or hud.paused:
 		return
 	director.toggle_overview()
 	hud.overview_panel.visible = director.overview
@@ -283,27 +412,37 @@ func _toggle_overview() -> void:
 	_control_state()
 
 func _control_state() -> void:
-	input_mode = InputMode.TRANSITION_3D if transitioning else (InputMode.PAUSED if hud.paused else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D))
+	if in_menu:
+		input_mode = InputMode.WARDROBE if is_instance_valid(front_end) and front_end.page=="wardrobe" else (InputMode.SETTINGS if is_instance_valid(front_end) and front_end.page=="settings" else InputMode.MAIN_MENU)
+	elif transitioning:
+		input_mode = InputMode.TRANSITION_EXIT_2D if transfer_phase=="EXIT" else (InputMode.TRANSITION_ENTER_2D if transfer_phase=="ENTER" else InputMode.TRANSITION_3D)
+	else:
+		input_mode = InputMode.PAUSED if hud.paused else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D)
 	if is_instance_valid(world):
-		var allowed := not transitioning and not hud.paused and not director.overview
+		var allowed := not in_menu and not transitioning and not hud.paused and not director.overview
 		world.enabled = allowed
 		world.player.enabled = allowed
 		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED
 
 func _progress() -> void:
+	if save.data.collected.has("archive_hidden") and not save.data.wardrobe.owned.has("glitch_crab"): save.data.wardrobe.owned.append("glitch_crab")
 	hud.update_progress(active_id,save.data)
 	for device in devices:
 		device.set_status("ACTIVE" if device.screen_id==active_id else ("CONNECTED" if device.screen_id in ["BOOT","ARCHIVE"] and save.data.flags.get("boot_access",false) else "SLEEP"))
 	_checkpoint()
 
-func _checkpoint() -> void:
-	if not is_instance_valid(world): return
+func _checkpoint() -> bool:
+	if in_menu or not is_instance_valid(world): return true
+	save.data.started = true
 	save.data.active = active_id
 	save.data.computer_id = manifest[active_id].computer_id
 	save.data.level_id = manifest[active_id].level_id
 	save.data.health = world.player.health
 	save.data.worlds[world.level_id] = world.snapshot()
-	if not save.write(): hud.show_message("进度未能写入磁盘，请检查存储空间。")
+	if not save.write():
+		hud.show_message("进度未能写入磁盘，请检查存储空间。")
+		return false
+	return true
 
 func _device(id: String) -> MonitorDevice:
 	for device in devices:
@@ -312,11 +451,12 @@ func _device(id: String) -> MonitorDevice:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning and not in_menu:
 		hud.set_paused(true)
 
 func _quit() -> void:
-	_checkpoint()
+	if transitioning: return
+	if not _checkpoint(): return
 	audio.stop_all()
 	await get_tree().create_timer(0.08).timeout
 	get_tree().quit()

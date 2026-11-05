@@ -1,0 +1,26 @@
+[
+  {
+    "id": "classic_orange",
+    "name": "默认小橘蟹",
+    "price": 0,
+    "condition": "default"
+  },
+  {
+    "id": "silver_shell",
+    "name": "银壳蟹",
+    "price": 6,
+    "condition": "purchase"
+  },
+  {
+    "id": "cyber_crab",
+    "name": "赛博蟹",
+    "price": 8,
+    "condition": "purchase"
+  },
+  {
+    "id": "glitch_crab",
+    "name": "故障蟹",
+    "price": 0,
+    "condition": "archive_hidden"
+  }
+]

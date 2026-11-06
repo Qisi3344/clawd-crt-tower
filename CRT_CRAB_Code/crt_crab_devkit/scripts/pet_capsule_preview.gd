@@ -55,12 +55,26 @@ func verify() -> void:
 		var pet := pets[i]
 		checks.append({"model":PetCapsule.TITLES[i],"passed":pet.kind==i and pet.has_node("LowerShell") and pet.has_node("AnimalUpperShell") and pet.has_node("SeamRim") and not pet.has_node("ClearDome") and not pet.has_node("PetHead"),"meshes":pet.find_children("*","MeshInstance3D",true,false).size()})
 		checks.append({"model":PetCapsule.TITLES[i]+" opaque matching hemisphere halves", "passed":pet.find_children("*","MeshInstance3D",true,false).all(func(n): return n.material_override.transparency==BaseMaterial3D.TRANSPARENCY_DISABLED) and pet.get_node("AnimalUpperShell").position.is_equal_approx(pet.get_node("LowerShell").position) and pet.get_node("AnimalUpperShell").scale.is_equal_approx(Vector3.ONE) and absf(pet.get_node("AnimalUpperShell").get_aabb().size.y-1)<0.001 and absf(pet.get_node("LowerShell").get_aabb().position.y+1)<0.001})
+	var hamster: Node3D = pets[2]
+	var colors: PackedColorArray = hamster.get_node("AnimalUpperShell").mesh.surface_get_arrays(0)[Mesh.ARRAY_COLOR]
+	checks.append({"model":"hamster two solid coat colors", "passed":colors.has(Color("f1e2c6")) and colors.has(Color("c69d70")) and hamster.get_node("AnimalUpperShell").material_override.vertex_color_use_as_albedo})
+	checks.append({"model":"hamster pink triangle without bear muzzle", "passed":hamster.has_node("PinkTriangleNose") and not hamster.has_node("CreamMuzzle")})
+	checks.append({"model":"hamster larger round cheeks", "passed":hamster.get_node("HamsterCheekLeft").get_aabb().size.x>0.35 and hamster.get_node("HamsterCheekRight").get_aabb().size.y>0.35})
 	for view in [["front",0.0],["side",PI/2],["back",PI]]:
 		for pet in pets: pet.rotation.y = view[1]
 		for i in range(4): await get_tree().process_frame
 		RenderingServer.force_draw()
 		get_viewport().get_texture().get_image().save_png("res://artifacts/pet-capsules-"+view[0]+".png")
-	var result := {"passed":checks.size()==12 and checks.all(func(c): return c.passed),"checks":checks,"renderer":RenderingServer.get_video_adapter_name()}
+	for pet in pets:
+		pet.rotation.y = 0
+		pet.visible = pet==hamster
+	game.director.camera.position = Vector3(-1.325,1.25,22.5)
+	game.director.camera.look_at(Vector3(-1.325,0.80,15.5))
+	game.director.camera.fov = 25
+	for i in range(4): await get_tree().process_frame
+	RenderingServer.force_draw()
+	get_viewport().get_texture().get_image().save_png("res://artifacts/hamster-face-closeup.png")
+	var result := {"passed":checks.size()==15 and checks.all(func(c): return c.passed),"checks":checks,"renderer":RenderingServer.get_video_adapter_name()}
 	var file := FileAccess.open("res://artifacts/pet-capsules-qa.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(result,"\t"))
 	print("PET_QA ",result.passed)

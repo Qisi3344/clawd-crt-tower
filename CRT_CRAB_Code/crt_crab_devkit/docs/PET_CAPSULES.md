@@ -6,7 +6,13 @@
 
 最新模型实机预览：
 
-![耳朵与五官修正版](pet_faces_evidence/front.png)
+![最新六款预览](hamster_face_evidence/lineup.png)
+
+本轮只修改仓鼠：橘棕头顶与奶油白下脸由同一球面上的弧形边界连接，使用纯色网格分区，保持低模色块；放大淡粉橘圆腮红，去掉胡须与旧口鼻，换成小粉色倒三角鼻子且不加嘴。黑色小圆眼拉宽并移到分界线上方，两眼均有小高光，橘棕圆耳与粉色内耳保留。其他五款、下壳配色及机台交互代码不变。
+
+![仓鼠近景](hamster_face_evidence/closeup.png)
+
+[侧面](hamster_face_evidence/side.png) · [背面](hamster_face_evidence/back.png) · [模型 15 项](hamster_face_evidence/pet-capsules-qa.json) · [出蛋 27 项](hamster_face_evidence/gashapon-v3-qa.json) · [全场 44 项](hamster_face_evidence/arcade-hall-qa.json)：全部通过；六款共 906 个姿态样本未发现受检通道边界的碰撞。下方耳朵与五官调整记录为上一轮版本。
 
 按最新参考调整动物耳根与脸部：猫耳上立，狗耳沿头部两侧自然下垂，兔耳和圆耳贴合头部；小圆眼降低并拉宽间距，小鼻小嘴居中，腮红位于眼下。去掉吐舌、门牙和夸张嘴形。兔子上半球改米白，隐藏猫皮肤改金色；其他毛色与六款下半壳配色保留。机台、机台猫耳、玻璃和交互代码未改。
 
@@ -24,7 +30,7 @@
 | --- | --- |
 | `cat.tscn` | 米白上半球、灰色花斑、尖耳，米色下壳；普通 |
 | `dog.tscn` | 棕色上半球、垂耳、奶白口鼻，灰色下壳；普通 |
-| `hamster.tscn` | 浅棕、圆耳、胡须、青绿下壳；稀有 |
+| `hamster.tscn` | 橘棕/奶油白双色脸、圆耳、大圆腮红、小粉三角鼻，青绿下壳；稀有 |
 | `rabbit.tscn` | 米白色长耳与上半球、粉色下壳；稀有 |
 | `bear.tscn` | 棕色圆耳、奶白口鼻、青绿下壳；稀有 |
 | `hidden_cat.tscn` | 金色上半球、柔金发光尖耳、小圆眼、金色下壳；隐藏 |

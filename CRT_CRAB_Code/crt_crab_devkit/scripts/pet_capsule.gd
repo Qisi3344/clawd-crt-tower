@@ -101,6 +101,50 @@ func droop_ear(side: float) -> void:
 	ear.material_override = ear.material_override.duplicate()
 	ear.material_override.cull_mode = BaseMaterial3D.CULL_DISABLED
 
+func hamster_face(upper: MeshInstance3D, coat: Color, ink: Color) -> void:
+	# Split the spherical surface along one curved boundary: solid colors, no gradient.
+	var cream := Color("f1e2c6")
+	if not shapes.has("hamster_upper"):
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for band in range(2):
+			for row in range(4):
+				for col in range(48):
+					var points: Array[Vector3] = []
+					for ij in [Vector2i(col,row),Vector2i(col+1,row),Vector2i(col+1,row+1),Vector2i(col,row+1)]:
+						var a: float = TAU*ij.x/48.0
+						var boundary := asin(0.40+0.18*pow(maxf(0,sin(a)),14))
+						var b: float = lerpf(0,boundary,ij.y/4.0) if band==0 else lerpf(boundary,PI/2,ij.y/4.0)
+						points.append(Vector3(cos(a)*cos(b),sin(b),sin(a)*cos(b)))
+					for tri in [[0,1,2],[0,2,3]]:
+						if (points[tri[1]]-points[tri[0]]).cross(points[tri[2]]-points[tri[0]]).dot(points[tri[0]])>0: tri.reverse()
+						for i in tri:
+							st.set_color(cream if band==0 else coat)
+							st.set_normal(points[i]); st.add_vertex(points[i])
+		shapes.hamster_upper = st.commit()
+	upper.mesh = shapes.hamster_upper
+	upper.material_override = Craft.material(Color.WHITE).duplicate()
+	upper.material_override.vertex_color_use_as_albedo = true
+	for side in [-1.0,1.0]:
+		ball("RoundEar",Vector3(side*0.64,1.93,-0.04),Vector3(0.25,0.28,0.20),coat)
+		ball("RoundInnerEar",Vector3(side*0.64,1.95,0.13),Vector3(0.16,0.18,0.06),Color("d98d9f"))
+		# A round patch follows the head surface rather than floating above the cheek.
+		var cheek := SurfaceTool.new(); cheek.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for i in range(16):
+			for p in [Vector2.ZERO,Vector2(cos(TAU*(i+1)/16.0),sin(TAU*(i+1)/16.0))*0.18,Vector2(cos(TAU*i/16.0),sin(TAU*i/16.0))*0.18]:
+				var point := face(side*0.59+p.x,1.22+p.y,0.008)
+				cheek.set_normal((point-Vector3(0,1,0)).normalized()); cheek.add_vertex(point)
+		part("HamsterCheekLeft" if side<0 else "HamsterCheekRight",cheek.commit(),Vector3.ZERO,Vector3.ONE,Color("e9baa4"))
+		ball("Eye",face(side*0.40,1.57,0.004),Vector3(0.067,0.070,0.035),ink)
+		ball("EyeShine",face(side*0.40,1.57,0.004)+Vector3(-0.015,0.02,0.035),Vector3.ONE*0.012,Color("fff3dc"))
+	var nose := SurfaceTool.new(); nose.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var points: Array[Vector3] = []
+	for lift in [0.025,0.002]:
+		for p in [Vector2(-0.055,1.335),Vector2(0.055,1.335),Vector2(0,1.26)]: points.append(face(p.x,p.y,lift))
+	for i in [0,1,2,3,5,4,0,3,4,0,4,1,1,4,5,1,5,2,2,5,3,2,3,0]: nose.add_vertex(points[i])
+	nose.generate_normals()
+	part("PinkTriangleNose",nose.commit(),Vector3.ZERO,Vector3.ONE,Color("dba1a2"))
+
 func _ready() -> void:
 	var coats := [Color("e8dfc9"),Color("bd8d60"),Color("c69d70"),Color("e8dfc9"),Color("966c59"),Color("e5b94f")]
 	var shells := [Color("cbbba1"),Color("b6b2b1"),Color("65ada4"),Color("bd789d"),Color("559b92"),Color("d5af59")]
@@ -128,6 +172,9 @@ func _ready() -> void:
 	ring.inner_radius = 0.985; ring.outer_radius = 1.012
 	ring.rings = 24; ring.ring_segments = 6
 	part("SeamRim",ring,Vector3(0,1,0),Vector3.ONE,shells[kind].lightened(0.15),0.22 if hidden else 0.0)
+	if kind==Kind.HAMSTER:
+		hamster_face(upper,coat,ink)
+		return
 	var pointed_ears := Node3D.new()
 	# Base corners follow the head silhouette; the shared machine-ear helper is unchanged.
 	pointed_ears.position.y = -1.1625

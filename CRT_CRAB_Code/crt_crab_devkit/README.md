@@ -1,5 +1,7 @@
 # CRT小蟹闯塔记
 
+扭蛋机 v3 已加入真实出蛋通道与 2.5 秒测试动画，双击 `GASHAPON_PREVIEW.cmd` 查看正侧背和剖视、逐款测试。[实机视频与验收](docs/GASHAPON_V3.md)。
+
 新增六款原生 3D 宠物扭蛋及右前方扭蛋机；双击 `PET_PREVIEW.cmd` 查看并旋转模型。[模型说明与实机图](docs/PET_CAPSULES.md)。
 
 最新场景调整：后墙大幅 NO SIGNAL 贴纸、错落海报画灯、地面分区与区域导视。[第二轮实机对比与验收](docs/ARCADE_ATMOSPHERE_ROUND2.md)。

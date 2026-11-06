@@ -33,12 +33,14 @@ func _ready() -> void:
 	for node in find_children("*","Node3D",true,false):
 		if node.has_meta("scenery_group"):
 			var bounds := AABB()
+			var parts: Array[AABB] = []
 			var first := true
 			for mesh in node.find_children("*","MeshInstance3D",true,false):
 				var box: AABB = mesh.global_transform*mesh.get_aabb()
+				parts.append(box.grow(0.02))
 				bounds = box if first else bounds.merge(box)
 				first = false
-			occluders.append({"node":node,"bounds":bounds.grow(0.12)})
+			occluders.append({"node":node,"bounds":bounds.grow(0.12),"parts":parts})
 		elif node is EnvironmentProp:
 			registered_model_count += 1
 			occluders.append({"node":node,"bounds":node.world_bounds().grow(0.12)})
@@ -153,7 +155,7 @@ func _update_occlusion() -> void:
 		var hide := false
 		if occlusion_enabled:
 			for target in targets:
-				if segment_hits(item.bounds,origin,target):
+				if segment_hits(item.bounds,origin,target) and (not item.has("parts") or item.parts.any(func(part): return segment_hits(part,origin,target))):
 					hide = true
 					break
 		item.node.visible = not hide

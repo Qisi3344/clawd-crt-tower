@@ -36,8 +36,8 @@ func _run() -> void:
 	check("full hall enabled by default",game.ambience.enabled and game.audio.arcade_ambience)
 	var gacha: Node3D = game.surroundings.zones[1].get_node("PetGashaponMachine")
 	check("gashapon uses crystal price",gacha.get_node("CrystalPrice").text=="◇ 100")
-	check("gashapon larger clear glass and smaller lid",gacha.get_node("ClearHopper").scale.is_equal_approx(Vector3(2.55,2.13,2.01)) and gacha.get_node("ClearHopper").material_override.albedo_color.a<0.04 and gacha.get_node("TopCap").scale.is_equal_approx(Vector3.ONE*0.5))
-	check("gashapon title clears lid surface",gacha.get_node("TopCap/TitlePlate").position.z-0.08>1.30)
+	check("gashapon v3 glass profile and lid",gacha.get_node("ClearHopper").scale.is_equal_approx(Vector3(1.75,1.42,1.51)) and gacha.get_node("ClearHopper").material_override is ShaderMaterial and absf(gacha.get_node("TopCap").position.y-6.24)<0.001)
+	check("gashapon title clears lid surface",gacha.get_node("TopCap/TitlePlate").position.z-0.06>1.57)
 	check("gashapon internal lamp points downward",(-gacha.get_node("HopperLamp").basis.z).dot(Vector3.DOWN)>0.99)
 	var hopper: MeshInstance3D = gacha.get_node("ClearHopper")
 	var hopper_bounds: AABB = hopper.global_transform*hopper.get_aabb()
@@ -105,6 +105,7 @@ func _run() -> void:
 		check(device.screen_id+" focused glass clear of enclosure",not blocked)
 	for view in [["arcade",Vector3(28,10,12),Vector3(18,2.7,-1)],["repair",Vector3(-27,10,12),Vector3(-18.4,2,1)]]:
 		pose(view[1],view[2])
+		if view[0]=="arcade": check("gashapon remains visible in peripheral camera",gacha.visible)
 		var clear := true
 		for wall in game.ambience.room_occluders:
 			if wall.node.visible and EnvironmentSurroundings.segment_hits(wall.bounds,view[1],view[2]): clear = false

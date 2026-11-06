@@ -37,7 +37,7 @@ func _run() -> void:
 	var gacha: Node3D = game.surroundings.zones[1].get_node("PetGashaponMachine")
 	var cat_upper: MeshInstance3D = gacha.pile[0].get_node("AnimalUpperShell")
 	check("cat coat and patch retained by hall cel material",cat_upper.material_override is ShaderMaterial and cat_upper.material_override.get_shader_parameter("vertex_colors"))
-	check("gashapon uses crystal price",gacha.get_node("CrystalPrice").text=="◇ 100")
+	check("gashapon advertises free test",gacha.get_node("CrystalPrice").text=="免费测试")
 	check("gashapon spherical glass profile and matching lid",gacha.get_node("ClearHopper").scale.is_equal_approx(Vector3(2.10,2.20,2.10)) and gacha.get_node("ClearHopper").material_override is ShaderMaterial and absf(gacha.get_node("TopCap").position.y-6.24)<0.001)
 	check("gashapon title clears lid surface",gacha.get_node("TopCap/TitlePlate").position.z-0.06>1.57)
 	check("gashapon internal lamp points downward",(-gacha.get_node("HopperLamp").basis.z).dot(Vector3.DOWN)>0.99)

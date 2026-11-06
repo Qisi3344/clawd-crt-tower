@@ -37,7 +37,7 @@ func run(qa: Node) -> void:
 	var props := environment.find_children("*","Node3D",true,false).filter(func(node): return node is EnvironmentProp)
 	qa.check("real GLB instances retained except replaced arcade",props.size()==25 and props.all(func(prop): return is_instance_valid(prop.imported) and not prop.meshes.is_empty()))
 	qa.check("one arcade replaced by native pet gashapon",environment.zones[1].has_node("PetGashaponMachine") and props.filter(func(p): return p.asset_id=="mini-arcade__arcade-machine").size()==1)
-	qa.check("surroundings add no physical gameplay bodies",environment.find_children("*","PhysicsBody3D",true,false).is_empty() and environment.find_children("*","CharacterBody2D",true,false).is_empty())
+	qa.check("hopper physics is isolated from pixel gameplay",environment.find_children("*","RigidBody3D",true,false).size()==18 and environment.find_children("*","CharacterBody2D",true,false).is_empty() and environment.find_children("*","RigidBody3D",true,false).all(func(b): return b.collision_layer==PetHopper.LAYER and b.collision_mask==PetHopper.LAYER))
 	qa.check("scenery displays do not create more SubViewports",environment.find_children("*","SubViewport",true,false).is_empty())
 	qa.check("actual cross-screen camera path stays clear of scenery",qa.transition_samples>0 and qa.transition_camera_clips==0)
 	var triangles := 0

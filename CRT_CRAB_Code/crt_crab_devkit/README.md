@@ -1,6 +1,8 @@
 # CRT小蟹闯塔记
 
-扭蛋机 v3 已加入真实出蛋通道与 2.5 秒测试动画，双击 `GASHAPON_PREVIEW.cmd` 查看正侧背和剖视、逐款测试。[实机视频与验收](docs/GASHAPON_V3.md)。
+宠物扭蛋已接入主菜单和暂停菜单：18 颗自然滚动后静止、免费抽取、4/20 抽保底与独立收藏存档。[三档出货演示、概率测试与验收](docs/PET_GACHA_V1.md)。
+
+双击 `GASHAPON_PREVIEW.cmd` 直接打开正式扭蛋界面。[机台结构与早期动画记录](docs/GASHAPON_V3.md)。
 
 新增六款原生 3D 宠物扭蛋及右前方扭蛋机；双击 `PET_PREVIEW.cmd` 查看并旋转模型。[模型说明与实机图](docs/PET_CAPSULES.md)。
 

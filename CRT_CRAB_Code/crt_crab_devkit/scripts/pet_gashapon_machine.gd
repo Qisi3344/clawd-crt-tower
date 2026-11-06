@@ -1,8 +1,6 @@
 extends Node3D
 signal dispensed
 const PETS := ["cat","dog","hamster","rabbit","bear","hidden_cat"]
-const ROUTE := [Vector3(0,4.332,-0.45),Vector3(-0.58,4.40,-0.95),Vector3(-0.58,3.62,-0.90),Vector3(-0.58,3.05,-0.50),Vector3(-0.58,2.64,-0.50),Vector3(-0.58,1.70,-0.50),Vector3(-0.58,0.48,0.10),Vector3(-0.58,0.48,1.12),Vector3(-0.58,0.48,1.12)]
-const TIMES := [0.35,0.55,0.70,1.15,1.40,1.65,1.95,2.18,2.50]
 var casing: Array[Node3D] = []
 var pile: Array[Node3D] = []
 var selected: Node3D
@@ -16,6 +14,12 @@ var cycle: Tween
 var sounds: Dictionary = {}
 var voice: AudioStreamPlayer3D
 var sound_step := -1
+var hopper: PetHopper
+var reward: Node3D
+var effects: Node3D
+var shake_started := false
+var effect_started := false
+var sfx_enabled := true
 
 func orb(parent: Node3D, p: Vector3, size: Vector3, color: Color) -> MeshInstance3D:
     var mesh := SphereMesh.new()
@@ -245,7 +249,7 @@ func _ready() -> void:
     box(self,"PriceFrame",Vector3(-0.82,2.70,1.61),Vector3(1.05,0.62,0.07),teal)
     casing.append(knob)
     casing.append(get_node("PriceFrame"))
-    var price := Craft.label(self,"◇ 100",Vector3(-0.82,2.70,1.66),Color("9ad8c5"),0.004,36); price.name = "CrystalPrice"; casing.append(price)
+    var price := Craft.label(self,"免费测试",Vector3(-0.82,2.70,1.66),Color("9ad8c5"),0.004,36); price.name = "CrystalPrice"; casing.append(price)
     casing.append(Craft.sticker(self,"boot_ok",Vector3(1.0,1.57,1.586),0.55))
     for i in range(3): casing.append(box(self,"FrontVent",Vector3(1.0,0.67+i*0.14,1.587),Vector3(0.65,0.04,0.02),dark))
     for x in [-1.36,1.36]: casing.append(Craft.box(self,Vector3(x,0.12,1.583),Vector3(0.65,0.035,0.02),pink,0.01,0.45))
@@ -286,60 +290,84 @@ func _ready() -> void:
     glass_highlight(highlights,deg_to_rad(140),-0.25,0.35,0.045)
     glass_highlight(highlights,deg_to_rad(40),0.06,0.30,0.026)
     lower_dressing()
-    reset()
+    hopper = PetHopper.new(); hopper.name = "HopperContents"; add_child(hopper)
+    pile.assign(hopper.visuals)
     make_sounds()
-
-func reset(kind := 5) -> void:
-    if busy: return
-    for pet in pile: pet.free()
-    pile.clear()
-    var positions := [Vector3(-0.70,3.55,0.40),Vector3(0,3.55,0.40),Vector3(-0.35,3.881,-0.08),Vector3(0.35,3.881,-0.08),Vector3(0.70,3.55,0.40),Vector3(0,4.332,-0.45)]
-    for i in range(6):
-        var pet := load("res://scenes/pets/"+PETS[kind if i==5 else i]+".tscn").instantiate() as Node3D
-        pet.position = positions[i]; pet.scale = Vector3.ONE*0.34; add_child(pet); pile.append(pet)
-    selected = pile[5]
-    knob.rotation.z = 0; disk.rotation.y = 0; gate.position.x = -0.58; flap.rotation.x = 0; flap.position = Vector3(-0.58,1.95,1.49)
 
 func set_cutaway(value: bool) -> void:
     cutaway = value
     for part in casing: part.visible = not value
 
-func dispense() -> bool:
-    if busy or selected==null or selected.position.y<1: return false
-    busy = true; sound_step = -1
+func clear_reward() -> void:
+    if busy: return
+    if is_instance_valid(reward): reward.free()
+    if is_instance_valid(effects): effects.free()
+    reward = null; selected = null
+
+func present_reward(award: Dictionary) -> bool:
+    if busy or not award.get("ok",false): return false
+    clear_reward()
+    reward = load("res://scenes/pets/"+PETS[int(award.kind)]+".tscn").instantiate() as Node3D
+    reward.name = "DispensedPet"; reward.scale = Vector3.ONE*0.38
+    reward.position = Vector3(-0.58,0.48,1.0); reward.visible = false; add_child(reward); selected = reward
+    effects = Node3D.new(); effects.name = "RewardEffects"; add_child(effects)
+    effects.set_meta("rarity",int(award.rarity)); effects.set_meta("kind",int(award.kind))
+    busy = true; sound_step = -1; shake_started = false; effect_started = false
     cycle = create_tween()
-    cycle.tween_method(sample,0.0,2.5,2.5)
+    cycle.tween_method(draw_frame,0.0,1.5,1.5)
     cycle.finished.connect(func(): busy = false; dispensed.emit())
     return true
 
-func sample(t: float) -> void:
-    knob.rotation.z = -PI/2*clampf(t/0.35,0,1)
-    disk.rotation.y = PI/2*clampf((t-0.35)/0.35,0,1)
-    gate.position.x = -0.58+1.25*clampf((t-0.55)/0.15,0,1)
-    flap.rotation.x = deg_to_rad(55)*clampf((t-0.70)/0.25,0,1)
-    # After tilting, the hinge carriage lifts behind the lintel, clearing rabbit ears.
-    flap.position.z = 1.49-0.10*clampf((t-0.95)/0.10,0,1)
-    flap.position.y = 1.95+0.52*clampf((t-1.05)/0.10,0,1)
-    var idx := 0
-    while idx<TIMES.size()-2 and t>TIMES[idx+1]: idx += 1
-    var u := clampf((t-TIMES[idx])/(TIMES[idx+1]-TIMES[idx]),0,1)
-    selected.position = ROUTE[idx].lerp(ROUTE[idx+1],u)
-    if t<0.35: selected.position = ROUTE[0]
-    if t>2.18: selected.position.y += sin(u*PI)*0.07*(1-u)
-    selected.rotation.z = sin(t*18)*0.035 if t>0.7 and t<2.18 else 0
-    var step := 0 if t<0.7 else 1 if t<2.18 else 2
-    if step!=sound_step:
-        sound_step = step; voice.stream = sounds[step]; voice.play()
+func play_sound(index: int) -> void:
+    if sfx_enabled: voice.stream = sounds[index]; voice.play()
+
+func draw_frame(t: float) -> void:
+    knob.rotation.z = -PI/2*clampf(t/0.25,0,1)
+    if t>=0.15 and not shake_started: shake_started = true; hopper.shake()
+    var opening := clampf((t-0.70)/0.15,0,1)
+    flap.rotation.x = deg_to_rad(55)*opening
+    flap.position.z = 1.49-0.10*clampf((t-0.82)/0.06,0,1)
+    flap.position.y = 1.95+0.52*clampf((t-0.88)/0.07,0,1)
+    if t>=1.25:
+        var close := clampf((t-1.25)/0.25,0,1)
+        flap.position.y = 2.47-0.52*clampf(close/0.4,0,1)
+        flap.position.z = 1.39+0.10*clampf((close-0.4)/0.2,0,1)
+        flap.rotation.x = deg_to_rad(55)*(1-clampf((close-0.6)/0.4,0,1))
+    reward.visible = t>=0.95
+    var u := clampf((t-0.95)/0.30,0,1)
+    reward.position = Vector3(-0.58,0.48,1.0).lerp(Vector3(-0.58,0.48,1.93),u)
+    reward.position.y += sin(u*PI)*0.04*(1-u)
+    var step := 0 if t<0.70 else 2 if t<0.95 else 1
+    if step!=sound_step: sound_step = step; play_sound(step)
+    if t>=1.25 and not effect_started: effect_started = true; reward_effect()
+
+func reward_effect() -> void:
+    var rarity: int = effects.get_meta("rarity")
+    var color := Color("eee9df") if rarity==0 else Color("e4a0c8") if rarity==1 else Color("f5cd67")
+    if rarity==1 and int(effects.get_meta("kind")) in [2,4]: color = Color("8dcabb")
+    var ring := MeshInstance3D.new(); var torus := TorusMesh.new()
+    torus.inner_radius = 0.43; torus.outer_radius = 0.46; torus.rings = 24; torus.ring_segments = 6
+    ring.mesh = torus; ring.position = Vector3(-0.58,0.46,1.93)
+    var mat := StandardMaterial3D.new(); mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA; mat.albedo_color = color
+    ring.material_override = mat; effects.add_child(ring)
+    var fade := create_tween(); fade.tween_property(mat,"albedo_color:a",0.0,0.65)
+    if rarity==2:
+        play_sound(3)
+        var sparks := CPUParticles3D.new(); sparks.amount = 12; sparks.lifetime = 0.55; sparks.one_shot = true
+        sparks.position = Vector3(-0.58,0.9,1.93); sparks.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX; sparks.emission_box_extents = Vector3(0.35,0.25,0.25)
+        sparks.direction = Vector3.UP; sparks.spread = 50; sparks.gravity = Vector3(0,-0.6,0); sparks.initial_velocity_min = 0.2; sparks.initial_velocity_max = 0.5
+        var pixel := BoxMesh.new(); pixel.size = Vector3.ONE*0.035; sparks.mesh = pixel
+        sparks.material_override = Craft.material(color,0.4); effects.add_child(sparks); sparks.emitting = true
 
 func make_sounds() -> void:
     voice = AudioStreamPlayer3D.new(); voice.position = Vector3(0,2,0); voice.volume_db = -14; voice.max_distance = 24; add_child(voice)
     var rng := RandomNumberGenerator.new(); rng.seed = 707
-    for kind in range(3):
-        var data := PackedByteArray(); var duration := 0.12 if kind==0 else 1.48 if kind==1 else 0.25
+    for kind in range(4):
+        var data := PackedByteArray(); var duration := 0.12 if kind==0 else 0.40 if kind==1 else 0.25
         for i in range(int(22050*duration)):
             var t := i/22050.0
             var env := exp(-t*40) if kind==0 else pow(1-t/duration,2)
-            var wave := rng.randf_range(-1,1)*0.3+sin(TAU*(150 if kind==0 else 85 if kind==1 else 210)*t)*0.6
+            var wave := rng.randf_range(-1,1)*0.3+sin(TAU*(150 if kind==0 else 85 if kind==1 else 980 if kind==3 else 210)*t)*0.6
             if kind==1: wave *= 0.3+0.7*pow(absf(sin(t*65)),6)
             var v := int(wave*env*13000); data.append(v&255); data.append((v>>8)&255)
         var stream := AudioStreamWAV.new(); stream.format = AudioStreamWAV.FORMAT_16_BITS; stream.mix_rate = 22050; stream.data = data; sounds[kind] = stream

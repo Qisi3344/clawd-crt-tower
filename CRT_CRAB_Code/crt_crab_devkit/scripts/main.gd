@@ -1,5 +1,7 @@
 extends Node3D
 
+var pet_gacha := PetGachaStore.new()
+var gacha_panel: PetGachaPanel
 var ambience: Node3D
 var shell: Node3D
 var devices: Array[MonitorDevice] = []
@@ -24,6 +26,8 @@ var input_mode := InputMode.PLAY_2D
 
 func _ready() -> void:
 	test_mode = "--qa" in OS.get_cmdline_user_args() or "--perf" in OS.get_cmdline_user_args()
+	pet_gacha.storage.enabled = not test_mode
+	if not test_mode: pet_gacha.load_collection()
 	save.enabled = not test_mode
 	save.load_progress()
 	manifest = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_manifest.json"))
@@ -47,6 +51,7 @@ func _ready() -> void:
 	if test_mode and DisplayServer.get_name()=="headless": audio.enabled = false
 	hud = GameHUD.new()
 	add_child(hud)
+	hud.gacha_requested.connect(open_gacha)
 	hud.pause_changed.connect(func(_v: bool): _control_state())
 	hud.overview_requested.connect(_toggle_overview)
 	hud.sfx_toggle.set_pressed_no_signal(audio.enabled)
@@ -385,6 +390,7 @@ func _travel(link: Dictionary) -> void:
 	if not success[0]: audio.play("error")
 
 func _process(delta: float) -> void:
+	if is_instance_valid(gacha_panel): return
 	if in_menu:
 		if not director.reduced_motion: director.orbit += delta*0.025
 		return
@@ -409,6 +415,7 @@ func _process(delta: float) -> void:
 		for device in devices: device.visible = true
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_instance_valid(gacha_panel): return
 	if in_menu: return
 	if event.is_action_pressed("pause") and not transitioning:
 		if director.overview:
@@ -427,22 +434,33 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: director.elevation = clampf(director.elevation+1,5,30)
 
 func _toggle_overview() -> void:
-	if in_menu or transitioning or hud.paused:
+	if in_menu or transitioning or hud.paused or is_instance_valid(gacha_panel):
 		return
 	director.toggle_overview()
 	hud.overview_panel.visible = director.overview
 	hud.prompt_label.text = ""
 	_control_state()
 
+func open_gacha() -> void:
+	if transitioning or surroundings==null or is_instance_valid(gacha_panel): return
+	gacha_panel = PetGachaPanel.new()
+	gacha_panel.game = self
+	gacha_panel.machine = surroundings.zones[1].get_node("PetGashaponMachine")
+	gacha_panel.store = pet_gacha
+	add_child(gacha_panel)
+	_control_state()
+
 func _control_state() -> void:
-	if in_menu:
+	if is_instance_valid(gacha_panel):
+		input_mode = InputMode.PAUSED
+	elif in_menu:
 		input_mode = InputMode.WARDROBE if is_instance_valid(front_end) and front_end.page=="wardrobe" else (InputMode.SETTINGS if is_instance_valid(front_end) and front_end.page=="settings" else InputMode.MAIN_MENU)
 	elif transitioning:
 		input_mode = InputMode.TRANSITION_EXIT_2D if transfer_phase=="EXIT" else (InputMode.TRANSITION_ENTER_2D if transfer_phase=="ENTER" else InputMode.TRANSITION_3D)
 	else:
 		input_mode = InputMode.PAUSED if hud.paused else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D)
 	if is_instance_valid(world):
-		var allowed := not in_menu and not transitioning and not hud.paused and not director.overview
+		var allowed := not in_menu and not transitioning and not hud.paused and not director.overview and not is_instance_valid(gacha_panel)
 		world.enabled = allowed
 		world.player.enabled = allowed
 		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED

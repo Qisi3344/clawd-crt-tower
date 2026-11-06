@@ -1,0 +1,72 @@
+{
+	"checks": [
+		{
+			"meshes": 21,
+			"model": "猫猫 / CAT",
+			"passed": true
+		},
+		{
+			"model": "猫猫 / CAT opaque matching hemisphere halves",
+			"passed": true
+		},
+		{
+			"meshes": 16,
+			"model": "狗狗 / DOG",
+			"passed": true
+		},
+		{
+			"model": "狗狗 / DOG opaque matching hemisphere halves",
+			"passed": true
+		},
+		{
+			"meshes": 14,
+			"model": "仓鼠 / HAMSTER",
+			"passed": true
+		},
+		{
+			"model": "仓鼠 / HAMSTER opaque matching hemisphere halves",
+			"passed": true
+		},
+		{
+			"meshes": 21,
+			"model": "兔兔 / RABBIT",
+			"passed": true
+		},
+		{
+			"model": "兔兔 / RABBIT opaque matching hemisphere halves",
+			"passed": true
+		},
+		{
+			"meshes": 18,
+			"model": "小熊 / BEAR",
+			"passed": true
+		},
+		{
+			"model": "小熊 / BEAR opaque matching hemisphere halves",
+			"passed": true
+		},
+		{
+			"meshes": 21,
+			"model": "隐藏猫猫 / SECRET",
+			"passed": true
+		},
+		{
+			"model": "隐藏猫猫 / SECRET opaque matching hemisphere halves",
+			"passed": true
+		},
+		{
+			"model": "hamster two solid coat colors",
+			"passed": true
+		},
+		{
+			"model": "hamster pink triangle without bear muzzle",
+			"passed": true
+		},
+		{
+			"model": "hamster larger round cheeks",
+			"passed": true
+		}
+	],
+	"passed": true,
+	"renderer": "NVIDIA GeForce RTX 5060 Ti"
+}

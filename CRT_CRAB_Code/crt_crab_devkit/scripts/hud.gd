@@ -13,6 +13,7 @@ signal motion_changed(value: bool)
 signal environment_motion_changed(value: bool)
 signal quit_requested
 signal title_requested
+signal gacha_requested
 signal reset_requested
 var health_label: Label
 var title_label: Label
@@ -127,9 +128,15 @@ func _build_pause(root: Control) -> void:
 	var panel := _panel(Color("252a2c"))
 	panel.custom_minimum_size = Vector2(390,0)
 	center.add_child(panel)
+	var scroll := ScrollContainer.new()
+	scroll.follow_focus = true
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size = Vector2(390,minf(680,get_viewport().get_visible_rect().size.y-70))
+	panel.add_child(scroll)
 	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.add_theme_constant_override("separation",12)
-	panel.add_child(column)
+	scroll.add_child(column)
 	column.add_child(_label("信号暂存 / PAUSED",27,Color("d4e852")))
 	resume_button = Button.new()
 	resume_button.text = "继续冒险"
@@ -139,6 +146,10 @@ func _build_pause(root: Control) -> void:
 	reset.text = "重置当前箱石谜题（保留宝箱）"
 	reset.pressed.connect(func(): reset_requested.emit())
 	column.add_child(reset)
+	var gacha := Button.new()
+	gacha.text = "宠物扭蛋 · 免费测试"
+	gacha.pressed.connect(func(): gacha_requested.emit())
+	column.add_child(gacha)
 	var sound := CheckButton.new()
 	sfx_toggle = sound
 	sound.text = "交互音效"

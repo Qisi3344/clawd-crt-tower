@@ -1,0 +1,167 @@
+{
+  "base_kind_counts": [
+    36099,
+    36024,
+    8311,
+    8291,
+    8319,
+    2956
+  ],
+  "base_probability_samples": 100000,
+  "checks": [
+    {
+      "passed": true,
+      "test": "base 72/25/3 probabilities without pity"
+    },
+    {
+      "passed": true,
+      "test": "uniform common and rare species pools"
+    },
+    {
+      "passed": true,
+      "test": "13th hidden chance is 8 percent"
+    },
+    {
+      "passed": true,
+      "test": "19th hidden chance is 38 percent"
+    },
+    {
+      "passed": true,
+      "test": "20th always hidden"
+    },
+    {
+      "passed": true,
+      "test": "hidden tested before rare pity"
+    },
+    {
+      "passed": true,
+      "test": "fourth forces rare or better"
+    },
+    {
+      "passed": true,
+      "test": "10000 draws preserve four and twenty pity"
+    },
+    {
+      "passed": true,
+      "test": "all six awarded with duplicates"
+    },
+    {
+      "passed": true,
+      "test": "25 durable awards committed"
+    },
+    {
+      "passed": true,
+      "test": "restart restores counts pity and recent history"
+    },
+    {
+      "passed": true,
+      "test": "failed atomic write awards nothing"
+    },
+    {
+      "passed": true,
+      "test": "corrupt collection is not overwritten"
+    },
+    {
+      "passed": true,
+      "test": "eighteen larger display models with rarity mix"
+    },
+    {
+      "passed": true,
+      "test": "all hulls stay inside glass and floor"
+    },
+    {
+      "passed": true,
+      "test": "display bodies naturally sleep"
+    },
+    {
+      "passed": true,
+      "test": "real main menu entry"
+    },
+    {
+      "passed": true,
+      "test": "free UI pauses gameplay and shows free price"
+    },
+    {
+      "passed": true,
+      "test": "rarity 0 persists before animation"
+    },
+    {
+      "passed": true,
+      "test": "rarity 0 duplicate click guarded"
+    },
+    {
+      "passed": true,
+      "test": "rarity 0 finishes with eighteen display models"
+    },
+    {
+      "passed": true,
+      "test": "rarity 0 flap restored"
+    },
+    {
+      "passed": true,
+      "test": "rarity 1 persists before animation"
+    },
+    {
+      "passed": true,
+      "test": "rarity 1 duplicate click guarded"
+    },
+    {
+      "passed": true,
+      "test": "rarity 1 finishes with eighteen display models"
+    },
+    {
+      "passed": true,
+      "test": "rarity 1 flap restored"
+    },
+    {
+      "passed": true,
+      "test": "rarity 2 persists before animation"
+    },
+    {
+      "passed": true,
+      "test": "rarity 2 duplicate click guarded"
+    },
+    {
+      "passed": true,
+      "test": "rarity 2 finishes with eighteen display models"
+    },
+    {
+      "passed": true,
+      "test": "rarity 2 flap restored"
+    },
+    {
+      "passed": true,
+      "test": "closing mid animation preserves award and restores interface"
+    },
+    {
+      "passed": true,
+      "test": "mobile panel stays inside viewport"
+    },
+    {
+      "passed": true,
+      "test": "keyboard focus scrolls return button into view"
+    },
+    {
+      "passed": true,
+      "test": "return restores main menu"
+    },
+    {
+      "passed": true,
+      "test": "pause entry freezes player"
+    },
+    {
+      "passed": true,
+      "test": "close returns to paused adventure"
+    },
+    {
+      "passed": true,
+      "test": "resume restores playable world"
+    }
+  ],
+  "hull_vertices_outside": 0,
+  "max_consecutive_common": 3,
+  "max_without_hidden": 19,
+  "passed": true,
+  "pity_sequence_samples": 10000,
+  "sleeping_bodies": 18
+}

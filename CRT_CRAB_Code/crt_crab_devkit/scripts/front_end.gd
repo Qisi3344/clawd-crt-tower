@@ -92,12 +92,13 @@ func show_page(value: String) -> void:
 		_label("◇ %d 晶体 · 宝箱 %d / 4"%[game.save.data.crystals,game.save.data.collected.size()],18,Color("86bdb4"))
 		if game.save.data.started:
 			_button("继续冒险",func(): game.begin_adventure(false))
-			_button("新游戏",func(): _ask("将重置关卡、晶体和宝箱；保留已解锁外观与设置。旧进度先备份。",func(): game.begin_adventure(true)))
+			_button("新游戏",func(): _ask("将重置关卡、晶体和宝箱；保留已解锁外观、宠物收藏与设置。旧进度先备份。",func(): game.begin_adventure(true)))
 		else:
 			_button("开始游戏",func():
 				if game.save.writable: game.begin_adventure(true)
 				else: _ask("存档损坏或版本不受支持。先备份原文件，再开始新游戏？",func(): game.begin_adventure(true))
 			)
+		_button("宠物扭蛋",game.open_gacha)
 		_button("更换服装",func(): return_focus="更换服装"; show_page("wardrobe"))
 		_button("游戏设置",func(): return_focus="游戏设置"; show_page("settings"))
 		_button("退出游戏",game._quit)

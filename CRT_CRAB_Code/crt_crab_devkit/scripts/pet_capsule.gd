@@ -3,6 +3,7 @@ extends Node3D
 
 enum Kind { CAT, DOG, HAMSTER, RABBIT, BEAR, HIDDEN_CAT }
 @export var kind: Kind = Kind.CAT
+@export var compact_display := false
 const TITLES := ["猫猫 / CAT", "狗狗 / DOG", "仓鼠 / HAMSTER", "兔兔 / RABBIT", "小熊 / BEAR", "隐藏猫猫 / SECRET"]
 const RARITIES := ["COMMON", "COMMON", "RARE", "RARE", "RARE", "HIDDEN"]
 static var shapes: Dictionary = {}
@@ -18,24 +19,27 @@ func part(label: String, mesh: Mesh, p: Vector3, size: Vector3, color: Color, gl
 	return n
 
 func ball(label: String, p: Vector3, size: Vector3, color: Color, glow := 0.0) -> MeshInstance3D:
-	if not shapes.has("ball"):
+	var key := "ball_lo" if compact_display else "ball"
+	if not shapes.has(key):
 		var sphere := SphereMesh.new()
 		sphere.radius = 1; sphere.height = 2
-		sphere.radial_segments = 12; sphere.rings = 8
-		shapes.ball = sphere
-	return part(label,shapes.ball,p,size,color,glow)
+		sphere.radial_segments = 8 if compact_display else 12; sphere.rings = 3 if compact_display else 8
+		shapes[key] = sphere
+	return part(label,shapes[key],p,size,color,glow)
 
-static func hemisphere(top: bool) -> ArrayMesh:
-	var key := "top" if top else "bottom"
+static func hemisphere(top: bool, compact := false) -> ArrayMesh:
+	var key := ("top" if top else "bottom")+("_lo" if compact else "")
+	var rows := 4 if compact else 8
+	var columns := 12 if compact else 24
 	if shapes.has(key): return shapes[key]
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for row in range(8):
-		for col in range(24):
+	for row in range(rows):
+		for col in range(columns):
 			var points: Array[Vector3] = []
 			for ij in [Vector2i(col,row),Vector2i(col+1,row),Vector2i(col+1,row+1),Vector2i(col,row+1)]:
-				var a: float = TAU*ij.x/24.0
-				var b: float = PI*0.5*ij.y/8.0
+				var a: float = TAU*ij.x/float(columns)
+				var b: float = PI*0.5*ij.y/float(rows)
 				points.append(Vector3(cos(a)*cos(b),sin(b)*(1 if top else -1),sin(a)*cos(b)))
 			for tri in [[0,1,2],[0,2,3]]:
 				var normal := (points[tri[1]]-points[tri[0]]).cross(points[tri[2]]-points[tri[0]])
@@ -104,15 +108,17 @@ func droop_ear(side: float) -> void:
 func hamster_face(upper: MeshInstance3D, coat: Color, ink: Color) -> void:
 	# Split the spherical surface along one curved boundary: solid colors, no gradient.
 	var cream := Color("f1e2c6")
-	if not shapes.has("hamster_upper"):
+	var key := "hamster_upper_lo" if compact_display else "hamster_upper"
+	var columns := 16 if compact_display else 48
+	if not shapes.has(key):
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		for band in range(2):
 			for row in range(4):
-				for col in range(48):
+				for col in range(columns):
 					var points: Array[Vector3] = []
 					for ij in [Vector2i(col,row),Vector2i(col+1,row),Vector2i(col+1,row+1),Vector2i(col,row+1)]:
-						var a: float = TAU*ij.x/48.0
+						var a: float = TAU*ij.x/float(columns)
 						var boundary := asin(0.40+0.18*pow(maxf(0,sin(a)),14))
 						var b: float = lerpf(0,boundary,ij.y/4.0) if band==0 else lerpf(boundary,PI/2,ij.y/4.0)
 						points.append(Vector3(cos(a)*cos(b),sin(b),sin(a)*cos(b)))
@@ -121,8 +127,8 @@ func hamster_face(upper: MeshInstance3D, coat: Color, ink: Color) -> void:
 						for i in tri:
 							st.set_color(cream if band==0 else coat)
 							st.set_normal(points[i]); st.add_vertex(points[i])
-		shapes.hamster_upper = st.commit()
-	upper.mesh = shapes.hamster_upper
+		shapes[key] = st.commit()
+	upper.mesh = shapes[key]
 	upper.material_override = Craft.material(Color.WHITE).duplicate()
 	upper.material_override.vertex_color_use_as_albedo = true
 	for side in [-1.0,1.0]:
@@ -167,25 +173,26 @@ func _ready() -> void:
 	var pink := Color("d98d9f")
 	var ink := Color("3b2d39")
 	var hidden := kind==Kind.HIDDEN_CAT
-	part("LowerShell",hemisphere(false),Vector3(0,1,0),Vector3.ONE,shells[kind])
+	part("LowerShell",hemisphere(false,compact_display),Vector3(0,1,0),Vector3.ONE,shells[kind])
 	# The animal is the opaque upper half of the ball, not a toy inside glass.
-	var upper := part("AnimalUpperShell",hemisphere(true),Vector3(0,1,0),Vector3.ONE,coat)
+	var upper := part("AnimalUpperShell",hemisphere(true,compact_display),Vector3(0,1,0),Vector3.ONE,coat)
 	if kind==Kind.CAT:
-		if not shapes.has("cat_upper"):
-			var arrays := hemisphere(true).surface_get_arrays(0)
+		var cat_key := "cat_upper_lo" if compact_display else "cat_upper"
+		if not shapes.has(cat_key):
+			var arrays := hemisphere(true,compact_display).surface_get_arrays(0)
 			var colors := PackedColorArray()
 			for v in arrays[Mesh.ARRAY_VERTEX]:
 				colors.append(Color("8c858b") if v.x>0.15 and v.y>0.45 and v.z>0.15 else coat)
 			arrays[Mesh.ARRAY_COLOR] = colors
 			var patch_mesh := ArrayMesh.new()
 			patch_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
-			shapes.cat_upper = patch_mesh
-		upper.mesh = shapes.cat_upper
+			shapes[cat_key] = patch_mesh
+		upper.mesh = shapes[cat_key]
 		upper.material_override = Craft.material(Color.WHITE).duplicate()
 		upper.material_override.vertex_color_use_as_albedo = true
 	var ring := TorusMesh.new()
 	ring.inner_radius = 0.985; ring.outer_radius = 1.012
-	ring.rings = 24; ring.ring_segments = 6
+	ring.rings = 12 if compact_display else 24; ring.ring_segments = 4 if compact_display else 6
 	part("SeamRim",ring,Vector3(0,1,0),Vector3.ONE,shells[kind].lightened(0.15),0.22 if hidden else 0.0)
 	if kind==Kind.HAMSTER:
 		hamster_face(upper,coat,ink)

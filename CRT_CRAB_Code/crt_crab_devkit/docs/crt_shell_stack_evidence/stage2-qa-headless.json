@@ -1,0 +1,192 @@
+{
+	"captures": [],
+	"engine": "4.7.2-stable (official)",
+	"passed": true,
+	"renderer": "headless",
+	"tests": [
+		{
+			"passed": true,
+			"test": "fresh boot stops at title with no playable world"
+		},
+		{
+			"passed": true,
+			"test": "bootstrap does not create an adventure"
+		},
+		{
+			"passed": true,
+			"test": "title ignores combat reset and overview input"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion holds the title camera still"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 0"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 0"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 5"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 5"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 6"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 6"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 8"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 8"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 14"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 14"
+		},
+		{
+			"passed": true,
+			"test": "both outfits affordable at 14"
+		},
+		{
+			"passed": true,
+			"test": "purchase boundary 17"
+		},
+		{
+			"passed": true,
+			"test": "duplicate purchase cannot charge at 17"
+		},
+		{
+			"passed": true,
+			"test": "both outfits affordable at 17"
+		},
+		{
+			"passed": true,
+			"test": "disk failure leaves balance and ownership unchanged"
+		},
+		{
+			"passed": true,
+			"test": "invalid or future save never silently overwrites source"
+		},
+		{
+			"passed": true,
+			"test": "invalid or future save never silently overwrites source"
+		},
+		{
+			"passed": true,
+			"test": "invalid or future save never silently overwrites source"
+		},
+		{
+			"passed": true,
+			"test": "v2 migration preserves adventure and makes backup"
+		},
+		{
+			"passed": true,
+			"test": "old hidden treasure unlocks outfit without another reward"
+		},
+		{
+			"passed": true,
+			"test": "unknown equipped skin safely falls back"
+		},
+		{
+			"passed": true,
+			"test": "new game requires confirmation"
+		},
+		{
+			"passed": true,
+			"test": "canceling new game preserves old progress"
+		},
+		{
+			"passed": true,
+			"test": "keyboard opens wardrobe from title"
+		},
+		{
+			"passed": true,
+			"test": "purchase asks before charging"
+		},
+		{
+			"passed": true,
+			"test": "confirmed purchase grants outfit but does not equip"
+		},
+		{
+			"passed": true,
+			"test": "equipment is separate from purchase"
+		},
+		{
+			"passed": true,
+			"test": "restart reloads owned equipped and balance"
+		},
+		{
+			"passed": true,
+			"test": "continue enters saved ARCHIVE in equipped outfit"
+		},
+		{
+			"passed": true,
+			"test": "actions preserve skin and collision dimensions"
+		},
+		{
+			"passed": true,
+			"test": "failed checkpoint keeps paused adventure live"
+		},
+		{
+			"passed": true,
+			"test": "return saves unloads only 2D and preserves tower"
+		},
+		{
+			"passed": true,
+			"test": "continue restores a safe saved horizontal position"
+		},
+		{
+			"passed": true,
+			"test": "new game resets adventure but keeps outfits"
+		},
+		{
+			"passed": true,
+			"test": "exit freezes player and enemies"
+		},
+		{
+			"passed": true,
+			"test": "three phases complete in mode false"
+		},
+		{
+			"passed": true,
+			"test": "transfer retains equipped outfit"
+		},
+		{
+			"passed": true,
+			"test": "exit freezes player and enemies"
+		},
+		{
+			"passed": true,
+			"test": "three phases complete in mode true"
+		},
+		{
+			"passed": true,
+			"test": "transfer retains equipped outfit"
+		},
+		{
+			"passed": true,
+			"test": "blocked destination rolls back visible player flags and input"
+		},
+		{
+			"passed": true,
+			"test": "settings page reachable by mouse"
+		}
+	]
+}

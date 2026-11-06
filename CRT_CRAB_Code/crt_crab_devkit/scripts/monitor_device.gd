@@ -17,17 +17,14 @@ var rear_z := -1.97
 func _ready() -> void:
 	var colors := [Color("aba897"),Color("87958d"),Color("293340"),Color("916c84")]
 	var shell: Color = colors[model]
-	if model==2:
-		Craft.box(self,Vector3(0,0,0.25),Vector3(5.2,4.55,2.4),shell,0.13)
-		rear_z = -0.98
-	else:
-		Craft.box(self,Vector3(0,0,-0.25),Vector3(5.2,4.55,3.4),shell,0.25 if model!=3 else 0.4)
-	Craft.box(self,Vector3(0,0,1.48),Vector3(4.78,3.85,0.3),shell.darkened(0.22),0.18)
-	# Four separate front bezel pieces leave a genuine recessed screen opening.
-	for side in [-1,1]:
-		Craft.box(self,Vector3(side*2.34,0.2,1.66),Vector3(0.52,3.6,0.4),shell,0.09)
-		Craft.box(self,Vector3(0,side*1.78+0.2,1.66),Vector3(4.75,0.43,0.4),shell,0.07)
-	Craft.box(self,Vector3(0,-1.9,1.65),Vector3(4.72,0.48,0.36),shell,0.08)
+	var case_size := Vector3(5.2,4.55,2.4 if model==2 else 3.4)
+	var case_center := Vector3(0,0,0.25 if model==2 else -0.25)
+	var case_radius := 0.13 if model==2 else (0.4 if model==3 else 0.25)
+	var body := Craft.box(self,case_center,case_size,shell,case_radius)
+	body.name = "Case"
+	if model==2: rear_z = -0.98
+	Craft.crt_bezel(self,shell,0.18 if model==2 else (0.36 if model==3 else 0.26))
+
 	screen = MeshInstance3D.new()
 	var quad := QuadMesh.new()
 	quad.size = Vector2(4.16,3.12)
@@ -38,24 +35,25 @@ func _ready() -> void:
 	screen_material.shader = load("res://assets/shaders/crt.gdshader")
 	screen.material_override = screen_material
 	set_texture(_standby_texture())
-	indicator = Craft.box(self,Vector3(1.82,-1.89,1.87),Vector3(0.13,0.09,0.04),accent,0.01,0.5)
-	Craft.box(self,Vector3(1.46,-1.9,1.89),Vector3(0.24,0.18,0.10),shell.darkened(0.4),0.025)
-	Craft.label(self,"CRT / %02d"%device_index,Vector3(-1.45,-1.9,1.875),Color("404d53"),0.0028,34)
+	indicator = Craft.box(self,Vector3(1.82,-1.89,1.882),Vector3(0.13,0.09,0.018),accent,0.01,0.5)
+	Craft.box(self,Vector3(1.46,-1.9,1.875),Vector3(0.24,0.18,0.045),shell.darkened(0.4),0.025)
+	Craft.sticker(self,["crt_crab","boot_ok","claws","404"][model],Vector3(-1.35,-1.88,1.884),0.55 if model==2 else 0.95)
 	for i in range(6):
-		Craft.box(self,Vector3(0.35+i*0.11,-1.9,1.86),Vector3(0.04,0.18,0.04),shell.darkened(0.43),0.004)
+		Craft.box(self,Vector3(0.35+i*0.11,-1.9,1.882),Vector3(0.04,0.18,0.012),shell.darkened(0.43),0.004)
 	for side in [-1,1]:
 		for i in range(9):
-			Craft.box(self,Vector3(side*2.604,0.7-i*0.12,-0.4),Vector3(0.018,0.046,1.25),shell.darkened(0.32),0.008)
-	Craft.box(self,Vector3(0,-2.42,-0.1),Vector3(3.7,0.38,2.4),shell.darkened(0.16),0.1)
+			Craft.box(self,Vector3(side*2.604,0.7-i*0.12,-0.05 if model==2 else -0.4),Vector3(0.018,0.046,0.85 if model==2 else 1.25),shell.darkened(0.32),0.008)
+	var foot := Craft.box(self,Vector3(0,-2.42,-0.1),Vector3(3.7,0.38,2.4),shell.darkened(0.16),0.1)
+	foot.name = "Foot"
 	if model == 0:
-		Craft.box(self,Vector3(0,-2.77,0.9),Vector3(5.0,0.42,3.7),shell.darkened(0.08),0.12)
+		var base := Craft.box(self,Vector3(0,-2.77,0.9),Vector3(5.0,0.42,3.7),shell.darkened(0.08),0.12)
+		base.name = "IntegralBase"
 		Craft.box(self,Vector3(0,-2.77,2.78),Vector3(4.75,0.25,0.08),shell,0.02)
 		Craft.box(self,Vector3(1.3,-2.77,2.83),Vector3(1.5,0.07,0.02),Color("495957"),0.01)
 	if has_keyboard and model != 2:
 		_build_keyboard(shell)
 	if model == 2:
-		Craft.box(self,Vector3(-1.8,1.97,1.89),Vector3(0.5,0.2,0.04),Color("d4e852"),0.02)
-		Craft.label(self,"ISLE",Vector3(-1.8,1.97,1.92),Color("252d35"),0.0012,28)
+		Craft.sticker(self,"boot_ok",Vector3(-1.55,2.00,1.884),0.68)
 		for x in [-0.65,0.05,0.75]:
 			var knob := MeshInstance3D.new()
 			var cylinder := CylinderMesh.new()
@@ -66,31 +64,38 @@ func _ready() -> void:
 			knob.mesh = cylinder
 			knob.material_override = Craft.material(Color("b7bdb0"))
 			knob.rotation_degrees.x = 90
-			knob.position = Vector3(x,-1.9,1.96)
+			knob.position = Vector3(x,-1.9,1.89)
 			add_child(knob)
 	elif model == 1:
 		scale = Vector3(0.88,1.08,0.92)
-		Craft.box(self,Vector3(-1.65,-2.72,1.65),Vector3(1.1,0.1,0.1),Color("273335"),0.01)
+		Craft.box(self,Vector3(-1.65,-2.4,1.71),Vector3(1.1,0.1,0.04),Color("273335"),0.01)
 		Craft.box(self,Vector3(0,-2.27,0.9),Vector3(4.2,0.65,1.6),shell.darkened(0.05),0.10)
-		Craft.box(self,Vector3(0.65,-2.22,1.73),Vector3(1.6,0.1,0.04),Color("273335"),0.01)
+		Craft.box(self,Vector3(0.65,-2.22,1.71),Vector3(1.6,0.1,0.04),Color("273335"),0.01)
 	elif model==3:
 		scale = Vector3.ONE*0.88
-		for x in [-1.3,1.3]: Craft.box(self,Vector3(x,2.43,-0.25),Vector3(0.25,0.6,0.4),Color("313a43"),0.06)
-		Craft.box(self,Vector3(0,2.69,-0.25),Vector3(2.8,0.25,0.4),Color("313a43"),0.06)
-		Craft.box(self,Vector3(-1.3,-1.9,1.89),Vector3(1.3,0.26,0.04),Color("54cfc3"),0.02)
-	# Original silk-screen labels, fasteners, tape, case seams, and rear socket.
-	for x in [-2.2,2.2]:
-		for y in [-1.62,1.91]: Craft.box(self,Vector3(x,y,1.89),Vector3(0.08,0.08,0.025),Color("a0aaa0"),0.012)
-	Craft.box(self,Vector3(-1.5,1.8,1.9),Vector3(0.8,0.28,0.025),Color("dce65b"),0.01)
-	Craft.label(self,"PORT_%02d"%device_index,Vector3(-1.5,1.8,1.92),Color("293340"),0.0015,28)
-	var tape := Craft.box(self,Vector3(1.6,1.82,1.91),Vector3(0.6,0.17,0.025),Color("d5c7a8"),0.004)
-	tape.rotation_degrees.z = -14
+		# Carry handle folds against the rear; the case roof stays a bearing surface.
+		for x in [-1.3,1.3]: Craft.box(self,Vector3(x,0.65,-1.98),Vector3(0.25,0.6,0.25),Color("313a43"),0.06)
+		Craft.box(self,Vector3(0,0.9,-2.02),Vector3(2.8,0.25,0.25),Color("313a43"),0.06)
+	# Flush fasteners sit on the planar front, inside the rounded outer perimeter.
+	for x in [-2.32,2.32]:
+		for y in [-1.85,1.90]:
+			var screw := MeshInstance3D.new()
+			var cylinder := CylinderMesh.new()
+			cylinder.top_radius = 0.04
+			cylinder.bottom_radius = 0.04
+			cylinder.height = 0.012
+			cylinder.radial_segments = 12
+			screw.mesh = cylinder
+			screw.rotation_degrees.x = 90
+			screw.position = Vector3(x,y,1.88)
+			screw.material_override = Craft.material(shell.darkened(0.28))
+			add_child(screw)
 	Craft.box(self,Vector3(0,1.1,rear_z),Vector3(3.3,0.04,0.03),shell.darkened(0.4),0.005)
 	Craft.box(self,Vector3(0,-0.8,rear_z),Vector3(0.9,0.35,0.12),Color("263640"),0.025)
 	for x in [-0.3,0,0.3]: Craft.box(self,Vector3(x,-0.8,rear_z-0.07),Vector3(0.12,0.1,0.03),Color("9ca58f"),0.008)
-	var rear_label := Craft.label(self,"DATA / %02d"%device_index,Vector3(0,-0.25,rear_z-0.08),Color("bdc5af"),0.003,28)
+	var rear_label := Craft.sticker(self,"archive_link" if model==2 else "no_signal",Vector3(0,0.1,-0.953 if model==2 else -1.953),0.95)
 	rear_label.rotation_degrees.y = 180
-	status_label = Craft.label(self,"",Vector3(0,2.15,1.86),accent,0.002,28)
+	status_label = Craft.label(self,"",Vector3(0,2.15,1.886),accent,0.002,28)
 	var screen_aspect: float = (4.0/3.0)*absf(scale.x/scale.y)
 	var fit := Vector2(1,screen_aspect/(4.0/3.0)) if screen_aspect<4.0/3.0 else Vector2((4.0/3.0)/screen_aspect,1)
 	screen_material.set_shader_parameter("content_scale",fit)
@@ -109,8 +114,8 @@ func set_status(value: String) -> void:
 func _build_keyboard(shell: Color) -> void:
 	var keyboard := Node3D.new()
 	keyboard.name = "Keyboard"
-	keyboard.position = Vector3(0,-3.12,2.15)
-	keyboard.rotation_degrees.x = 9
+	keyboard.position = Vector3(0,-2.46,2.15) if model==0 else Vector3(0,-2.51,2.6)
+	keyboard.rotation_degrees.x = 0
 	add_child(keyboard)
 	Craft.box(keyboard,Vector3.ZERO,Vector3(3.8,0.2,1.12),shell.darkened(0.07),0.06)
 	for row in range(4):

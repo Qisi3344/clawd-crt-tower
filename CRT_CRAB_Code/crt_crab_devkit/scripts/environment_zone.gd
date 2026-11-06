@@ -23,7 +23,7 @@ func _sign(parent: Node3D, text: String, p: Vector3, size: Vector2, color: Color
 	Craft.box(parent,p+Vector3(-size.x/2+0.08,0,0.075),Vector3(0.09,size.y-0.18,0.025),color,0.01,0.1)
 	Craft.label(parent,text,p+Vector3(0,0,0.08),color,0.0085,36)
 
-func _decal(parent: Node3D, asset: String, p: Vector3, width: float) -> void:
+func _decal(parent: Node3D, asset: String, p: Vector3, width: float) -> MeshInstance3D:
 	var texture := load("res://assets/environment/decals/user/"+asset+".png") as Texture2D
 	var mesh := QuadMesh.new()
 	mesh.size = Vector2(width,width*texture.get_height()/float(texture.get_width()))
@@ -38,6 +38,7 @@ func _decal(parent: Node3D, asset: String, p: Vector3, width: float) -> void:
 	material.roughness = 1
 	node.material_override = material
 	parent.add_child(node)
+	return node
 
 func _repair() -> void:
 	_model("repair_workbench",Vector3(0,0,0),0)
@@ -169,11 +170,6 @@ func _overhead() -> void:
 		for z in [-16,-12,-10]:
 			Craft.box(self,Vector3(x,19.45,z),Vector3(2.4,0.25,0.8),Color("3d5157"),0.04)
 			Craft.box(self,Vector3(x,19.29,z),Vector3(2.0,0.04,0.5),Color("9eb7ad"),0.01,0.18)
-	# Posters and graffiti sit on the existing rear metal panels.
-	_decal(self,"archive_link",Vector3(13,2.5,-24.20),2.5)
-	_decal(self,"crt_poster",Vector3(-5,2.7,-24.20),2.3)
-	_decal(self,"404",Vector3(-13,1.9,-24.20),2.8)
-	_decal(self,"claws",Vector3(5,2.2,-24.20),2.1)
 	# An open ladder-style cable tray, with a supported rail at either side.
 	for x in [-0.5,0.5]: Craft.box(self,Vector3(x,18.9,-18),Vector3(0.08,0.3,14),Color("5b6a6d"),0.012)
 	for i in range(17): Craft.box(self,Vector3(0,18.8,-24+i*0.75),Vector3(1.05,0.08,0.1),Color("566569"),0.012)

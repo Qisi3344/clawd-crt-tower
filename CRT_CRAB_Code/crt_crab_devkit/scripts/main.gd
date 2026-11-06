@@ -191,9 +191,9 @@ func _build_shell() -> void:
 		device.rotation_degrees = ScreenWorld._vec(item.rotation)
 		shell.add_child(device)
 		devices.append(device)
-	# Stacked speaker cabinets make the reference's media tower silhouette.
+	# Existing audio cabinets rest on one another; they never support a CRT.
 	for layer in range(3):
-		var p := Vector3(-2.5+layer*1.7,1.2+layer*4.5,0)
+		var p := Vector3(0,0.9+layer*4.0,0)
 		Craft.box(shell,p,Vector3(2.6,4.0,2.5),Color("232c34"),0.09)
 		for y in [-0.9,0.9]:
 			_speaker(p+Vector3(0,y,1.27))

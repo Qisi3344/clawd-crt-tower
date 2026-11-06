@@ -22,6 +22,18 @@ func run(qa: Node) -> void:
 	game.audio.preferences_path = "user://audio.cfg"
 	var environment: EnvironmentSurroundings = game.surroundings
 	qa.check("environment has four independent zones",environment.zones.size()==4)
+	var posters := environment.find_children("MountedPoster","MeshInstance3D",true,false)
+	var mounted := posters.size()==4
+	for poster in posters:
+		var panel := poster.get_parent() as EnvironmentProp
+		if panel==null:
+			mounted = false
+			continue
+		panel.hide()
+		mounted = mounted and not poster.is_visible_in_tree()
+		panel.show()
+		mounted = mounted and poster.is_visible_in_tree()
+	qa.check("rear posters hide and restore with their real panels",mounted)
 	var props := environment.find_children("*","Node3D",true,false).filter(func(node): return node is EnvironmentProp)
 	qa.check("real GLB instances are loaded",props.size()==26 and props.all(func(prop): return is_instance_valid(prop.imported) and not prop.meshes.is_empty()))
 	qa.check("surroundings add no physical gameplay bodies",environment.find_children("*","PhysicsBody3D",true,false).is_empty() and environment.find_children("*","CharacterBody2D",true,false).is_empty())

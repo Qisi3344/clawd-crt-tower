@@ -48,14 +48,11 @@ static func build(shell: Node3D, devices: Array[MonitorDevice]) -> void:
 	for i in range(3):
 		var floppy := Craft.box(shell,Vector3(-7.2+i*0.65,-1.04,9.2),Vector3(0.65,0.12,0.7),Color("94718e"),0.025)
 		Craft.box(floppy,Vector3(0,0.07,-0.12),Vector3(0.4,0.015,0.24),Color("c6c6b6"),0.003)
-	var hub := Craft.box(shell,Vector3(-0.8,8.025,0),Vector3(2.3,0.65,1.3),Color("52536e"),0.08)
+	var hub := Craft.box(shell,Vector3(0,11.225,0),Vector3(2.3,0.65,1.3),Color("52536e"),0.08)
 	for i in range(5): Craft.box(hub,Vector3(-0.8+i*0.38,0.08,0.67),Vector3(0.1,0.08,0.04),Color("54cfc3"),0.01,0.4)
-	var sign := Node3D.new()
-	sign.position = devices[10].to_global(Vector3(0,2.275,-0.25))+Vector3(0,0.8,0)
-	shell.add_child(sign)
-	Craft.box(sign,Vector3.ZERO,Vector3(4.5,1.0,0.14),Color("dce65b"),0.05)
-	Craft.label(sign,"CRAB LINK / 01",Vector3(0,0,0.09),Color("1b252c"),0.004,36)
-	Craft.box(sign,Vector3(0,-0.8,-0.05),Vector3(0.1,0.8,0.12),metal,0.01)
+	# The former sign post is a flush user decal on the existing portable CRT.
+	var sign := Craft.sticker(devices[10],"crt_crab",Vector3(0,1.2,-1.953),1.3)
+	sign.rotation_degrees.y = 180
 	Craft.label(shell,"01 / MEMORY DECK",Vector3(5,-0.99,10.4),Color("a6b095"),0.008,32).rotation_degrees.x = -90
 
 static func _disc(parent: Node3D, p: Vector3, radius: float, color: Color) -> void:

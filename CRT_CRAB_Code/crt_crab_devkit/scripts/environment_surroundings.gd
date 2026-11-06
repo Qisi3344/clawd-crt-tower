@@ -62,9 +62,14 @@ func _build_stage() -> void:
 		for z in [-16,-8]:
 			var panel := _model("background_panel",Vector3(side*25.5,-1.1,z),side*90)
 			panel.scale = Vector3(1.7,2.5,1)
-	for x in [-13,-5,5,13]:
+	for poster in [[-13,1.9,2.8,"404"],[-5,2.7,2.3,"crt_poster"],[5,2.2,2.1,"claws"],[13,2.5,2.5,"archive_link"]]:
+		var x: float = poster[0]
 		var panel := _model("background_panel",Vector3(x,-1.1,-24.5),0)
 		panel.scale = Vector3(1.9,2.2,1)
+		# Share the panel's visibility; preserve the original world size and position.
+		var decal: MeshInstance3D = zones[3]._decal(zones[3],poster[3],Vector3(x,poster[1],-24.20),poster[2])
+		decal.name = "MountedPoster"
+		decal.reparent(panel,true)
 	# Cable trays connect at both ends: rear CRT socket -> power cabinet socket.
 	var cables := [
 		PackedVector3Array([Vector3(0,0.3,-10.9),Vector3(0,-0.9,-13.0),Vector3(7,-0.9,-13.0),Vector3(7,1.5,-18.1)]),

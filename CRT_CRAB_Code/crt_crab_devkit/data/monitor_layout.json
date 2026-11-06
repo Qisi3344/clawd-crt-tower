@@ -5,16 +5,17 @@
     "model": 0,
     "position": [
       0,
-      2.1,
+      1.88,
       6.1
     ],
     "rotation": [
       0,
       0,
-      -2
+      0
     ],
     "keyboard": true,
-    "computer_id": "crt_boot_00"
+    "computer_id": "crt_boot_00",
+    "supported_by": "original_platform"
   },
   {
     "index": 1,
@@ -22,16 +23,17 @@
     "model": 1,
     "position": [
       6.4,
-      2.3,
+      1.7188003,
       0.3
     ],
     "rotation": [
       0,
       86,
-      2
+      0
     ],
     "keyboard": true,
-    "computer_id": "crt_sleep_01"
+    "computer_id": "crt_sleep_01",
+    "supported_by": "original_platform"
   },
   {
     "index": 2,
@@ -39,16 +41,17 @@
     "model": 2,
     "position": [
       0.4,
-      2.2,
+      1.5100001,
       -6.1
     ],
     "rotation": [
       0,
       180,
-      -3
+      0
     ],
     "keyboard": true,
-    "computer_id": "crt_sleep_02"
+    "computer_id": "crt_sleep_02",
+    "supported_by": "original_platform"
   },
   {
     "index": 3,
@@ -56,151 +59,160 @@
     "model": 0,
     "position": [
       -6.2,
-      2.0,
+      1.88,
       0.1
     ],
     "rotation": [
       0,
       267,
-      3
+      0
     ],
     "keyboard": true,
-    "computer_id": "crt_sleep_03"
+    "computer_id": "crt_sleep_03",
+    "supported_by": "original_platform"
   },
   {
     "index": 4,
     "screen": "SLEEP_4",
     "model": 3,
     "position": [
-      3.7,
-      7.5,
-      3.8
+      1.6,
+      6.4518002,
+      5.6
     ],
     "rotation": [
       0,
       40,
-      2
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_04"
+    "computer_id": "crt_sleep_04",
+    "supported_by": "crt_boot_00"
   },
   {
     "index": 5,
     "screen": "ARCHIVE",
     "model": 2,
     "position": [
-      4.6,
-      7.85,
-      -3.0
+      5.7,
+      6.7858006,
+      -1.1
     ],
     "rotation": [
       0,
       120,
-      -3
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_archive_05"
+    "computer_id": "crt_archive_05",
+    "supported_by": "crt_sleep_01"
   },
   {
     "index": 6,
     "screen": "SLEEP_6",
     "model": 0,
     "position": [
-      -3.6,
-      7.45,
-      -4.3
+      -0.1,
+      6.7650002,
+      -6.0
     ],
     "rotation": [
       0,
       216,
-      2
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_06"
+    "computer_id": "crt_sleep_06",
+    "supported_by": "crt_sleep_02"
   },
   {
     "index": 7,
     "screen": "SLEEP_7",
     "model": 3,
     "position": [
-      -4.6,
-      7.65,
-      3.2
+      -5.7,
+      6.4518002,
+      1.7
     ],
     "rotation": [
       0,
       307,
-      -2
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_07"
+    "computer_id": "crt_sleep_07",
+    "supported_by": "crt_sleep_03"
   },
   {
     "index": 8,
     "screen": "SLEEP_8",
     "model": 2,
     "position": [
-      0.936,
-      13.2,
-      4.563
+      0.9,
+      11.0638004,
+      5.0
     ],
     "rotation": [
       0,
       10,
-      3
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_08"
+    "computer_id": "crt_sleep_08",
+    "supported_by": "crt_sleep_04"
   },
   {
     "index": 9,
     "screen": "SLEEP_9",
     "model": 0,
     "position": [
-      4.797,
-      13.32,
-      -0.702
+      5.5,
+      12.0408007,
+      -1.2
     ],
     "rotation": [
       0,
       104,
-      -2
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_09"
+    "computer_id": "crt_sleep_09",
+    "supported_by": "crt_archive_05"
   },
   {
     "index": 10,
     "screen": "SLEEP_10",
     "model": 3,
     "position": [
-      -1.053,
-      13.1,
-      -4.446
+      -1.0,
+      11.3368004,
+      -5.1
     ],
     "rotation": [
       0,
       192,
-      1
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_10"
+    "computer_id": "crt_sleep_10",
+    "supported_by": "crt_sleep_06"
   },
   {
     "index": 11,
     "screen": "SLEEP_11",
     "model": 2,
     "position": [
-      -4.68,
-      13.3,
-      0.936
+      -5.1,
+      11.0638004,
+      0.9
     ],
     "rotation": [
       0,
       282,
-      -3
+      0
     ],
     "keyboard": false,
-    "computer_id": "crt_sleep_11"
+    "computer_id": "crt_sleep_11",
+    "supported_by": "crt_sleep_07"
   }
 ]

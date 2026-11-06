@@ -34,6 +34,15 @@ func _run() -> void:
 	game.director.busy = true
 	for i in range(12): await process_frame
 	check("full hall enabled by default",game.ambience.enabled and game.audio.arcade_ambience)
+	var gacha: Node3D = game.surroundings.zones[1].get_node("PetGashaponMachine")
+	check("gashapon uses crystal price",gacha.get_node("CrystalPrice").text=="◇ 100")
+	check("gashapon larger clear glass and smaller lid",gacha.get_node("ClearHopper").scale.is_equal_approx(Vector3(2.55,2.13,2.01)) and gacha.get_node("ClearHopper").material_override.albedo_color.a<0.04 and gacha.get_node("TopCap").scale.is_equal_approx(Vector3.ONE*0.5))
+	check("gashapon title clears lid surface",gacha.get_node("TopCap/TitlePlate").position.z-0.08>1.30)
+	check("gashapon internal lamp points downward",(-gacha.get_node("HopperLamp").basis.z).dot(Vector3.DOWN)>0.99)
+	var hopper: MeshInstance3D = gacha.get_node("ClearHopper")
+	var hopper_bounds: AABB = hopper.global_transform*hopper.get_aabb()
+	var cabinets: Array = game.surroundings.zones[1].get_children().filter(func(n): return n is EnvironmentProp and n.asset_id=="mini-arcade__arcade-machine")
+	check("enlarged hopper clears retained arcade",cabinets.size()==1 and not hopper_bounds.intersects(cabinets[0].world_bounds()))
 	check("all twelve CRT shells use cel shading",game.devices.all(func(d): return d.get_node("Case").material_override is ShaderMaterial))
 	check("pixel shaders kept on all twelve glass surfaces",game.devices.all(func(d): return d.screen_material.shader.resource_path=="res://assets/shaders/crt.gdshader"))
 	check("five decorative units retained",game.shell.get_node("GapFillers").get_child_count()==5)

@@ -45,10 +45,16 @@
   },
   "additional_images": [
     {
-      "source": "User attachment codex-clipboard-bd84fe71-50ca-4a39-bffa-1a615fd567d6.png",
+      "source": "User attachment codex-clipboard-cd71e990-b55e-437d-a6c9-e5c349cfd818.png",
       "path": "assets/environment/decals/user/no_signal_wall.png",
-      "sha256": "91d97c078e8ff3502c1b1420d03944fabfcd7616e323178ba7fd56434e8dc0e6",
-      "notes": "Original palette PNG preserved; transparent background is handled by alpha scissor at runtime."
+      "sha256": "cc79d436772a45ba719186b3d534f545167dfa0430c5ea5e80feddf20650996f",
+      "notes": "User-adjusted lower saturation version; palette-preserving nearest resize to 720x540 and optimized PNG compression; original colors and transparency retained.",
+      "source_sha256": "affe15cda2c86870050a84ae58436ae3e17df50ce7b7e425e2989e8c844d13d2",
+      "size_bytes": 39136,
+      "resolution": [
+        720,
+        540
+      ]
     }
   ]
 }

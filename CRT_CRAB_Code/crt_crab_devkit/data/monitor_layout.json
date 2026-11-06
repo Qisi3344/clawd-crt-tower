@@ -4,9 +4,9 @@
     "screen": "BOOT",
     "model": 0,
     "position": [
-      0,
+      0.0,
       1.88,
-      6.1
+      5.124
     ],
     "rotation": [
       0,
@@ -22,9 +22,9 @@
     "screen": "SLEEP_1",
     "model": 1,
     "position": [
-      6.4,
+      5.376,
       1.7188003,
-      0.3
+      0.252
     ],
     "rotation": [
       0,
@@ -40,9 +40,9 @@
     "screen": "SLEEP_2",
     "model": 2,
     "position": [
-      0.4,
+      0.336,
       1.5100001,
-      -6.1
+      -5.124
     ],
     "rotation": [
       0,
@@ -58,9 +58,9 @@
     "screen": "SLEEP_3",
     "model": 0,
     "position": [
-      -6.2,
+      -5.208,
       1.88,
-      0.1
+      0.084
     ],
     "rotation": [
       0,
@@ -76,9 +76,9 @@
     "screen": "SLEEP_4",
     "model": 3,
     "position": [
-      1.6,
+      1.344,
       6.4518002,
-      5.6
+      4.704
     ],
     "rotation": [
       0,
@@ -94,9 +94,9 @@
     "screen": "ARCHIVE",
     "model": 2,
     "position": [
-      5.7,
+      4.788,
       6.7858006,
-      -1.1
+      -0.924
     ],
     "rotation": [
       0,
@@ -112,9 +112,9 @@
     "screen": "SLEEP_6",
     "model": 0,
     "position": [
-      -0.1,
+      -0.084,
       6.7650002,
-      -6.0
+      -5.04
     ],
     "rotation": [
       0,
@@ -130,9 +130,9 @@
     "screen": "SLEEP_7",
     "model": 3,
     "position": [
-      -5.7,
+      -4.788,
       6.4518002,
-      1.7
+      1.428
     ],
     "rotation": [
       0,
@@ -148,9 +148,9 @@
     "screen": "SLEEP_8",
     "model": 2,
     "position": [
-      0.9,
+      0.756,
       11.0638004,
-      5.0
+      4.2
     ],
     "rotation": [
       0,
@@ -166,9 +166,9 @@
     "screen": "SLEEP_9",
     "model": 0,
     "position": [
-      5.5,
+      4.62,
       12.0408007,
-      -1.2
+      -1.008
     ],
     "rotation": [
       0,
@@ -184,9 +184,9 @@
     "screen": "SLEEP_10",
     "model": 3,
     "position": [
-      -1.0,
+      -0.84,
       11.3368004,
-      -5.1
+      -4.284
     ],
     "rotation": [
       0,
@@ -202,9 +202,9 @@
     "screen": "SLEEP_11",
     "model": 2,
     "position": [
-      -5.1,
+      -4.284,
       11.0638004,
-      0.9
+      0.756
     ],
     "rotation": [
       0,

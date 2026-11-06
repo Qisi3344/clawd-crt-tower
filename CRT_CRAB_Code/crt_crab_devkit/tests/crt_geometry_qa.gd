@@ -112,6 +112,21 @@ func _run() -> void:
 			for point in p.poly:
 				point[0] *= device.scale.x; point[1] *= device.scale.z
 		devices.append({"computer_id":device.computer_id,"top_polygon":top_poly,"bottom_polygon":bottom_poly,"top_y":top_box.end.y*device.scale.y,"bottom_y":bottom_box.position.y*device.scale.y,"mass":mass*device.scale.x*device.scale.y*device.scale.z,"mass_center":[mass_center.x*device.scale.x,mass_center.z*device.scale.z],"parts":parts})
+	# A tighter array must still expose every screen and front control when focused.
+	for device in game.devices:
+		var blocked := 0
+		var targets := [Vector3(0,0.2,1.72),Vector3(-1.95,-1.20,1.72),Vector3(1.95,-1.20,1.72),Vector3(-1.95,1.60,1.72),Vector3(1.95,1.60,1.72),Vector3(-1.35,-1.88,1.89),Vector3(1.46,-1.9,1.90),Vector3(1.82,-1.89,1.90)]
+		for other in game.devices:
+			if other==device: continue
+			for node in other.find_children("*","MeshInstance3D",true,false):
+				for target in targets:
+					if node.get_aabb().intersects_segment(node.to_local(device.focus_position()),node.to_local(device.to_global(target)))!=null: blocked += 1
+			for batch in other.find_children("*","MultiMeshInstance3D",true,false):
+				for i in range(batch.multimesh.instance_count):
+					var inverse: Transform3D = (batch.global_transform*batch.multimesh.get_instance_transform(i)).affine_inverse()
+					for target in targets:
+						if batch.multimesh.mesh.get_aabb().intersects_segment(inverse*device.focus_position(),inverse*device.to_global(target))!=null: blocked += 1
+		check("%02d focus view exposes glass corners, sticker, button and indicator"%device.device_index,blocked==0)
 	var exterior_parts: Array = []
 	for node in game.shell.find_children("*","MeshInstance3D",true,false):
 		if game.surroundings.is_ancestor_of(node): continue

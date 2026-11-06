@@ -1,0 +1,132 @@
+{
+  "checks": [
+    {
+      "passed": true,
+      "test": "body width / glass ratio"
+    },
+    {
+      "passed": true,
+      "test": "real front annulus, no solid body"
+    },
+    {
+      "passed": true,
+      "test": "six native pet instances"
+    },
+    {
+      "passed": true,
+      "test": "glass follows one ellipsoid"
+    },
+    {
+      "passed": true,
+      "test": "base circular groove fits glass and body top"
+    },
+    {
+      "passed": true,
+      "test": "lid circular groove fits glass opening"
+    },
+    {
+      "passed": true,
+      "test": "new outlet lip leaves port open"
+    },
+    {
+      "passed": true,
+      "test": "ray passes real front opening"
+    },
+    {
+      "passed": true,
+      "test": "ray hits surrounding front panel"
+    },
+    {
+      "passed": true,
+      "test": "storage floor has open feed hole"
+    },
+    {
+      "passed": true,
+      "test": "outlet floor and open funnel / disk / chute"
+    },
+    {
+      "passed": true,
+      "test": "model 0 fits chute including ears"
+    },
+    {
+      "passed": true,
+      "test": "swept mesh clearance model 0"
+    },
+    {
+      "passed": true,
+      "test": "model 0 lands continuously at floor"
+    },
+    {
+      "passed": true,
+      "test": "model 1 fits chute including ears"
+    },
+    {
+      "passed": true,
+      "test": "swept mesh clearance model 1"
+    },
+    {
+      "passed": true,
+      "test": "model 1 lands continuously at floor"
+    },
+    {
+      "passed": true,
+      "test": "model 2 fits chute including ears"
+    },
+    {
+      "passed": true,
+      "test": "swept mesh clearance model 2"
+    },
+    {
+      "passed": true,
+      "test": "model 2 lands continuously at floor"
+    },
+    {
+      "passed": true,
+      "test": "model 3 fits chute including ears"
+    },
+    {
+      "passed": true,
+      "test": "swept mesh clearance model 3"
+    },
+    {
+      "passed": true,
+      "test": "model 3 lands continuously at floor"
+    },
+    {
+      "passed": true,
+      "test": "model 4 fits chute including ears"
+    },
+    {
+      "passed": true,
+      "test": "swept mesh clearance model 4"
+    },
+    {
+      "passed": true,
+      "test": "model 4 lands continuously at floor"
+    },
+    {
+      "passed": true,
+      "test": "model 5 fits chute including ears"
+    },
+    {
+      "passed": true,
+      "test": "swept mesh clearance model 5"
+    },
+    {
+      "passed": true,
+      "test": "model 5 lands continuously at floor"
+    },
+    {
+      "passed": true,
+      "test": "test button starts real tween"
+    },
+    {
+      "passed": true,
+      "test": "animation finishes and button restores"
+    }
+  ],
+  "collisions": [],
+  "method": "actual pet mesh edges against front annulus and flap, vertices against funnel/ring/chute/walls; all six models, 60 Hz trajectory; actual Tween capture at fixed 30 fps",
+  "passed": true,
+  "sweep_samples": 906
+}

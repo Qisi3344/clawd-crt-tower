@@ -1,5 +1,19 @@
 # 扭蛋机 v3 实机验收
 
+## 最新：球形玻璃罩与扣环
+
+将原来近直筒的玻璃改为同一椭球面，两端仅为安装开口而截断。最大直径 4.20，球心 Y=4.82，半径 (2.10,2.20,2.10)；下口 Y=3.55、半径 1.714758，上口 Y=6.24、半径 1.603977。上下圆形 U 槽直接由这些截面半径生成，槽宽 0.04；底座下表面 Y=3.40 贴合原机身顶部，玻璃边缘嵌入槽内，顶部由匹配圆环与猫耳扁盖扣住。
+
+修正球面法线、增强 Fresnel 边缘反光，增加两条贴合球面的高光，同时保持仓内可见。下半机身仅补旋钮弧标、价格牌内衬、固定螺钉、取物口薄边框和系列标识；机身尺寸、内部机构、宠物模型和摆放、出蛋路径及交互代码均保留。
+
+| 正面实机 | 侧面实机 |
+| --- | --- |
+| ![正面](spherical_hopper_evidence/front.png) | ![侧面](spherical_hopper_evidence/side.png) |
+
+正侧面检查未见外露缝隙或玻璃穿入机身。[机台 31 项](spherical_hopper_evidence/gashapon-v3-qa.json)、[全场 44 项](spherical_hopper_evidence/arcade-hall-qa.json)、[玩法与环境 90 项](spherical_hopper_evidence/sideview-qa-visual.json)通过；新增检查覆盖椭球面方程、上下口与扣环半径、底座落点和取物口净空。六款共 906 个出蛋姿态样本通过受检通道检查。[游戏厅效果](spherical_hopper_evidence/hall.png)，[环境几何统计](spherical_hopper_evidence/environment-metrics-visual.json)为 56,790 三角面。
+
+以下为原 v3 初验记录，参数与配图保留历史版本。
+
 后续宠物外观按草稿修正为不透明的“动物上半球 + 稀有度下半球”，透明仅保留在机台大玻璃仓。最新并排图和复查结果见 [六款扭蛋说明](PET_CAPSULES.md)；本文图片与视频保留 v3 初验记录。
 
 按 [用户调整单](GASHAPON_V3_SPEC.md) 在原扭蛋机脚本内完成外壳、玻璃与出蛋机构修改。游戏厅位置、六款独立模型、电脑塔、屏幕玩法、关卡映射和存档脚本保留。

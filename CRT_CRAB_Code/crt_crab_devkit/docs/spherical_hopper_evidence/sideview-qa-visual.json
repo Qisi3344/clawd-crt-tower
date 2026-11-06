@@ -1,0 +1,639 @@
+{
+	"captures": [
+		{
+			"draw_calls": 386.0,
+			"fps": 1.0,
+			"memory_mb": 100.64112663269,
+			"name": "m1-01-boot",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 387.0,
+			"fps": 60.0,
+			"memory_mb": 100.906286239624,
+			"name": "m1-02-pressure",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 385.0,
+			"fps": 60.0,
+			"memory_mb": 100.938711166382,
+			"name": "m1-03-treasure",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 886.0,
+			"fps": 60.0,
+			"memory_mb": 101.443353652954,
+			"name": "m3-front",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 799.0,
+			"fps": 51.0,
+			"memory_mb": 101.447454452515,
+			"name": "m3-back",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 796.0,
+			"fps": 56.0,
+			"memory_mb": 101.448427200317,
+			"name": "m3-left",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 825.0,
+			"fps": 56.0,
+			"memory_mb": 101.451173782349,
+			"name": "m3-right",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 795.0,
+			"fps": 56.0,
+			"memory_mb": 101.452001571655,
+			"name": "m3-top",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 764.0,
+			"fps": 60.0,
+			"memory_mb": 101.975957870483,
+			"name": "m2-04-transition",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 395.0,
+			"fps": 60.0,
+			"memory_mb": 101.90500831604,
+			"name": "m2-05-archive",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 413.0,
+			"fps": 60.0,
+			"memory_mb": 101.881174087524,
+			"name": "m2-06-heavy-plate",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 396.0,
+			"fps": 60.0,
+			"memory_mb": 101.88673210144,
+			"name": "m2-07-key",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 405.0,
+			"fps": 59.0,
+			"memory_mb": 101.852197647095,
+			"name": "m2-08-remote-gate",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 399.0,
+			"fps": 59.0,
+			"memory_mb": 98.62721824646,
+			"name": "m2-portrait",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 426.0,
+			"fps": 59.0,
+			"memory_mb": 98.7658863067627,
+			"name": "m2-pause",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 999.0,
+			"fps": 51.0,
+			"memory_mb": 101.948632240295,
+			"name": "environment-credits",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 948.0,
+			"fps": 51.0,
+			"memory_mb": 101.944382667542,
+			"name": "environment-front",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 545.0,
+			"fps": 51.0,
+			"memory_mb": 101.945675849915,
+			"name": "environment-compare-front-before",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 925.0,
+			"fps": 51.0,
+			"memory_mb": 101.946316719055,
+			"name": "environment-back",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 525.0,
+			"fps": 51.0,
+			"memory_mb": 101.947812080383,
+			"name": "environment-compare-back-before",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 898.0,
+			"fps": 51.0,
+			"memory_mb": 101.948464393616,
+			"name": "environment-left",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 526.0,
+			"fps": 40.0,
+			"memory_mb": 101.949753761292,
+			"name": "environment-compare-left-before",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 883.0,
+			"fps": 40.0,
+			"memory_mb": 101.950413703918,
+			"name": "environment-right",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 899.0,
+			"fps": 40.0,
+			"memory_mb": 101.951321601868,
+			"name": "environment-top",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 433.0,
+			"fps": 40.0,
+			"memory_mb": 101.953019142151,
+			"name": "environment-detail-repair",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 561.0,
+			"fps": 40.0,
+			"memory_mb": 101.953980445862,
+			"name": "environment-detail-arcade",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 146.0,
+			"fps": 37.0,
+			"memory_mb": 101.954934120178,
+			"name": "environment-detail-power",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"engine": "4.7.2-stable (official)",
+	"passed": true,
+	"renderer": "Windows",
+	"tests": [
+		{
+			"passed": true,
+			"test": "M0 exterior twelve devices retained"
+		},
+		{
+			"passed": true,
+			"test": "upper keyboards absent and base configuration retained"
+		},
+		{
+			"passed": true,
+			"test": "real isolated 320x240 2D screen"
+		},
+		{
+			"passed": true,
+			"test": "only player belongs to internal screen"
+		},
+		{
+			"passed": true,
+			"test": "QA disables user save access"
+		},
+		{
+			"passed": true,
+			"test": "W away from a ladder never creates flying movement"
+		},
+		{
+			"passed": true,
+			"test": "walk toward gap"
+		},
+		{
+			"passed": true,
+			"test": "jump crosses gap and lands"
+		},
+		{
+			"passed": true,
+			"test": "walk to crate"
+		},
+		{
+			"passed": true,
+			"test": "push crate using held E"
+		},
+		{
+			"passed": true,
+			"test": "pull crate without changing facing"
+		},
+		{
+			"passed": true,
+			"test": "push to normal pressure plate"
+		},
+		{
+			"passed": true,
+			"test": "weight opens actual collision door"
+		},
+		{
+			"passed": true,
+			"test": "pass opened gate"
+		},
+		{
+			"passed": true,
+			"test": "ladder reaches raised treasure platform"
+		},
+		{
+			"passed": true,
+			"test": "approach BOOT chest"
+		},
+		{
+			"passed": true,
+			"test": "BOOT chest grants unique key and crystals"
+		},
+		{
+			"passed": true,
+			"test": "same chest cannot pay twice"
+		},
+		{
+			"passed": true,
+			"test": "pause freezes 2D control"
+		},
+		{
+			"passed": true,
+			"test": "array mode freezes internal physics"
+		},
+		{
+			"passed": true,
+			"test": "reach first port by normal movement"
+		},
+		{
+			"passed": true,
+			"test": "bad spawn safely refuses travel"
+		},
+		{
+			"passed": true,
+			"test": "mid-transition failure returns live original screen"
+		},
+		{
+			"passed": true,
+			"test": "failed transfer restores visible avatar and failure feedback"
+		},
+		{
+			"passed": true,
+			"test": "transition input is locked"
+		},
+		{
+			"passed": true,
+			"test": "BOOT to ARCHIVE via actual E interaction"
+		},
+		{
+			"passed": true,
+			"test": "unique player after transfer"
+		},
+		{
+			"passed": true,
+			"test": "player weight alone cannot activate heavy plate"
+		},
+		{
+			"passed": true,
+			"test": "two claw strikes defeat data bug"
+		},
+		{
+			"passed": true,
+			"test": "walk to archive box"
+		},
+		{
+			"passed": true,
+			"test": "reach archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "climb archive platform"
+		},
+		{
+			"passed": true,
+			"test": "approach marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "pinch breaks marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "reach heavy stone"
+		},
+		{
+			"passed": true,
+			"test": "push heavy stone off platform"
+		},
+		{
+			"passed": true,
+			"test": "gravity lands heavy stone on persistent plate"
+		},
+		{
+			"passed": true,
+			"test": "walk through heavy-signal gate"
+		},
+		{
+			"passed": true,
+			"test": "archive chest grants persistent key"
+		},
+		{
+			"passed": true,
+			"test": "walk to marked hidden wall"
+		},
+		{
+			"passed": true,
+			"test": "hidden wall can be broken"
+		},
+		{
+			"passed": true,
+			"test": "reach optional archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "reach hidden archive chest"
+		},
+		{
+			"passed": true,
+			"test": "optional archive treasure is collectible"
+		},
+		{
+			"passed": true,
+			"test": "reach archive exit without teleport"
+		},
+		{
+			"passed": true,
+			"test": "return route reaches BOOT"
+		},
+		{
+			"passed": true,
+			"test": "ARCHIVE pressure opens real BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "walk through BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "remote reward obtainable only after cross-screen signal"
+		},
+		{
+			"passed": true,
+			"test": "walk back to outgoing port"
+		},
+		{
+			"passed": true,
+			"test": "BOOT ARCHIVE BOOT ARCHIVE roundtrip"
+		},
+		{
+			"passed": true,
+			"test": "heavy stone and signal persist on revisit"
+		},
+		{
+			"passed": true,
+			"test": "treasure ledger survives revisit"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "R resets current stone and clears supported signal"
+		},
+		{
+			"passed": true,
+			"test": "R keeps unique treasure rewards"
+		},
+		{
+			"passed": true,
+			"test": "damage has invulnerable interval"
+		},
+		{
+			"passed": true,
+			"test": "no chain damage"
+		},
+		{
+			"passed": true,
+			"test": "death keeps collected chests"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "pause menu has focused resume"
+		},
+		{
+			"passed": true,
+			"test": "full 209 second music track loops"
+		},
+		{
+			"passed": true,
+			"test": "music switch pauses music independently"
+		},
+		{
+			"passed": true,
+			"test": "music volume slider reaches silence"
+		},
+		{
+			"passed": true,
+			"test": "QA never persists audio preferences"
+		},
+		{
+			"passed": true,
+			"test": "audio preferences persist separately from progress"
+		},
+		{
+			"passed": true,
+			"test": "environment has four independent zones"
+		},
+		{
+			"passed": true,
+			"test": "rear posters hide and restore with their real panels"
+		},
+		{
+			"passed": true,
+			"test": "real GLB instances retained except replaced arcade"
+		},
+		{
+			"passed": true,
+			"test": "one arcade replaced by native pet gashapon"
+		},
+		{
+			"passed": true,
+			"test": "surroundings add no physical gameplay bodies"
+		},
+		{
+			"passed": true,
+			"test": "scenery displays do not create more SubViewports"
+		},
+		{
+			"passed": true,
+			"test": "actual cross-screen camera path stays clear of scenery"
+		},
+		{
+			"passed": true,
+			"test": "all added geometry remains under 60k triangles"
+		},
+		{
+			"passed": true,
+			"test": "a prop placed across active glass is hidden immediately"
+		},
+		{
+			"passed": true,
+			"test": "a cleared prop becomes visible again"
+		},
+		{
+			"passed": true,
+			"test": "360-degree observation never leaves camera inside a visible prop"
+		},
+		{
+			"passed": true,
+			"test": "micro-motion switch stops the repair fan"
+		},
+		{
+			"passed": true,
+			"test": "repair fan resumes when enabled"
+		},
+		{
+			"passed": true,
+			"test": "pause menu opens readable material credits"
+		}
+	]
+}

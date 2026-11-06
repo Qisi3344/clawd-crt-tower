@@ -137,23 +137,89 @@ func chute() -> void:
     get_node("CollectionBack").scale.y = 0.20
     get_node("CollectionBack").position.y = 0.37
 
+const GLASS_CENTER := 4.82
+const GLASS_RADII := Vector3(2.10,2.20,2.10)
+const GLASS_BOTTOM := 3.55
+const GLASS_TOP := 6.24
+
+func glass_radius(y: float) -> float:
+    return GLASS_RADII.x*sqrt(1-pow((y-GLASS_CENTER)/GLASS_RADII.y,2))
+
 func glass_mesh() -> ArrayMesh:
-    # Curved profile with an actual open bottom/top rim; dimensions remain 3.5x2.84x3.02.
-    var profiles := [Vector2(-1,0.90),Vector2(-0.75,0.97),Vector2(-0.35,1),Vector2(0.25,1),Vector2(0.65,0.97),Vector2(1,0.94)]
+    # True spherical coordinates, cropped only at the two mounting openings.
+    var bottom := asin((GLASS_BOTTOM-GLASS_CENTER)/GLASS_RADII.y)
+    var top := asin((GLASS_TOP-GLASS_CENTER)/GLASS_RADII.y)
     var st := SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
-    for k in range(profiles.size()-1):
-        for i in range(32):
+    for row in range(12):
+        for col in range(32):
             var p: Array[Vector3] = []
-            for ij in [Vector2i(k,i),Vector2i(k,i+1),Vector2i(k+1,i+1),Vector2i(k+1,i)]:
-                var profile: Vector2 = profiles[ij.x]
-                var angle: float = TAU*ij.y/32.0
-                p.append(Vector3(cos(angle)*profile.y,profile.x,sin(angle)*profile.y))
-            var v := PackedVector3Array()
-            quad(v,p[0],p[1],p[2],p[3],Vector3(p[0].x,0,p[0].z))
-            for vertex in v:
-                st.set_normal(Vector3(vertex.x,vertex.y*0.12,vertex.z).normalized())
-                st.add_vertex(vertex)
+            for ij in [Vector2i(col,row),Vector2i(col+1,row),Vector2i(col+1,row+1),Vector2i(col,row+1)]:
+                var a: float = TAU*ij.x/32.0
+                var b := lerpf(bottom,top,ij.y/12.0)
+                p.append(Vector3(cos(a)*cos(b),sin(b),sin(a)*cos(b)))
+            var vertices := PackedVector3Array()
+            quad(vertices,p[0],p[1],p[2],p[3],p[0])
+            for v in vertices: st.set_normal(v); st.add_vertex(v)
     return st.commit()
+
+func mounting_groove(label: String, y: float, direction: float, parent: Node3D) -> MeshInstance3D:
+    var radius := glass_radius(y)
+    # U-section: 0.04-wide groove receives the glass edge, with a supporting bottom.
+    var profile := [Vector2(-0.09,0.08),Vector2(-0.02,0.08),Vector2(-0.02,0),Vector2(0.02,0),Vector2(0.02,0.08),Vector2(0.09,0.08),Vector2(0.09,-0.15),Vector2(-0.09,-0.15)]
+    var vertices := PackedVector3Array()
+    for row in range(profile.size()):
+        var next := (row+1)%profile.size()
+        var delta: Vector2 = profile[next]-profile[row]
+        for col in range(32):
+            var a := TAU*col/32; var b := TAU*(col+1)/32
+            var r: float = radius+profile[row].x; var t: float = radius+profile[next].x
+            var h: float = profile[row].y*direction; var k: float = profile[next].y*direction
+            quad(vertices,Vector3(cos(a)*r,h,sin(a)*r),Vector3(cos(b)*r,h,sin(b)*r),Vector3(cos(b)*t,k,sin(b)*t),Vector3(cos(a)*t,k,sin(a)*t),Vector3(-delta.y*cos((a+b)/2),delta.x*direction,-delta.y*sin((a+b)/2)))
+    var n := mesh_node(label,vertices,Color("d4b49d"))
+    n.reparent(parent,false); n.position.y = y if parent==self else 0
+    n.set_meta("opening_radius",radius)
+    casing.append(n)
+    return n
+
+func glass_highlight(parent: Node3D, azimuth: float, low: float, high: float, width: float) -> void:
+    var st := SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
+    for row in range(8):
+        var points: Array[Vector3] = []
+        for ij in [Vector2i(0,row),Vector2i(1,row),Vector2i(1,row+1),Vector2i(0,row+1)]:
+            var a: float = azimuth+(ij.x-0.5)*width
+            var b := lerpf(low,high,ij.y/8.0)
+            points.append(Vector3(cos(a)*cos(b),sin(b),sin(a)*cos(b))*GLASS_RADII+Vector3(0,GLASS_CENTER,0))
+        var vertices := PackedVector3Array()
+        quad(vertices,points[0],points[1],points[2],points[3],points[0]-Vector3(0,GLASS_CENTER,0))
+        for v in vertices:
+            var normal := ((v-Vector3(0,GLASS_CENTER,0))/GLASS_RADII).normalized()
+            st.set_normal(normal); st.add_vertex(v+normal*0.008)
+    var n := MeshInstance3D.new(); n.mesh = st.commit()
+    var mat := StandardMaterial3D.new(); mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; mat.albedo_color = Color(0.91,0.94,0.97,0.65)
+    n.material_override = mat; n.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF; parent.add_child(n)
+
+func lower_dressing() -> void:
+    var details := Node3D.new(); details.name = "CabinetDetails"; add_child(details); casing.append(details)
+    box(details,"PriceInset",Vector3(-0.82,2.70,1.654),Vector3(0.88,0.44,0.018),Color("332b3b"))
+    get_node("CrystalPrice").position.z = 1.68
+    for x in [-1.65,1.65]:
+        for y in [0.42,3.16]: orb(details,Vector3(x,y,1.590),Vector3(0.035,0.035,0.018),Color("9c9298"))
+    var arc := PackedVector3Array()
+    for i in range(17):
+        var a := deg_to_rad(20+i*140.0/16)
+        arc.append(Vector3(1.01+cos(a)*0.60,2.50+sin(a)*0.60,1.61))
+    Craft.cable(details,arc,Color("c77b9d"),0.026)
+    Craft.label(details,"TURN",Vector3(1.01,3.19,1.60),Color("906b7f"),0.0016,26)
+    Craft.label(details,"SERIES 06",Vector3(1.0,1.18,1.60),Color("896d73"),0.0015,24)
+    # Thin continuous lip follows the real opening, without reducing its clearance.
+    var outer := rounded(Rect2(-1.31,0.40,1.46,1.63),0.20)
+    var inner := rounded(Rect2(-1.23,0.48,1.30,1.47),0.12)
+    var points := PackedVector3Array()
+    for i in range(outer.size()):
+        var j := (i+1)%outer.size()
+        quad(points,Vector3(outer[i].x,outer[i].y,1.590),Vector3(outer[j].x,outer[j].y,1.590),Vector3(inner[j].x,inner[j].y,1.590),Vector3(inner[i].x,inner[i].y,1.590),Vector3.BACK)
+    var lip := mesh_node("OutletTrim",points,Color("e2c8ad")); lip.reparent(details,false)
 
 func _ready() -> void:
     name = "PetGashaponMachine"; set_meta("scenery_group",true)
@@ -194,34 +260,32 @@ func _ready() -> void:
     var ring := MeshInstance3D.new(); ring.mesh = torus; ring.scale.y = 0.18/0.245; ring.material_override = Craft.material(teal); disk.add_child(ring)
     box(disk,"IndexTab",Vector3(0.53,0,0),Vector3(0.22,0.18,0.12),pink)
     gate = box(self,"ReleaseGate",Vector3(-0.58,2.84,-0.50),Vector3(0.85,0.04,0.85),Color("77687e"))
-    var glass := MeshInstance3D.new(); glass.name = "ClearHopper"; glass.mesh = glass_mesh(); glass.position.y = 4.82; glass.scale = Vector3(1.75,1.42,1.51)
+    var glass := MeshInstance3D.new(); glass.name = "ClearHopper"; glass.mesh = glass_mesh(); glass.position.y = GLASS_CENTER; glass.scale = GLASS_RADII
     var mat := ShaderMaterial.new(); mat.shader = load("res://assets/shaders/gashapon_glass.gdshader"); glass.material_override = mat
     glass.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF; add_child(glass); casing.append(glass)
-    for rim in [[3.40,1.575,1.359],[6.24,1.645,1.419]]:
-        var torus_rim := TorusMesh.new(); torus_rim.inner_radius = 0.98; torus_rim.outer_radius = 1.0; torus_rim.rings = 24; torus_rim.ring_segments = 6
-        var edge := MeshInstance3D.new(); edge.mesh = torus_rim; edge.position.y = rim[0]; edge.scale = Vector3(rim[1],1,rim[2]); edge.material_override = Craft.material(Color("b4a7b6")); add_child(edge); casing.append(edge)
-    var top := Node3D.new(); top.name = "TopCap"; top.position.y = 6.24; add_child(top)
-    orb(top,Vector3.ZERO,Vector3(1.85,0.25,1.57),cream)
+    mounting_groove("BaseGroove",GLASS_BOTTOM,1,self)
+    var top := Node3D.new(); top.name = "TopCap"; top.position.y = GLASS_TOP; add_child(top)
+    mounting_groove("LidGroove",GLASS_TOP,-1,top)
+    var lid := MeshInstance3D.new(); lid.name = "FlatLid"
+    var cylinder := CylinderMesh.new(); cylinder.top_radius = glass_radius(GLASS_TOP)+0.12; cylinder.bottom_radius = cylinder.top_radius; cylinder.height = 0.24; cylinder.radial_segments = 32
+    lid.mesh = cylinder; lid.position.y = 0.15; lid.material_override = Craft.material(cream); top.add_child(lid)
     orb(top,Vector3(0,0.26,0),Vector3(0.48,0.08,0.40),teal)
     var ears := Node3D.new(); ears.position.y = -1.97; top.add_child(ears)
     PetCapsule.cat_ear(ears,-1,cream,pink,false); PetCapsule.cat_ear(ears,1,cream,pink,false)
-    var title := box(top,"TitlePlate",Vector3(0,0.02,1.64),Vector3(2.45,0.46,0.12),dark)
-    Craft.label(top,"PET GASHAPON",Vector3(0,0.02,1.72),Color("dd98bd"),0.0037,32)
+    var title := box(top,"TitlePlate",Vector3(0,0.02,1.75),Vector3(2.45,0.46,0.12),dark)
+    Craft.label(top,"PET GASHAPON",Vector3(0,0.02,1.83),Color("dd98bd"),0.0037,32)
     for side in [-1,1]:
-        for y in [-0.1,0.02,0.14]: box(top,"Whisker",Vector3(side*1.40,y,1.47),Vector3(0.23,0.025,0.025),dark)
+        for y in [0.10,0.17,0.24]:
+            var whisker := box(top,"Whisker",Vector3(side*1.40,y,1.0),Vector3(0.23,0.025,0.025),dark)
+            whisker.rotation.y = atan2(side*1.40,1.0)
     box(self,"LampFixture",Vector3(0,6.02,0),Vector3(0.48,0.08,0.40),dark)
     Craft.box(self,Vector3(0,5.965,0),Vector3(0.4,0.025,0.34),Color("eedab1"),0.01,0.4)
     var lamp := SpotLight3D.new(); lamp.name = "HopperLamp"; lamp.position.y = 5.94; lamp.rotation_degrees.x = -90
     lamp.light_color = Color("ffe6bf"); lamp.light_energy = 0.60; lamp.spot_range = 4; lamp.spot_angle = 48; add_child(lamp)
-    var highlights := Node3D.new(); add_child(highlights); casing.append(highlights)
-    for side in [-1,1]:
-        var points := PackedVector3Array()
-        for i in range(7):
-            var a := -0.45+i*0.14
-            var y := sin(a)
-            var r := lerpf(0.97,1.0,(y+0.75)/0.40) if y< -0.35 else lerpf(1.0,0.97,(y-0.25)/0.40) if y>0.25 else 1.0
-            points.append(Vector3(side*0.93*1.75,4.82+y*1.42,sqrt(r*r-0.93*0.93)*1.51+0.008))
-        Craft.cable(highlights,points,Color("aebcc5"),0.0125)
+    var highlights := Node3D.new(); highlights.name = "GlassHighlights"; add_child(highlights); casing.append(highlights)
+    glass_highlight(highlights,deg_to_rad(140),-0.25,0.35,0.045)
+    glass_highlight(highlights,deg_to_rad(40),0.06,0.30,0.026)
+    lower_dressing()
     reset()
     make_sounds()
 

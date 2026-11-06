@@ -119,9 +119,20 @@ func hits_mesh(node: MeshInstance3D, start: Vector3, end: Vector3) -> bool:
 func verify(canvas: CanvasLayer) -> void:
     await capture("controls")
     canvas.hide()
-    record("body width / glass ratio",3.50/3.85<=1.10)
+    record("body width / glass ratio",machine.get_node("ClearHopper").scale.x*2/3.85<=1.10)
     record("real front annulus, no solid body",machine.has_node("OpenFrontPanel") and not machine.has_node("Body"))
     record("six native pet instances",machine.pile.size()==6)
+    var glass: MeshInstance3D = machine.get_node("ClearHopper")
+    var sphere_vertices: PackedVector3Array = glass.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+    record("glass follows one ellipsoid",Array(sphere_vertices).all(func(p): return absf(p.length()-1)<0.00001))
+    var world_bounds: AABB = glass.transform*glass.get_aabb()
+    var base_radius := sqrt(1-pow((world_bounds.position.y-glass.position.y)/glass.scale.y,2))*glass.scale.x
+    var lid_radius := sqrt(1-pow((world_bounds.end.y-glass.position.y)/glass.scale.y,2))*glass.scale.x
+    var base: MeshInstance3D = machine.get_node("BaseGroove")
+    var lid: MeshInstance3D = machine.get_node("TopCap/LidGroove")
+    record("base circular groove fits glass and body top",absf(base.get_meta("opening_radius")-base_radius)<0.0001 and absf(base.position.y-world_bounds.position.y)<0.0001 and absf((base.transform*base.get_aabb()).position.y-3.40)<0.0001)
+    record("lid circular groove fits glass opening",absf(lid.get_meta("opening_radius")-lid_radius)<0.0001 and absf(machine.get_node("TopCap").position.y-world_bounds.end.y)<0.0001)
+    record("new outlet lip leaves port open",not hits_mesh(machine.get_node("CabinetDetails/OutletTrim"),Vector3(-0.58,1.215,2),Vector3(-0.58,1.215,1)))
     record("ray passes real front opening",not hits_mesh(machine.get_node("OpenFrontPanel"),Vector3(-0.58,1.215,2),Vector3(-0.58,1.215,1)))
     record("ray hits surrounding front panel",hits_mesh(machine.get_node("OpenFrontPanel"),Vector3(1.2,1.215,2),Vector3(1.2,1.215,1)))
     record("storage floor has open feed hole",not hits_mesh(machine.get_node("HopperFloorWithOpening"),Vector3(-0.58,4,-0.5),Vector3(-0.58,3,-0.5)))

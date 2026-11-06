@@ -46,7 +46,7 @@ static func hemisphere(top: bool) -> ArrayMesh:
 	return shapes[key]
 
 func face(x: float, y: float, lift := 0.0) -> Vector3:
-	return Vector3(x,y,0.77*sqrt(maxf(0.04,1-pow(x/0.80,2)-pow((y-1.57)/0.79,2)))+0.025+lift)
+	return Vector3(x,y,sqrt(maxf(0.01,1-x*x-pow(y-1.0,2)))+0.018+lift)
 
 func line(points: Array, color: Color, thickness := 0.021) -> void:
 	var path := PackedVector3Array()
@@ -76,44 +76,50 @@ static func cat_ear(parent: Node3D, side: float, coat: Color, inner: Color, glow
 
 func _ready() -> void:
 	var coats := [Color("e8dfc9"),Color("bd8d60"),Color("c69d70"),Color("e5b3c8"),Color("966c59"),Color("40304e")]
-	var shells := [Color("cbbba1"),Color("c5b49b"),Color("65ada4"),Color("bd789d"),Color("559b92"),Color("d5af59")]
+	var shells := [Color("cbbba1"),Color("b6b2b1"),Color("65ada4"),Color("bd789d"),Color("559b92"),Color("d5af59")]
 	var coat: Color = coats[kind]
 	var pink := Color("d98d9f")
 	var ink := Color("3b2d39")
 	var hidden := kind==Kind.HIDDEN_CAT
 	part("LowerShell",hemisphere(false),Vector3(0,1,0),Vector3.ONE,shells[kind])
-	var dome := part("ClearDome",hemisphere(true),Vector3(0,1,0),Vector3.ONE*1.015,Color.WHITE)
-	var glass := StandardMaterial3D.new()
-	glass.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	glass.albedo_color = Color(0.86,0.84,0.96,0.18)
-	glass.roughness = 0.24
-	glass.cull_mode = BaseMaterial3D.CULL_BACK
-	glass.no_depth_test = false
-	dome.material_override = glass
-	dome.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# The animal is the opaque upper half of the ball, not a toy inside glass.
+	var upper := part("AnimalUpperShell",hemisphere(true),Vector3(0,1,0),Vector3.ONE,coat)
+	if kind==Kind.CAT:
+		if not shapes.has("cat_upper"):
+			var arrays := hemisphere(true).surface_get_arrays(0)
+			var colors := PackedColorArray()
+			for v in arrays[Mesh.ARRAY_VERTEX]:
+				colors.append(Color("8c858b") if v.x>0.15 and v.y>0.45 and v.z>0.15 else coat)
+			arrays[Mesh.ARRAY_COLOR] = colors
+			var patch_mesh := ArrayMesh.new()
+			patch_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+			shapes.cat_upper = patch_mesh
+		upper.mesh = shapes.cat_upper
+		upper.material_override = Craft.material(Color.WHITE).duplicate()
+		upper.material_override.vertex_color_use_as_albedo = true
 	var ring := TorusMesh.new()
-	ring.inner_radius = 0.96; ring.outer_radius = 1.035
+	ring.inner_radius = 0.985; ring.outer_radius = 1.012
 	ring.rings = 24; ring.ring_segments = 6
-	part("SeamRim",ring,Vector3(0,1.015,0),Vector3.ONE,shells[kind].lightened(0.15),0.22 if hidden else 0.0)
-	ball("PetHead",Vector3(0,1.57,0),Vector3(0.80,0.79,0.77),coat)
+	part("SeamRim",ring,Vector3(0,1,0),Vector3.ONE,shells[kind].lightened(0.15),0.22 if hidden else 0.0)
+	var pointed_ears := Node3D.new()
+	pointed_ears.position.y = -0.40
+	add_child(pointed_ears)
 	for side in [-1.0,1.0]:
 		match kind:
-			Kind.CAT,Kind.HIDDEN_CAT: cat_ear(self,side,Color("e9bf60") if hidden else coat,pink,hidden)
+			Kind.CAT,Kind.HIDDEN_CAT: cat_ear(pointed_ears,side,Color("e9bf60") if hidden else coat,pink,hidden)
 			Kind.DOG:
-				var ear := ball("DroopEar",Vector3(side*0.73,1.76,0.34),Vector3(0.23,0.48,0.22),Color("a67653"))
+				var ear := ball("DroopEar",Vector3(side*0.89,1.52,0.20),Vector3(0.20,0.38,0.22),Color("a67653"))
 				ear.rotation_degrees.z = side*-15
 			Kind.RABBIT:
-				ball("LongEar",Vector3(side*0.38,2.55,-0.05),Vector3(0.23,0.65,0.19),coat)
-				ball("LongInnerEar",Vector3(side*0.38,2.59,0.10),Vector3(0.14,0.48,0.07),pink)
+				ball("LongEar",Vector3(side*0.38,2.33,-0.05),Vector3(0.23,0.65,0.19),coat)
+				ball("LongInnerEar",Vector3(side*0.38,2.37,0.10),Vector3(0.14,0.48,0.07),pink)
 			_:
-				ball("RoundEar",Vector3(side*0.56,2.20,-0.04),Vector3(0.31,0.32,0.20),coat)
-				ball("RoundInnerEar",Vector3(side*0.56,2.22,0.13),Vector3(0.20,0.21,0.06),pink if kind==Kind.HAMSTER else Color("cead8e"))
+				ball("RoundEar",Vector3(side*0.56,1.99,-0.04),Vector3(0.27,0.28,0.20),coat)
+				ball("RoundInnerEar",Vector3(side*0.56,2.01,0.13),Vector3(0.17,0.18,0.06),pink if kind==Kind.HAMSTER else Color("cead8e"))
 		ball("Blush",face(side*0.47,1.49,0.008),Vector3(0.12,0.075,0.028),pink)
 		if not hidden:
 			ball("Eye",face(side*0.27,1.73),Vector3(0.060,0.073,0.036),ink)
 			ball("EyeShine",face(side*0.27-0.015,1.755,0.035),Vector3.ONE*0.014,Color("fff3dc"))
-	if kind==Kind.CAT:
-		ball("GrayPatch",Vector3(0.33,1.99,0.36),Vector3(0.31,0.33,0.30),Color("8c858b"))
 	if kind in [Kind.DOG,Kind.HAMSTER,Kind.BEAR]:
 		ball("CreamMuzzle",face(0,1.45,0.02),Vector3(0.31,0.20,0.07),Color("eddbc0"))
 	if hidden:
@@ -131,6 +137,3 @@ func _ready() -> void:
 		if kind in [Kind.CAT,Kind.HAMSTER,Kind.RABBIT]:
 			for side in [-1,1]:
 				for y in [1.49,1.57]: line([Vector2(side*0.54,y),Vector2(side*0.67,y+0.025)],ink,0.014)
-	# Small painted glass glints, kept off the eyes and mouth.
-	for side in [-1,1]:
-		ball("GlassGlint",Vector3(side*0.87,1.39,0.38),Vector3(0.023,0.16,0.025),Color("dfd8df"))

@@ -1,7 +1,7 @@
 extends Node3D
 signal dispensed
 const PETS := ["cat","dog","hamster","rabbit","bear","hidden_cat"]
-const ROUTE := [Vector3(0,4.402,-0.45),Vector3(-0.58,4.40,-0.95),Vector3(-0.58,3.62,-0.90),Vector3(-0.58,3.05,-0.50),Vector3(-0.58,2.64,-0.50),Vector3(-0.58,1.70,-0.50),Vector3(-0.58,0.48,0.10),Vector3(-0.58,0.48,1.12),Vector3(-0.58,0.48,1.12)]
+const ROUTE := [Vector3(0,4.332,-0.45),Vector3(-0.58,4.40,-0.95),Vector3(-0.58,3.62,-0.90),Vector3(-0.58,3.05,-0.50),Vector3(-0.58,2.64,-0.50),Vector3(-0.58,1.70,-0.50),Vector3(-0.58,0.48,0.10),Vector3(-0.58,0.48,1.12),Vector3(-0.58,0.48,1.12)]
 const TIMES := [0.35,0.55,0.70,1.15,1.40,1.65,1.95,2.18,2.50]
 var casing: Array[Node3D] = []
 var pile: Array[Node3D] = []
@@ -229,7 +229,7 @@ func reset(kind := 5) -> void:
     if busy: return
     for pet in pile: pet.free()
     pile.clear()
-    var positions := [Vector3(-0.70,3.55,0.40),Vector3(0,3.55,0.40),Vector3(-0.35,3.881,-0.08),Vector3(0.35,3.881,-0.08),Vector3(0.70,3.55,0.40),Vector3(0,4.402,-0.45)]
+    var positions := [Vector3(-0.70,3.55,0.40),Vector3(0,3.55,0.40),Vector3(-0.35,3.881,-0.08),Vector3(0.35,3.881,-0.08),Vector3(0.70,3.55,0.40),Vector3(0,4.332,-0.45)]
     for i in range(6):
         var pet := load("res://scenes/pets/"+PETS[kind if i==5 else i]+".tscn").instantiate() as Node3D
         pet.position = positions[i]; pet.scale = Vector3.ONE*0.34; add_child(pet); pile.append(pet)

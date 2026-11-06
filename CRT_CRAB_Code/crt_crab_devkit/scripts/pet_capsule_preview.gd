@@ -53,8 +53,8 @@ func verify() -> void:
 	var checks: Array = []
 	for i in range(pets.size()):
 		var pet := pets[i]
-		checks.append({"model":PetCapsule.TITLES[i],"passed":pet.kind==i and pet.has_node("LowerShell") and pet.has_node("ClearDome") and pet.has_node("SeamRim") and pet.has_node("PetHead"),"meshes":pet.find_children("*","MeshInstance3D",true,false).size()})
-		checks.append({"model":PetCapsule.TITLES[i]+" glass and base", "passed":pet.get_node("ClearDome").material_override.transparency==BaseMaterial3D.TRANSPARENCY_ALPHA and absf(pet.get_node("LowerShell").get_aabb().position.y+1)<0.001})
+		checks.append({"model":PetCapsule.TITLES[i],"passed":pet.kind==i and pet.has_node("LowerShell") and pet.has_node("AnimalUpperShell") and pet.has_node("SeamRim") and not pet.has_node("ClearDome") and not pet.has_node("PetHead"),"meshes":pet.find_children("*","MeshInstance3D",true,false).size()})
+		checks.append({"model":PetCapsule.TITLES[i]+" opaque matching hemisphere halves", "passed":pet.find_children("*","MeshInstance3D",true,false).all(func(n): return n.material_override.transparency==BaseMaterial3D.TRANSPARENCY_DISABLED) and pet.get_node("AnimalUpperShell").position.is_equal_approx(pet.get_node("LowerShell").position) and pet.get_node("AnimalUpperShell").scale.is_equal_approx(Vector3.ONE) and absf(pet.get_node("AnimalUpperShell").get_aabb().size.y-1)<0.001 and absf(pet.get_node("LowerShell").get_aabb().position.y+1)<0.001})
 	for view in [["front",0.0],["side",PI/2],["back",PI]]:
 		for pet in pets: pet.rotation.y = view[1]
 		for i in range(4): await get_tree().process_frame

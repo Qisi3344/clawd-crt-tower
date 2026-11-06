@@ -24,6 +24,7 @@ func cel(source: StandardMaterial3D) -> ShaderMaterial:
 	mat.shader = load("res://assets/shaders/light_cel.gdshader")
 	mat.set_shader_parameter("base_color",source.albedo_color)
 	mat.set_shader_parameter("textured",source.albedo_texture!=null)
+	mat.set_shader_parameter("vertex_colors",source.vertex_color_use_as_albedo)
 	if source.albedo_texture!=null: mat.set_shader_parameter("base_texture",source.albedo_texture)
 	converted[id] = mat
 	return mat

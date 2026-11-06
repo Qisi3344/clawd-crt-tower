@@ -1,0 +1,242 @@
+{
+	"captures": [
+		"before-front",
+		"before-right",
+		"before-back",
+		"before-left",
+		"before-room",
+		"before-arcade",
+		"before-repair",
+		"before-focus",
+		"before-wall-detail",
+		"before-floor-detail",
+		"after-front",
+		"after-right",
+		"after-back",
+		"after-left",
+		"after-room",
+		"after-arcade",
+		"after-repair",
+		"after-focus",
+		"after-wall-detail",
+		"after-floor-detail"
+	],
+	"checks": [
+		{
+			"name": "full hall enabled by default",
+			"passed": true
+		},
+		{
+			"name": "cat coat and patch retained by hall cel material",
+			"passed": true
+		},
+		{
+			"name": "gashapon uses crystal price",
+			"passed": true
+		},
+		{
+			"name": "gashapon v3 glass profile and lid",
+			"passed": true
+		},
+		{
+			"name": "gashapon title clears lid surface",
+			"passed": true
+		},
+		{
+			"name": "gashapon internal lamp points downward",
+			"passed": true
+		},
+		{
+			"name": "enlarged hopper clears retained arcade",
+			"passed": true
+		},
+		{
+			"name": "all twelve CRT shells use cel shading",
+			"passed": true
+		},
+		{
+			"name": "pixel shaders kept on all twelve glass surfaces",
+			"passed": true
+		},
+		{
+			"name": "five decorative units retained",
+			"passed": true
+		},
+		{
+			"name": "Speaker_A wider pink or purple cabinet",
+			"passed": true
+		},
+		{
+			"name": "Speaker_B wider pink or purple cabinet",
+			"passed": true
+		},
+		{
+			"name": "Speaker_C wider pink or purple cabinet",
+			"passed": true
+		},
+		{
+			"name": "no bloom or spotlights",
+			"passed": true
+		},
+		{
+			"name": "original sourceless directional lights disabled",
+			"passed": true
+		},
+		{
+			"name": "four enclosure surfaces and twenty-one source lights",
+			"passed": true
+		},
+		{
+			"name": "two enlarged softly backlit rear posters",
+			"passed": true
+		},
+		{
+			"name": "poster wash lights are parented to real wall fixtures",
+			"passed": true
+		},
+		{
+			"name": "floor links include one can and connecting cables",
+			"passed": true
+		},
+		{
+			"name": "large supplied NO SIGNAL decal occupies the marked central wall",
+			"passed": true
+		},
+		{
+			"name": "internal pixel framebuffer byte-identical across art toggle",
+			"passed": true
+		},
+		{
+			"name": "72-angle orbit keeps camera outside visible room surfaces",
+			"passed": true
+		},
+		{
+			"name": "BOOT focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_1 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_2 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_3 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_4 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "ARCHIVE focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_6 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_7 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_8 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_9 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_10 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_11 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "gashapon remains visible in peripheral camera",
+			"passed": true
+		},
+		{
+			"name": "arcade peripheral cutaway camera keeps the room wall out of view",
+			"passed": true
+		},
+		{
+			"name": "repair peripheral cutaway camera keeps the room wall out of view",
+			"passed": true
+		},
+		{
+			"name": "pause art switch restores original materials",
+			"passed": true
+		},
+		{
+			"name": "pause art switch restores full cel layer",
+			"passed": true
+		},
+		{
+			"name": "cel materials can be disabled independently",
+			"passed": true
+		},
+		{
+			"name": "local light intensity can be disabled independently",
+			"passed": true
+		},
+		{
+			"name": "room decoration can be hidden independently",
+			"passed": true
+		},
+		{
+			"name": "art preference saved separately from adventure",
+			"passed": true
+		},
+		{
+			"name": "QA never writes formal adventure",
+			"passed": true
+		}
+	],
+	"method": "1600x1000 GPU; 60 forced-render/readback samples after 20 warmups per view, not gameplay FPS",
+	"passed": true,
+	"perf": [
+		{
+			"art_enabled": false,
+			"median_ms": 20.092,
+			"p95_ms": 21.197,
+			"view": "front"
+		},
+		{
+			"art_enabled": false,
+			"median_ms": 19.902,
+			"p95_ms": 21.058,
+			"view": "back"
+		},
+		{
+			"art_enabled": false,
+			"median_ms": 19.923,
+			"p95_ms": 20.884,
+			"view": "focus"
+		},
+		{
+			"art_enabled": true,
+			"median_ms": 21.232,
+			"p95_ms": 22.526,
+			"view": "front"
+		},
+		{
+			"art_enabled": true,
+			"median_ms": 20.028,
+			"p95_ms": 21.209,
+			"view": "back"
+		},
+		{
+			"art_enabled": true,
+			"median_ms": 20.047,
+			"p95_ms": 21.648,
+			"view": "focus"
+		}
+	]
+}

@@ -1,6 +1,6 @@
 class_name PetHopper
 extends Node3D
-const DISPLAY_KINDS := [0,1,0,1,0,1,0,1,0,1,0,1,0,2,3,4,2,5]
+const DISPLAY_KINDS := [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,2,3,4,2,3,4,2,4,5]
 const DISPLAY_SCALE := 0.38
 const LAYER := 1<<18
 static var hulls: Dictionary = {}
@@ -31,7 +31,7 @@ func _ready() -> void:
         body.collision_layer = LAYER; body.collision_mask = LAYER; body.mass = 0.22
         body.linear_damp = 2.5; body.angular_damp = 3.5
         var material := PhysicsMaterial.new(); material.friction = 0.75; material.bounce = 0.03; body.physics_material_override = material
-        body.position = Vector3((i%3-1)*0.85,3.66+floori(i/9.0)*1.08,((i/3)%3-1)*0.85)
+        body.position = Vector3((i%4-1.5)*0.80,3.60+floori(i/12.0)*0.77,((i/4)%3-1)*0.80)
         body.rotation_degrees = Vector3(rng.randf_range(-4,4),rng.randf_range(-22,22),rng.randf_range(-4,4))
         add_child(body)
         var visual := load("res://scenes/pets/"+PetGachaStore.IDS[kind]+".tscn").instantiate() as Node3D

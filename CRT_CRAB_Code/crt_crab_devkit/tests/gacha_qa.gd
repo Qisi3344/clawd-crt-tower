@@ -50,19 +50,23 @@ func run() -> void:
     game.audio.enabled = false; game.audio.music_enabled = false
     await frames(450)
     var machine: Node = game.surroundings.zones[1].get_node("PetGashaponMachine")
-    check("eighteen larger display models with rarity mix",machine.pile.size()==18 and machine.hopper.DISPLAY_KINDS.count(0)+machine.hopper.DISPLAY_KINDS.count(1)==13 and machine.hopper.DISPLAY_KINDS.count(5)==1 and machine.pile.all(func(p): return p.scale.is_equal_approx(Vector3.ONE*0.38)))
-    var outside := 0; var asleep := 0
+    check("thirty larger display models with rarity mix",machine.pile.size()==30 and machine.hopper.DISPLAY_KINDS.count(0)+machine.hopper.DISPLAY_KINDS.count(1)==21 and machine.hopper.DISPLAY_KINDS.count(5)==1 and machine.pile.all(func(p): return p.scale.is_equal_approx(Vector3.ONE*0.38)))
+    var outside := 0; var asleep := 0; var near_glass := 0
     for body in machine.hopper.bodies:
         if body.sleeping: asleep += 1
         var xf: Transform3D = machine.global_transform.affine_inverse()*body.global_transform
+        var nearest := 0.0
         for shape in body.get_children():
             if not shape is CollisionShape3D: continue
             for p in shape.shape.points:
                 var v: Vector3 = xf*p
                 var ellipsoid: Vector3 = (v-Vector3(0,machine.GLASS_CENTER,0))/machine.GLASS_RADII
+                nearest = maxf(nearest,ellipsoid.length())
                 if v.y<3.50 or v.y>6.29 or ellipsoid.length()>1.035: outside += 1
+        if nearest>0.967: near_glass += 1
+    check("outer capsules touch inner glass",near_glass>=4)
     check("all hulls stay inside glass and floor",outside==0)
-    check("display bodies naturally sleep",asleep==18)
+    check("display bodies naturally sleep",asleep==30)
     var menu_button: Button
     for n in game.front_end.column.get_children():
         if n is Button and n.text=="宠物扭蛋": menu_button = n
@@ -90,7 +94,7 @@ func run() -> void:
             await process_frame
             if frame%2==0:
                 RenderingServer.force_draw(); root.get_texture().get_image().save_png(directory+"/%03d.png"%(frame/2))
-        check("rarity %d finishes with eighteen display models"%rarity,not machine.busy and not panel.draw_button.disabled and machine.pile.size()==18 and panel.last_award.rarity==rarity and machine.reward.position.is_equal_approx(Vector3(-0.58,0.48,1.93)))
+        check("rarity %d finishes with thirty display models"%rarity,not machine.busy and not panel.draw_button.disabled and machine.pile.size()==30 and panel.last_award.rarity==rarity and machine.reward.position.is_equal_approx(Vector3(-0.58,0.48,1.93)))
         check("rarity %d flap restored"%rarity,absf(machine.flap.rotation.x)<0.001 and machine.flap.position.is_equal_approx(Vector3(-0.58,1.95,1.49)))
         await capture(["common","rare","hidden"][rarity])
     panel.draw_button.pressed.emit(); await frames(20)
@@ -114,7 +118,7 @@ func run() -> void:
     check("close returns to paused adventure",not game.in_menu and game.hud.visible and game.hud.paused and not game.world.enabled)
     game.hud.set_paused(false)
     check("resume restores playable world",game.world.enabled and game.world.player.enabled)
-    var report := {"passed":checks.all(func(c): return c.passed),"checks":checks,"base_probability_samples":100000,"base_kind_counts":histogram,"pity_sequence_samples":10000,"max_consecutive_common":max_common,"max_without_hidden":max_nonhidden,"sleeping_bodies":asleep,"hull_vertices_outside":outside}
+    var report := {"passed":checks.all(func(c): return c.passed),"checks":checks,"base_probability_samples":100000,"base_kind_counts":histogram,"pity_sequence_samples":10000,"max_consecutive_common":max_common,"max_without_hidden":max_nonhidden,"near_glass_bodies":near_glass,"sleeping_bodies":asleep,"hull_vertices_outside":outside}
     var file := FileAccess.open("res://artifacts/pet-gacha-qa.json",FileAccess.WRITE); file.store_string(JSON.stringify(report,"  "))
     print("PET_GACHA_QA ",report.passed," checks ",checks.size())
     quit(0 if report.passed else 1)

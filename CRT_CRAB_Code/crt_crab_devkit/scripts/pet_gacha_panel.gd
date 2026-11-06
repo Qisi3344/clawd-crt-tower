@@ -34,7 +34,7 @@ func _ready() -> void:
     label("宠物扭蛋 / PET GACHA",25)
     label("免费测试 · 每次 0 晶体",20).add_theme_color_override("font_color",Color("a7d5c2"))
     label("普通 72% · 稀有 25% · 隐藏 3%\n第 4 抽稀有保底；第 13 抽起提升隐藏概率，第 20 抽隐藏保底。",16)
-    label("仓内 18 颗展示扭蛋",16)
+    label("仓内 30 颗展示扭蛋",16)
     pity = label("")
     draw_button = Button.new(); draw_button.name = "DrawPet"; draw_button.text = "免费抽取一次"; draw_button.custom_minimum_size.y = 48; draw_button.pressed.connect(draw); column.add_child(draw_button)
     result = label("",20)

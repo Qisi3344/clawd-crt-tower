@@ -23,13 +23,13 @@ func ball(label: String, p: Vector3, size: Vector3, color: Color, glow := 0.0) -
 	if not shapes.has(key):
 		var sphere := SphereMesh.new()
 		sphere.radius = 1; sphere.height = 2
-		sphere.radial_segments = 8 if compact_display else 12; sphere.rings = 3 if compact_display else 8
+		sphere.radial_segments = 6 if compact_display else 12; sphere.rings = 2 if compact_display else 8
 		shapes[key] = sphere
 	return part(label,shapes[key],p,size,color,glow)
 
 static func hemisphere(top: bool, compact := false) -> ArrayMesh:
 	var key := ("top" if top else "bottom")+("_lo" if compact else "")
-	var rows := 4 if compact else 8
+	var rows := 3 if compact else 8
 	var columns := 12 if compact else 24
 	if shapes.has(key): return shapes[key]
 	var st := SurfaceTool.new()
@@ -55,7 +55,17 @@ func face(x: float, y: float, lift := 0.0) -> Vector3:
 func line(points: Array, color: Color, thickness := 0.021) -> void:
 	var path := PackedVector3Array()
 	for p in points: path.append(face(p.x,p.y,0.06 if kind in [Kind.DOG,Kind.HAMSTER,Kind.BEAR] and absf(p.x)<0.32 else 0.012))
-	Craft.cable(self,path,color,thickness)
+	if compact_display:
+		# Tiny warehouse strokes need only a curved ribbon; full-size models retain round tubes.
+		var st := SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for i in range(path.size()-1):
+			var delta := path[i+1]-path[i]
+			var side := Vector3(-delta.y,delta.x,0).normalized()*thickness
+			var stroke_points := [path[i]-side,path[i+1]-side,path[i+1]+side,path[i]+side]
+			for index in [0,2,1,0,3,2]: st.set_normal(Vector3.BACK); st.add_vertex(stroke_points[index])
+		part("FaceStroke",st.commit(),Vector3.ZERO,Vector3.ONE,color)
+	else:
+		Craft.cable(self,path,color,thickness)
 
 static func cat_ear(parent: Node3D, side: float, coat: Color, inner: Color, glowing: bool) -> void:
 	# Triangular low-poly prism with a smaller inset pink triangle.
@@ -192,7 +202,7 @@ func _ready() -> void:
 		upper.material_override.vertex_color_use_as_albedo = true
 	var ring := TorusMesh.new()
 	ring.inner_radius = 0.985; ring.outer_radius = 1.012
-	ring.rings = 12 if compact_display else 24; ring.ring_segments = 4 if compact_display else 6
+	ring.rings = 8 if compact_display else 24; ring.ring_segments = 3 if compact_display else 6
 	part("SeamRim",ring,Vector3(0,1,0),Vector3.ONE,shells[kind].lightened(0.15),0.22 if hidden else 0.0)
 	if kind==Kind.HAMSTER:
 		hamster_face(upper,coat,ink)

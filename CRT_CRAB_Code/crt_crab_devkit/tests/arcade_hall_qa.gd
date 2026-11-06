@@ -43,18 +43,26 @@ func _run() -> void:
 		check(pair[0]+" wider pink or purple cabinet",absf(cabinet.get_aabb().size.x-pair[1])<0.0001 and color.is_equal_approx(pair[2]))
 	check("no bloom or spotlights",not game.ambience.world_environment.environment.glow_enabled and game.ambience.additions.find_children("*","SpotLight3D",true,false).is_empty())
 	check("original sourceless directional lights disabled",game.ambience.original_lights.all(func(l): return not l.visible))
-	check("four enclosure surfaces and nineteen source lights",game.ambience.room_occluders.size()==4 and game.ambience.additions.find_children("*","OmniLight3D",true,false).size()==19)
+	check("four enclosure surfaces and twenty-one source lights",game.ambience.room_occluders.size()==4 and game.ambience.additions.find_children("*","OmniLight3D",true,false).size()==21)
+	var posters: Array = game.ambience.decorations.find_children("BackWallPoster*","MeshInstance3D",true,false)
+	check("two enlarged softly backlit rear posters",posters.size()==2 and posters.all(func(n): return n.mesh.size.x>=4.6-0.001 and n.material_override.emission_energy_multiplier<=0.15))
+	check("poster wash lights are parented to real wall fixtures",game.ambience.additions.find_children("PosterWash*","OmniLight3D",true,false).size()==2)
+	check("floor links include one can and connecting cables",game.ambience.decorations.get_node("ZoneConnections").has_node("CornerDrinkCan") and game.ambience.decorations.get_node("ZoneConnections").find_children("*","MultiMeshInstance3D",true,false).size()>=2)
+	var mural: MeshInstance3D = game.ambience.decorations.find_children("MainNoSignalMural","MeshInstance3D",true,false)[0]
+	check("large supplied NO SIGNAL decal occupies the marked central wall",mural.mesh.size.is_equal_approx(Vector2(16.5,8.8)) and absf(mural.global_position.x)<0.001 and absf(mural.global_position.y-10.75)<0.001 and mural.material_override.albedo_texture.resource_path.ends_with("no_signal_wall.png"))
 	var pixels := PackedByteArray()
-	var views := [["front",Vector3(0,17,34),Vector3(0,6.4,0)],["right",Vector3(34,17,0),Vector3(0,6.4,0)],["back",Vector3(0,17,-34),Vector3(0,6.4,0)],["left",Vector3(-34,17,0),Vector3(0,6.4,0)],["room",Vector3(23,18,32),Vector3(0,6,-3)],["arcade",Vector3(28,10,12),Vector3(18,2.7,-1)],["repair",Vector3(-27,10,12),Vector3(-18.4,2,1)],["focus",game.devices[0].focus_position(),game.devices[0].focus_point()]]
+	var views := [["front",Vector3(0,17,34),Vector3(0,6.4,0)],["right",Vector3(34,17,0),Vector3(0,6.4,0)],["back",Vector3(0,17,-34),Vector3(0,6.4,0)],["left",Vector3(-34,17,0),Vector3(0,6.4,0)],["room",Vector3(23,18,32),Vector3(0,6,-3)],["arcade",Vector3(28,10,12),Vector3(18,2.7,-1)],["repair",Vector3(-27,10,12),Vector3(-18.4,2,1)],["focus",game.devices[0].focus_position(),game.devices[0].focus_point()],["wall-detail",Vector3(0,16,-5),Vector3(0,10,-24.85)],["floor-detail",Vector3(14,8,14),Vector3(11,-1,4.5)]]
 	for state in [false,true]:
 		game.ambience.set_enabled(state)
 		for view in views:
+			game.director.camera.fov = 55 if view[0]=="wall-detail" else 43
 			pose(view[1],view[2],view[0]!="focus")
 			await capture(("after-" if state else "before-")+view[0])
 		RenderingServer.force_draw()
 		var data: PackedByteArray = game.viewport.get_texture().get_image().get_data()
 		if state: check("internal pixel framebuffer byte-identical across art toggle",pixels==data)
 		else: pixels = data
+		game.director.camera.fov = 43
 		for view in [views[0],views[2],views[7]]:
 			pose(view[1],view[2],view[0]!="focus")
 			for i in range(20):

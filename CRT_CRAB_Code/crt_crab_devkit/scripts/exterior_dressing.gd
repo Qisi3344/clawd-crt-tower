@@ -80,7 +80,7 @@ static func build_fillers(shell: Node3D) -> void:
 	var root := Node3D.new()
 	root.name = "GapFillers"
 	shell.add_child(root)
-	for spec in [["Speaker_A",-3.3,3.6,1.25,1.55,5.0],["Speaker_B",3.3,3.5,1.15,1.5,5.0],["Speaker_C",-2.5,-2.4,1.15,1.5,5.6],["Tower_A",-3.6,-3.4,0.95,1.75,4.1],["Tower_B",3.1,-3.2,0.95,1.75,4.6]]:
+	for spec in [["Speaker_A",-3.42,3.6,1.44,1.55,5.0],["Speaker_B",3.42,3.5,1.32,1.5,5.0],["Speaker_C",-2.45,-2.2,1.32,1.5,5.6],["Tower_A",-3.6,-3.4,0.95,1.75,4.1],["Tower_B",3.1,-3.2,0.95,1.75,4.6]]:
 		var unit := Node3D.new()
 		unit.name = spec[0]
 		unit.position = Vector3(spec[1],-1.1,spec[2])
@@ -90,15 +90,16 @@ static func build_fillers(shell: Node3D) -> void:
 		for x in [-w*0.32,w*0.32]:
 			for z in [-d*0.3,d*0.3]: Craft.box(unit,Vector3(x,0.09,z),Vector3(0.18,0.18,0.24),Color("16191c"),0.025)
 		if str(spec[0]).begins_with("Speaker"):
-			_speaker_case(unit,w,d,h)
+			_speaker_case(unit,w,d,h,Color("756185") if unit.name=="Speaker_B" else Color("916c84"))
 		else:
 			_tower_case(unit,w,d,h,Color("b9b3a1") if spec[0]=="Tower_A" else Color("89918e"))
 		Craft.batch_static(unit)
 
-static func _speaker_case(unit: Node3D, w: float, d: float, h: float) -> void:
+static func _speaker_case(unit: Node3D, w: float, d: float, h: float, shell: Color) -> void:
 	var front := d/2-0.16
-	Craft.box(unit,Vector3(0,(h+0.16)/2,-0.06),Vector3(w-0.06,h-0.16,d-0.2),Color("272b32"),0.07)
-	Craft.box(unit,Vector3(0,h/2,front-0.02),Vector3(w-0.16,h-0.34,0.08),Color("10171e"),0.025)
+	var cabinet := Craft.box(unit,Vector3(0,(h+0.16)/2,-0.06),Vector3(w-0.06,h-0.16,d-0.2),shell,0.07)
+	cabinet.name = "Cabinet"
+	Craft.box(unit,Vector3(0,h/2,front-0.02),Vector3(w-0.16,h-0.34,0.08),shell.darkened(0.30),0.025)
 	for y in [h*0.30,h*0.62]: _driver(unit,Vector3(0,y,front+0.045),w*0.36)
 	_driver(unit,Vector3(0,h*0.86,front+0.045),w*0.19)
 	# Bass-reflex opening has a recessed dark throat and a rounded rim.
@@ -121,7 +122,7 @@ static func _driver(unit: Node3D, p: Vector3, r: float) -> void:
 	torus.rings = 24
 	torus.ring_segments = 8
 	rim.mesh = torus
-	rim.material_override = Craft.material(Color("3b4249"))
+	rim.material_override = Craft.material(Color("ad92ad"))
 	rim.rotation_degrees.x = 90
 	rim.position = p
 	unit.add_child(rim)
@@ -136,7 +137,7 @@ static func _driver(unit: Node3D, p: Vector3, r: float) -> void:
 	cone.mesh = mesh
 	cone.rotation_degrees.x = 90
 	cone.position = p-Vector3(0,0,r*0.07)
-	var paper := Craft.material(Color("1b232d")).duplicate() as StandardMaterial3D
+	var paper := Craft.material(Color("392f47")).duplicate() as StandardMaterial3D
 	paper.cull_mode = BaseMaterial3D.CULL_DISABLED
 	cone.material_override = paper
 	unit.add_child(cone)
@@ -149,7 +150,7 @@ static func _driver(unit: Node3D, p: Vector3, r: float) -> void:
 	cap.mesh = dome
 	cap.scale.z = 0.35
 	cap.position = p-Vector3(0,0,0.015)
-	cap.material_override = Craft.material(Color("515962"))
+	cap.material_override = Craft.material(Color("806c88"))
 	unit.add_child(cap)
 
 static func _tower_case(unit: Node3D, w: float, d: float, h: float, shell: Color) -> void:

@@ -1,4 +1,6 @@
-# 复古游戏厅材质与灯光样板 · 待视觉确认
+# 复古游戏厅材质与灯光样板 · 历史对比（已确认）
+
+> 样板方向已获确认并应用全场，当前效果与验收见 [ARCADE_HALL_UPDATE.md](ARCADE_HALL_UPDATE.md)。本页保留当时样板的数据。
 
 2026-11-06。基于 42b46d1，在现有真实场景中制作局部样板。按本次要求先对比确认，再推广全场。当前正常启动的主场景没有接入样板；所有原有排列、堆叠与模型保持原样。
 
@@ -51,4 +53,4 @@
 
 阅读了 [Godot 官方 Toon 材质示例](https://github.com/godotengine/godot-demo-projects/blob/master/3d/material_testers/test_materials/toon.tres)、[官方 TPS Demo](https://github.com/godotengine/tps-demo) 和 [Spatial shader 文档](https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/spatial_shader.html)。参考材质分档和场景内灯光分区的方向，没有复制这些项目的美术资源。
 
-请先确认本页的三档明暗、暖色灯管、深紫冷影与屏幕局部染色。确认后再进行全场材质、光源分区、墙地面合理装饰与远景层次，并做十二台聚焦、360°、四向最终截图及全场玩法／性能验收。
+这一版方向已确认。全场应用、粉紫音响和最终验收见页首链接；本页图片与性能数据仅代表当时局部样板。

@@ -30,6 +30,16 @@ func _run() -> void:
 	check("reduced motion holds the title camera still",game.director.camera.position.distance_to(menu_camera)<0.001)
 	game.audio.reduced_motion = false
 	game.apply_settings()
+	await activate(button("游戏设置"))
+	var art_toggle: CheckButton
+	for control in game.front_end.column.get_children():
+		if control is CheckButton and control.text=="游戏厅氛围": art_toggle = control
+	check("settings expose the arcade ambience switch",art_toggle!=null)
+	await activate(art_toggle)
+	check("settings switch restores original scene art",not game.ambience.enabled)
+	await activate(art_toggle)
+	check("settings switch reapplies arcade scene art",game.ambience.enabled)
+	await activate(button("返回主菜单"))
 	await capture("stage2-title")
 	await capture("stage2-title-portrait")
 	get_tree().root.size = Vector2i(1280,800)

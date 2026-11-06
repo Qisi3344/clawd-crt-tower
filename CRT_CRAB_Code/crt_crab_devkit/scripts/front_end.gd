@@ -137,6 +137,7 @@ func show_page(value: String) -> void:
 		_slider("音效音量",game.audio.sfx_volume,game.audio.set_sfx_volume)
 		_toggle("减少动态",game.audio.reduced_motion,func(v): game.audio.set_visual("reduced_motion",v);game.apply_settings())
 		_toggle("环境微动态",game.audio.environment_motion,func(v): game.audio.set_visual("environment_motion",v);game.apply_settings())
+		_toggle("游戏厅氛围",game.audio.arcade_ambience,func(v): game.audio.set_visual("arcade_ambience",v);game.apply_settings())
 		_toggle("全屏显示",game.audio.fullscreen,func(v): game.audio.set_visual("fullscreen",v);game.apply_settings())
 		_button("返回主菜单",func(): show_page("title"))
 	if message!="": _label(message,18,Color("ffc09e"))

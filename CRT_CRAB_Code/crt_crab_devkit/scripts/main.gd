@@ -1,5 +1,6 @@
 extends Node3D
 
+var ambience: Node3D
 var shell: Node3D
 var devices: Array[MonitorDevice] = []
 var director: ShellDirector
@@ -70,6 +71,7 @@ func _ready() -> void:
 	get_tree().root.size_changed.connect(_resize_ui)
 	_resize_ui()
 	apply_settings()
+	_prepare_ambience.call_deferred()
 	director.focus(_device("BOOT"),true)
 	if test_mode and "--menu-qa" not in OS.get_cmdline_user_args():
 		in_menu = false
@@ -90,7 +92,18 @@ func _ready() -> void:
 			harness.set_script(load("res://tests/stage2_qa.gd"))
 			add_child(harness)
 
+func _prepare_ambience() -> void:
+	# Craft batches release source meshes at the end of their construction frame.
+	await get_tree().process_frame
+	if "--art-preview" in OS.get_cmdline_user_args() or surroundings==null: return
+	ambience = Node3D.new()
+	ambience.set_script(load("res://scripts/arcade_ambience.gd"))
+	shell.add_child(ambience)
+	ambience.prepare(self,true)
+	ambience.set_enabled(audio.arcade_ambience)
+
 func apply_settings() -> void:
+	if is_instance_valid(ambience): ambience.set_enabled(audio.arcade_ambience)
 	director.reduced_motion = audio.reduced_motion
 	if in_menu: director.busy = audio.reduced_motion
 	if surroundings!=null: surroundings.set_micro_motion(audio.environment_motion)
@@ -98,6 +111,7 @@ func apply_settings() -> void:
 	for button in hud.find_children("*","CheckButton",true,false):
 		if button.text=="减少转场动态": button.set_pressed_no_signal(audio.reduced_motion)
 		if button.text=="环境微动态": button.set_pressed_no_signal(audio.environment_motion)
+		if button.text=="游戏厅氛围": button.set_pressed_no_signal(audio.arcade_ambience)
 	hud.sfx_toggle.set_pressed_no_signal(audio.enabled)
 	hud.music_toggle.set_pressed_no_signal(audio.music_enabled)
 	hud.music_slider.set_value_no_signal(audio.music_volume)
@@ -194,7 +208,7 @@ func _build_shell() -> void:
 	# Existing audio cabinets rest on one another; they never support a CRT.
 	for layer in range(3):
 		var p := Vector3(0,0.9+layer*4.0,0)
-		Craft.box(shell,p,Vector3(2.6,4.0,2.5),Color("232c34"),0.09)
+		Craft.box(shell,p,Vector3(2.6,4.0,2.5),Color("62556e") if layer%2 else Color("785c70"),0.09)
 		for y in [-0.9,0.9]:
 			_speaker(p+Vector3(0,y,1.27))
 	var dressing := Node3D.new()

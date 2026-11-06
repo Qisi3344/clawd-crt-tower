@@ -185,6 +185,7 @@ func _run() -> void:
 			root.get_texture().get_image().save_png("res://artifacts/crt-model-%d.png"%model)
 	if DisplayServer.get_name()!="headless":
 		game.set_process(false)
+		if is_instance_valid(game.ambience): game.ambience.set_enabled(false)
 		# Inspection fixture only: reveal all five native models without the CRTs.
 		# Normal four-direction gameplay captures above retain the complete scene.
 		for child in game.shell.get_children():

@@ -162,6 +162,10 @@ func _build_pause(root: Control) -> void:
 	music_slider.value_changed.connect(func(v: float): music_volume_changed.emit(v))
 	volume_row.add_child(music_slider)
 	column.add_child(volume_row)
+	var ambience_toggle := CheckButton.new()
+	ambience_toggle.text = "游戏厅氛围"
+	ambience_toggle.toggled.connect(func(v): get_parent().audio.set_visual("arcade_ambience",v);get_parent().apply_settings())
+	column.add_child(ambience_toggle)
 	var motion := CheckButton.new()
 	motion.text = "减少转场动态"
 	motion.toggled.connect(func(v: bool): motion_changed.emit(v))

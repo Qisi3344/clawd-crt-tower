@@ -11,6 +11,7 @@ var preferences_enabled := false
 var preferences_path := "user://audio.cfg"
 var reduced_motion := false
 var environment_motion := true
+var arcade_ambience := true
 var fullscreen := false
 var cursor := 0
 var sounds: Dictionary = {}
@@ -23,7 +24,7 @@ func _ready() -> void:
 		music_enabled = bool(prefs.get_value("audio","music",true))
 		sfx_volume = clampf(float(prefs.get_value("audio","sfx_volume",0.8)),0,1)
 		music_volume = clampf(float(prefs.get_value("audio","volume",0.35)),0,1)
-		for key in ["reduced_motion","environment_motion","fullscreen"]: set(key,bool(prefs.get_value("visual",key,get(key))))
+		for key in ["reduced_motion","environment_motion","fullscreen","arcade_ambience"]: set(key,bool(prefs.get_value("visual",key,get(key))))
 	music = AudioStreamPlayer.new()
 	music.name = "BackgroundMusic"
 	music.stream = load("res://assets/audio/no_signal_full.mp3")
@@ -82,7 +83,7 @@ func set_music_volume(value: float) -> void:
 	_save_audio_preferences()
 
 func set_visual(key: String, value: bool) -> void:
-	if key not in ["reduced_motion","environment_motion","fullscreen"]: return
+	if key not in ["reduced_motion","environment_motion","fullscreen","arcade_ambience"]: return
 	set(key,value)
 	_save_audio_preferences()
 
@@ -93,7 +94,7 @@ func _save_audio_preferences() -> void:
 	prefs.set_value("audio","sfx_volume",sfx_volume)
 	prefs.set_value("audio","music",music_enabled)
 	prefs.set_value("audio","volume",music_volume)
-	for key in ["reduced_motion","environment_motion","fullscreen"]: prefs.set_value("visual",key,get(key))
+	for key in ["reduced_motion","environment_motion","fullscreen","arcade_ambience"]: prefs.set_value("visual",key,get(key))
 	if prefs.save(preferences_path)!=OK: push_warning("Audio settings could not be saved")
 
 func stop_all() -> void:

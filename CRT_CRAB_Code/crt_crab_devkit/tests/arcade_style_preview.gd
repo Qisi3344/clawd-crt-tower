@@ -17,6 +17,8 @@ func _run() -> void:
 	root.size = Vector2i(1600,1000)
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
+	game.audio.arcade_ambience = false
+	game.apply_settings()
 	for child in game.get_children():
 		if child.get_script()!=null and child.get_script().resource_path=="res://tests/sideview_qa.gd":
 			game.remove_child(child)

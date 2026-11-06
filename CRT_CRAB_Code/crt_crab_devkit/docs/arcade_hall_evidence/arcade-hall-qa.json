@@ -1,0 +1,194 @@
+{
+	"captures": [
+		"before-front",
+		"before-right",
+		"before-back",
+		"before-left",
+		"before-room",
+		"before-arcade",
+		"before-repair",
+		"before-focus",
+		"after-front",
+		"after-right",
+		"after-back",
+		"after-left",
+		"after-room",
+		"after-arcade",
+		"after-repair",
+		"after-focus"
+	],
+	"checks": [
+		{
+			"name": "full hall enabled by default",
+			"passed": true
+		},
+		{
+			"name": "all twelve CRT shells use cel shading",
+			"passed": true
+		},
+		{
+			"name": "pixel shaders kept on all twelve glass surfaces",
+			"passed": true
+		},
+		{
+			"name": "five decorative units retained",
+			"passed": true
+		},
+		{
+			"name": "Speaker_A wider pink or purple cabinet",
+			"passed": true
+		},
+		{
+			"name": "Speaker_B wider pink or purple cabinet",
+			"passed": true
+		},
+		{
+			"name": "Speaker_C wider pink or purple cabinet",
+			"passed": true
+		},
+		{
+			"name": "no bloom or spotlights",
+			"passed": true
+		},
+		{
+			"name": "original sourceless directional lights disabled",
+			"passed": true
+		},
+		{
+			"name": "four enclosure surfaces and nineteen source lights",
+			"passed": true
+		},
+		{
+			"name": "internal pixel framebuffer byte-identical across art toggle",
+			"passed": true
+		},
+		{
+			"name": "72-angle orbit keeps camera outside visible room surfaces",
+			"passed": true
+		},
+		{
+			"name": "BOOT focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_1 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_2 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_3 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_4 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "ARCHIVE focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_6 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_7 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_8 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_9 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_10 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "SLEEP_11 focused glass clear of enclosure",
+			"passed": true
+		},
+		{
+			"name": "arcade peripheral cutaway camera keeps the room wall out of view",
+			"passed": true
+		},
+		{
+			"name": "repair peripheral cutaway camera keeps the room wall out of view",
+			"passed": true
+		},
+		{
+			"name": "pause art switch restores original materials",
+			"passed": true
+		},
+		{
+			"name": "pause art switch restores full cel layer",
+			"passed": true
+		},
+		{
+			"name": "cel materials can be disabled independently",
+			"passed": true
+		},
+		{
+			"name": "local light intensity can be disabled independently",
+			"passed": true
+		},
+		{
+			"name": "room decoration can be hidden independently",
+			"passed": true
+		},
+		{
+			"name": "art preference saved separately from adventure",
+			"passed": true
+		},
+		{
+			"name": "QA never writes formal adventure",
+			"passed": true
+		}
+	],
+	"method": "1600x1000 GPU; 60 forced-render/readback samples after 20 warmups per view, not gameplay FPS",
+	"passed": true,
+	"perf": [
+		{
+			"art_enabled": false,
+			"median_ms": 20.917,
+			"p95_ms": 22.804,
+			"view": "front"
+		},
+		{
+			"art_enabled": false,
+			"median_ms": 21.151,
+			"p95_ms": 23.586,
+			"view": "back"
+		},
+		{
+			"art_enabled": false,
+			"median_ms": 21.613,
+			"p95_ms": 23.75,
+			"view": "focus"
+		},
+		{
+			"art_enabled": true,
+			"median_ms": 21.835,
+			"p95_ms": 24.559,
+			"view": "front"
+		},
+		{
+			"art_enabled": true,
+			"median_ms": 21.816,
+			"p95_ms": 24.304,
+			"view": "back"
+		},
+		{
+			"art_enabled": true,
+			"median_ms": 21.415,
+			"p95_ms": 24.012,
+			"view": "focus"
+		}
+	]
+}

@@ -11,6 +11,22 @@ func frames(n: int) -> void:
     for i in range(n): await process_frame
 func capture(name: String) -> void:
     await frames(4); RenderingServer.force_draw(); root.get_texture().get_image().save_png("res://artifacts/gacha-"+name+".png")
+func click(pos: Vector2) -> void:
+    var event := InputEventMouseButton.new(); event.button_index = MOUSE_BUTTON_LEFT; event.position = pos; event.pressed = true; root.push_input(event,true)
+    await frames(1)
+    event = event.duplicate(); event.pressed = false; root.push_input(event,true)
+    await frames(2)
+func touch(pos: Vector2, pressed: bool) -> void:
+    var event := InputEventScreenTouch.new(); event.index = 0; event.position = pos; event.pressed = pressed; root.push_input(event,true)
+    await frames(1)
+func drag_knob(panel: PetGachaPanel, angle: float) -> void:
+    var center := panel.draw_button.get_global_rect().get_center()
+    var radius := panel.draw_button.size.x*0.38
+    var event := InputEventMouseButton.new(); event.button_index = MOUSE_BUTTON_LEFT; event.position = center+Vector2(radius,0); event.pressed = true; root.push_input(event,true)
+    for step in range(1,7):
+        var motion := InputEventMouseMotion.new(); motion.position = center+Vector2(cos(angle*step/6),sin(angle*step/6))*radius; root.push_input(motion,true)
+    event = event.duplicate(); event.position = center+Vector2(cos(angle),sin(angle))*radius; event.pressed = false; root.push_input(event,true)
+    await frames(2)
 func run() -> void:
     var store := PetGachaStore.new(); store.storage.enabled = false; store.rng.seed = 720253
     for i in range(100000): histogram[store.roll_kind(store.rng.randf())] += 1
@@ -73,7 +89,15 @@ func run() -> void:
     check("real main menu entry",menu_button!=null)
     menu_button.pressed.emit(); await frames(5)
     var panel: PetGachaPanel = game.gacha_panel
-    check("free UI pauses gameplay and shows free price",game.input_mode==game.InputMode.PAUSED and machine.get_node("CrystalPrice").text=="免费测试" and panel.draw_button.text=="免费抽取一次")
+    check("minimal machine UI pauses gameplay",game.input_mode==game.InputMode.PAUSED and panel.draw_button.text.is_empty() and panel.result.text=="转动旋钮" and not panel.panel.visible)
+    check("six locked silhouette icons",panel.icons.size()==6 and panel.icons.all(func(icon): return not icon.get_child(0).material.get_shader_parameter("owned")))
+    await click(panel.help_button.get_global_rect().get_center())
+    check("question reveals probability and pity only on demand",panel.panel.visible and panel.pity.text.contains("累计") and panel.draw_button.disabled)
+    await capture("help")
+    var escape := InputEventAction.new(); escape.action = "pause"; escape.pressed = true; root.push_input(escape,true); await frames(2)
+    check("escape dismisses help before leaving machine",is_instance_valid(game.gacha_panel) and not panel.panel.visible and not panel.draw_button.disabled)
+    await drag_knob(panel,0.65)
+    check("small drag cancels without award",panel.store.data.total==0 and not panel.drawing and is_zero_approx(machine.knob.rotation.z))
     await capture("contents")
     var frame_id := 0
     for rarity in range(3):
@@ -84,7 +108,12 @@ func run() -> void:
             var k := panel.store.roll_kind(panel.store.rng.randf())
             if (2 if k==5 else 1 if k>=2 else 0)==rarity: chosen_seed = seed; break
         panel.store.rng.seed = chosen_seed
-        panel.draw_button.pressed.emit()
+        if rarity==0: await click(panel.draw_button.get_global_rect().get_center())
+        elif rarity==1: await drag_knob(panel,PI/2)
+        else:
+            panel.draw_button.grab_focus()
+            var key := InputEventKey.new(); key.keycode = KEY_ENTER; key.pressed = true; root.push_input(key,true)
+            key = key.duplicate(); key.pressed = false; root.push_input(key,true); await frames(2)
         check("rarity %d persists before animation"%rarity,panel.store.data.total==1 and machine.busy and panel.drawing)
         panel.draw_button.pressed.emit(); panel.draw_button.pressed.emit()
         check("rarity %d duplicate click guarded"%rarity,panel.store.data.total==1)
@@ -95,19 +124,30 @@ func run() -> void:
             if frame%2==0:
                 RenderingServer.force_draw(); root.get_texture().get_image().save_png(directory+"/%03d.png"%(frame/2))
         check("rarity %d finishes with thirty display models"%rarity,not machine.busy and not panel.draw_button.disabled and machine.pile.size()==30 and panel.last_award.rarity==rarity and machine.reward.position.is_equal_approx(Vector3(-0.58,0.48,1.93)))
+        check("awarded icon lights after exit %d"%rarity,panel.icons[panel.last_award.kind].get_child(0).material.get_shader_parameter("owned"))
         check("rarity %d flap restored"%rarity,absf(machine.flap.rotation.x)<0.001 and machine.flap.position.is_equal_approx(Vector3(-0.58,1.95,1.49)))
         await capture(["common","rare","hidden"][rarity])
     panel.draw_button.pressed.emit(); await frames(20)
     var granted := panel.store.data.duplicate(true)
+    var granted_kind: int = panel.last_award.kind
     panel.close(); await frames(2); game.open_gacha(); await frames(3)
-    check("closing mid animation preserves award and restores interface",game.pet_gacha.data==granted and not game.gacha_panel.drawing and not machine.busy and game.gacha_panel.result.text.begins_with("最近获得"))
+    check("closing mid animation preserves award and restores interface",game.pet_gacha.data==granted and not game.gacha_panel.drawing and not machine.busy and game.gacha_panel.result.text=="转动旋钮" and game.gacha_panel.icons[granted_kind].get_child(0).material.get_shader_parameter("owned"))
     root.size = Vector2i(720,1280); await frames(5)
-    var rect: Rect2 = game.gacha_panel.panel.get_global_rect()
-    check("mobile panel stays inside viewport",rect.position.x>=0 and rect.position.y>=0 and rect.end.x<=root.get_visible_rect().size.x+1 and rect.end.y<=root.get_visible_rect().size.y+1 and game.gacha_panel.panel.anchor_top>0.5)
+    panel = game.gacha_panel
+    var bounds := root.get_visible_rect()
+    check("portrait collection and knob remain visible",bounds.encloses(panel.collection.get_global_rect()) and bounds.encloses(panel.draw_button.get_global_rect()))
     await capture("mobile")
-    game.gacha_panel.close_button.grab_focus(); await frames(4)
-    var return_rect: Rect2 = game.gacha_panel.close_button.get_global_rect()
-    check("keyboard focus scrolls return button into view",return_rect.position.y>=rect.position.y and return_rect.end.y<=rect.end.y)
+    var total: int = panel.store.data.total
+    var center := panel.draw_button.get_global_rect().get_center()
+    await touch(center,true); await touch(center,false)
+    check("touch knob grants exactly once",panel.store.data.total==total+1 and panel.drawing)
+    await frames(96)
+    await click(panel.help_button.get_global_rect().get_center())
+    check("portrait help stays inside viewport",bounds.encloses(panel.panel.get_global_rect()))
+    await capture("mobile-help")
+    panel.help_button.button_pressed = false
+    panel.close_button.grab_focus(); await frames(4)
+    check("keyboard return remains visible",bounds.encloses(panel.close_button.get_global_rect()))
 
     game.gacha_panel.close(); await frames(2)
     check("return restores main menu",game.in_menu and game.front_end.visible and not is_instance_valid(game.gacha_panel))

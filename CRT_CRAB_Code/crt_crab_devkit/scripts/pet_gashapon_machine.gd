@@ -276,7 +276,7 @@ func _ready() -> void:
     orb(top,Vector3(0,0.40,0),Vector3(0.48,0.08,0.40),teal)
     var ears := Node3D.new(); ears.position.y = -1.97; top.add_child(ears)
     PetCapsule.cat_ear(ears,-1,cream,pink,false); PetCapsule.cat_ear(ears,1,cream,pink,false)
-    var title := box(top,"TitlePlate",Vector3(0,0.21,1.75),Vector3(2.10,0.28,0.12),dark)
+    var title := box(top,"TitlePlate",Vector3(0,0.21,1.75),Vector3(1.20,0.28,0.12),dark)
     Craft.label(top,"PET GASHAPON",Vector3(0,0.21,1.83),Color("dd98bd"),0.0032,32)
     for side in [-1,1]:
         for y in [0.10,0.17,0.24]:

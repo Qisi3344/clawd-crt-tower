@@ -69,6 +69,10 @@ func _physics_process(delta: float) -> void:
 		attack_time = 0.22
 		attack_cooldown = 0.32
 		struck.emit()
+	# Ladder travel must cross one-way ledges in both directions; solid floors stay active.
+	for platform in level.ladder_platforms:
+		if climbing: add_collision_exception_with(platform)
+		else: remove_collision_exception_with(platform)
 	move_and_slide()
 	animation_time += delta
 	var row := 0

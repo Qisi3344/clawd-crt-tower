@@ -76,6 +76,7 @@ func _ready() -> void:
 	get_tree().root.size_changed.connect(_resize_ui)
 	_resize_ui()
 	apply_settings()
+	var retro := CanvasLayer.new(); retro.set_script(load("res://scripts/retro_ui.gd")); add_child(retro)
 	_prepare_ambience.call_deferred()
 	director.focus(_device("BOOT"),true)
 	if test_mode and "--menu-qa" not in OS.get_cmdline_user_args():

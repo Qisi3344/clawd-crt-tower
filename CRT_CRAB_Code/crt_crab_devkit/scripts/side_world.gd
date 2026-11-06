@@ -17,6 +17,7 @@ var enabled := false
 var player: SideCrab
 var camera: Camera2D
 var blocks: Array[PuzzleBlock] = []
+var ladder_platforms: Array[StaticBody2D] = []
 var enemies: Array[DataBug] = []
 var plates: Array[Dictionary] = []
 var doors: Array[Dictionary] = []
@@ -133,6 +134,7 @@ func _solid(rect: Rect2) -> void:
 	box.size = rect.size
 	shape.shape = box
 	shape.one_way_collision = rect.position.y<208 and rect.position.y>0
+	if shape.one_way_collision: ladder_platforms.append(body)
 	body.add_child(shape)
 	for x in range(int(rect.position.x),int(rect.end.x),16):
 		for y in range(int(rect.position.y),int(rect.end.y),16): PixelArt.tile(self,Vector2(x,y),screen_id=="ARCHIVE",(x/16)%8)
@@ -151,6 +153,7 @@ func _physics_process(delta: float) -> void:
 		if player.position.distance_to(point(crystal.position)+Vector2(0,10))<18:
 			session.pickups.append(crystal.id)
 			session.crystals += 1
+			pickup_burst(crystal.sprite.position)
 			crystal.sprite.queue_free()
 			crystals.remove_at(i)
 			sound_requested.emit("unlock")
@@ -231,6 +234,7 @@ func interact() -> void:
 			session.crystals += int(chest.crystals)
 			flags[chest.flag] = true
 			chest.sprite.texture = PixelArt.frame(7)
+			pickup_burst(chest.sprite.position)
 			message.emit("宝箱已记录 · +%d 晶体"%int(chest.crystals))
 			if session.collected.size()==4:
 				flags.slice_complete = true
@@ -294,8 +298,8 @@ func snapshot() -> Dictionary:
 	return state.duplicate(true)
 
 func _draw() -> void:
-	var font := ThemeDB.fallback_font
-	for sign in definition.get("signs",[]): draw_string(font,Vector2(sign[0],sign[1]),str(sign[2]),HORIZONTAL_ALIGNMENT_LEFT,-1,8,Color("aec8ba"))
+	var font := preload("res://assets/fonts/fusion-pixel.otf")
+	for sign in definition.get("signs",[]): draw_string(font,Vector2(sign[0],sign[1]),str(sign[2]),HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("aec8ba"))
 	for plate in plates:
 		if int(plate.weight)<2: continue
 		var p := point(plate.position)-Vector2(0,15)
@@ -309,3 +313,11 @@ static func point(value, fallback := Vector2.ZERO) -> Vector2:
 		var p := Vector2(float(value[0]),float(value[1]))
 		if p.is_finite() and p.x>=0 and p.x<=768 and p.y>=0 and p.y<=256: return p
 	return fallback
+
+func pickup_burst(pos: Vector2) -> void:
+	for i in range(10):
+		var pixel := Polygon2D.new(); pixel.polygon = PackedVector2Array([Vector2(-1,-1),Vector2(1,-1),Vector2(1,1),Vector2(-1,1)]); pixel.color = Color("ffc478") if i%2==0 else Color("f4e7cf"); pixel.position = pos; pixel.z_index = 12; add_child(pixel)
+		var tween := create_tween().set_parallel()
+		tween.tween_property(pixel,"position",pos+Vector2(cos(i*TAU/10)*18,-12+sin(i*TAU/10)*14),0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_property(pixel,"modulate:a",0.0,0.3).set_delay(0.1)
+		tween.chain().tween_callback(pixel.queue_free)

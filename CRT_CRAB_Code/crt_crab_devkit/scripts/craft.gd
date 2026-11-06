@@ -80,6 +80,7 @@ static func label(parent: Node3D, text: String, pos: Vector3, color: Color, pixe
 	node.text = text
 	node.position = pos
 	node.pixel_size = pixels
+	node.font = preload("res://assets/fonts/fusion-pixel.otf")
 	node.font_size = size
 	node.modulate = color
 	node.outline_size = 0

@@ -31,6 +31,10 @@ var debug_label: Label
 var veil: ColorRect
 var paused := false
 var toast_time := 0.0
+var cursor_time := 0.0
+var prompt_cursor: Label
+var inventory: HBoxContainer
+var counters: Array[Label] = []
 
 func _ready() -> void:
 	layer = 10
@@ -53,7 +57,7 @@ func _ready() -> void:
 	column.add_child(top)
 	var brand := _panel(Color("d4e852"))
 	top.add_child(brand)
-	brand.add_child(_label("  CRT小蟹闯塔记  ",22,Color("16191a")))
+	brand.add_child(_label("  CRT小蟹闯塔记  ",24,Color("ffc478")))
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(spacer)
@@ -69,7 +73,12 @@ func _ready() -> void:
 	objective = _label("去左后方终端，按 E 唤醒信号",20,Color("e1e2d6"))
 	column.add_child(objective)
 	collection_label = _label("",18,Color("dce65b"))
+	collection_label.hide()
 	column.add_child(collection_label)
+	inventory = HBoxContainer.new(); inventory.add_theme_constant_override("separation",12); column.add_child(inventory)
+	for row in [15,6,8]:
+		var icon := TextureRect.new(); icon.texture = PixelArt.icon(row); icon.custom_minimum_size = Vector2(32,32); icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE; icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST; inventory.add_child(icon)
+		var count := _label("0",20); inventory.add_child(count); counters.append(count)
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	space.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -80,6 +89,7 @@ func _ready() -> void:
 	prompt_label = _label("",23,Color("d4e852"))
 	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(prompt_label)
+	prompt_cursor = _label("_",20,Color("ffc478")); prompt_cursor.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER; column.add_child(prompt_cursor)
 	var bottom := HBoxContainer.new()
 	column.add_child(bottom)
 	var help := _label("AD 移动   空格 跳跃   W/S 梯子   按住 E 推拉   J 螯击   R 复位",17,Color("c1c7c3"))
@@ -137,19 +147,12 @@ func _build_pause(root: Control) -> void:
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.add_theme_constant_override("separation",12)
 	scroll.add_child(column)
+	column.minimum_size_changed.connect(func(): scroll.custom_minimum_size.y = minf(column.get_combined_minimum_size().y,get_viewport().get_visible_rect().size.y-100); panel.reset_size())
 	column.add_child(_label("信号暂存 / PAUSED",27,Color("d4e852")))
 	resume_button = Button.new()
 	resume_button.text = "继续冒险"
 	resume_button.pressed.connect(func(): set_paused(false))
 	column.add_child(resume_button)
-	var reset := Button.new()
-	reset.text = "重置当前箱石谜题（保留宝箱）"
-	reset.pressed.connect(func(): reset_requested.emit())
-	column.add_child(reset)
-	var gacha := Button.new()
-	gacha.text = "宠物扭蛋 · 免费测试"
-	gacha.pressed.connect(func(): gacha_requested.emit())
-	column.add_child(gacha)
 	var sound := CheckButton.new()
 	sfx_toggle = sound
 	sound.text = "交互音效"
@@ -190,14 +193,9 @@ func _build_pause(root: Control) -> void:
 	credits_dialog.title = "素材署名 / CREDITS"
 	credits_dialog.dialog_autowrap = true
 	credits_dialog.dialog_text = "外围模型：Kenney · CC0 1.0\nMini Arcade 1.2 / Furniture Kit 2.0\nFactory Kit 3.0 / Survival Kit 2.0\nMini Arcade 同时致谢 Fleur Keijsers、Guus Vermeulen。\n\n本项目修改：尺寸、底部轴心、统一色板、哑光材质；工业机柜改为供电与储存设施。\n来源：kenney.nl/assets\n完整逐项路径与许可：docs/ASSET_CREDITS.md\n\n小蟹形体参考：Qisi3344 / 绮思 · clawd-motion\n像素图与场景标识：本工程原创\n引擎：Godot Engine · MIT · godotengine.org/license"
-	credits_dialog.confirmed.connect(func(): credits_button.grab_focus())
-	credits_dialog.canceled.connect(func(): credits_button.grab_focus())
+	credits_dialog.confirmed.connect(func(): resume_button.grab_focus())
+	credits_dialog.canceled.connect(func(): resume_button.grab_focus())
 	pause_panel.add_child(credits_dialog)
-	credits_button = Button.new()
-	credits_button.text = "素材署名 / CREDITS"
-	credits_button.pressed.connect(func(): credits_dialog.popup_centered(Vector2i(580,420)))
-	column.add_child(credits_button)
-	column.add_child(_label("E / K：开箱、传送 · 按住可推拉\nF3：性能面板 · 进度自动保存",18,Color("c1c7c3")))
 	var title_button := Button.new()
 	title_button.text = "保存并返回主菜单"
 	title_button.pressed.connect(func(): title_requested.emit())
@@ -209,6 +207,8 @@ func _build_pause(root: Control) -> void:
 	pause_panel.hide()
 
 func _process(delta: float) -> void:
+	cursor_time += delta
+	prompt_cursor.modulate.a = 1.0 if not prompt_label.text.is_empty() and (get_parent().audio.reduced_motion or fmod(cursor_time,1.0)<0.55) else 0.0
 	if toast_time > 0:
 		toast_time -= delta
 		if toast_time <= 0:
@@ -233,6 +233,8 @@ func set_paused(value: bool) -> void:
 
 func update_progress(id: String, session: Dictionary) -> void:
 	var flags: Dictionary = session.flags
+	if counters.size()==3:
+		counters[0].text = str(session.crystals); counters[1].text = "%d / 4"%session.collected.size(); counters[2].text = str(int(flags.get("boot_access",false))+int(flags.get("archive_key",false)))
 	title_label.text = "01 / BOOT  启动区" if id == "BOOT" else "02 / ARCHIVE  档案仓库"
 	collection_label.text = "◇ %d 晶体   ▣ 宝箱 %d / 4"%[session.crystals,session.collected.size()]
 	if id=="ARCHIVE":

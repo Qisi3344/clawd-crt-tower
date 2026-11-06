@@ -66,6 +66,9 @@ func capture(label: String) -> void:
 
 func _run() -> void:
 	await frames(20)
+	check("single bundled pixel font",game.hud.resume_button.get_theme_font("font").resource_path=="res://assets/fonts/fusion-pixel.otf")
+	check("pause removes marked actions and debug copy",game.hud.pause_panel.find_children("*","Button",true,false).all(func(b): return not b.text.contains("重置当前") and not b.text.contains("宠物扭蛋") and not b.text.contains("CREDITS")))
+	check("pixel depth styles and shared icons",game.hud.resume_button.get_theme_stylebox("normal") is StyleBoxTexture and PixelArt.icon(8).get_width()==32)
 	check("M0 exterior twelve devices retained",game.devices.size()==12)
 	check("upper keyboards absent and base configuration retained",game.devices.slice(4).all(func(d): return not d.has_keyboard) and game.devices[0].has_keyboard)
 	check("real isolated 320x240 2D screen",game.viewport.disable_3d and game.viewport.size==Vector2i(320,240) and game.world.player is CharacterBody2D)
@@ -97,6 +100,11 @@ func _run() -> void:
 	await press("move_up",85)
 	await frames(10)
 	check("ladder reaches raised treasure platform",game.world.player.position.y<150)
+	await press("move_down",66)
+	check("S descends through ladder top ledge to solid floor",game.world.player.position.y>200 and game.world.player.is_on_floor())
+	await capture("m1-ladder-down")
+	await press("move_up",72)
+	check("ladder can be climbed again after descent",game.world.player.position.y<150)
 	check("approach BOOT chest",await walk_to(512))
 	await press("interact")
 	check("BOOT chest grants unique key and crystals",game.save.data.collected.has("boot_access") and game.save.data.flags.get("boot_access",false) and game.save.data.crystals>=2)

@@ -89,7 +89,7 @@ func show_page(value: String) -> void:
 	_label("CRT CRAB // SCREEN ADVENTURE",15,Color("86bdb4"))
 	if value=="title":
 		_label("SYSTEM ONLINE · 两屏冒险试玩",18)
-		_label("◇ %d 晶体 · 宝箱 %d / 4"%[game.save.data.crystals,game.save.data.collected.size()],18,Color("86bdb4"))
+		_inventory()
 		if game.save.data.started:
 			_button("继续冒险",func(): game.begin_adventure(false))
 			_button("新游戏",func(): _ask("将重置关卡、晶体和宝箱；保留已解锁外观、宠物收藏与设置。旧进度先备份。",func(): game.begin_adventure(true)))
@@ -104,7 +104,7 @@ func show_page(value: String) -> void:
 		_button("退出游戏",game._quit)
 		if game.save.status not in ["valid","missing"]: _label("原存档暂不可继续，已停止自动覆盖。",18,Color("ea5985"))
 	elif value=="wardrobe":
-		_label("OUTFIT DATA / 晶体 %d · 宝箱 %d/4"%[game.save.data.crystals,game.save.data.collected.size()],20,Color("86bdb4"))
+		_inventory()
 		preview = TextureRect.new()
 		preview.custom_minimum_size = Vector2(160,160)
 		preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -168,3 +168,9 @@ func _ask(text: String, callback: Callable) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible: return
 	if event.is_action_pressed("pause") and not confirm.visible and page!="title": show_page("title");get_viewport().set_input_as_handled()
+
+func _inventory() -> void:
+	var row := HBoxContainer.new(); row.add_theme_constant_override("separation",12); column.add_child(row)
+	for entry in [[15,str(game.save.data.crystals)],[6,"%d / 4"%game.save.data.collected.size()],[8,str(int(game.save.data.flags.get("boot_access",false))+int(game.save.data.flags.get("archive_key",false)))]]:
+		var icon := TextureRect.new(); icon.texture = PixelArt.icon(entry[0]); icon.custom_minimum_size = Vector2(32,32); icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE; icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST; row.add_child(icon)
+		var count := Label.new(); count.text = entry[1]; row.add_child(count)

@@ -271,13 +271,13 @@ func _ready() -> void:
     var top := Node3D.new(); top.name = "TopCap"; top.position.y = GLASS_TOP; add_child(top)
     mounting_groove("LidGroove",GLASS_TOP,-1,top)
     var lid := MeshInstance3D.new(); lid.name = "FlatLid"
-    var cylinder := CylinderMesh.new(); cylinder.top_radius = glass_radius(GLASS_TOP)+0.12; cylinder.bottom_radius = cylinder.top_radius; cylinder.height = 0.24; cylinder.radial_segments = 32
-    lid.mesh = cylinder; lid.position.y = 0.15; lid.material_override = Craft.material(cream); top.add_child(lid)
-    orb(top,Vector3(0,0.26,0),Vector3(0.48,0.08,0.40),teal)
+    var cylinder := CylinderMesh.new(); cylinder.top_radius = glass_radius(GLASS_TOP)+0.12; cylinder.bottom_radius = cylinder.top_radius; cylinder.height = 0.36; cylinder.radial_segments = 32
+    lid.mesh = cylinder; lid.position.y = 0.21; lid.material_override = Craft.material(cream); top.add_child(lid)
+    orb(top,Vector3(0,0.40,0),Vector3(0.48,0.08,0.40),teal)
     var ears := Node3D.new(); ears.position.y = -1.97; top.add_child(ears)
     PetCapsule.cat_ear(ears,-1,cream,pink,false); PetCapsule.cat_ear(ears,1,cream,pink,false)
-    var title := box(top,"TitlePlate",Vector3(0,0.02,1.75),Vector3(2.45,0.46,0.12),dark)
-    Craft.label(top,"PET GASHAPON",Vector3(0,0.02,1.83),Color("dd98bd"),0.0037,32)
+    var title := box(top,"TitlePlate",Vector3(0,0.21,1.75),Vector3(2.10,0.28,0.12),dark)
+    Craft.label(top,"PET GASHAPON",Vector3(0,0.21,1.83),Color("dd98bd"),0.0032,32)
     for side in [-1,1]:
         for y in [0.10,0.17,0.24]:
             var whisker := box(top,"Whisker",Vector3(side*1.40,y,1.0),Vector3(0.23,0.025,0.025),dark)

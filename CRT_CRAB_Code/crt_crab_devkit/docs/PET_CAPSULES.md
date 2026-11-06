@@ -6,7 +6,13 @@
 
 最新模型实机预览：
 
-![上下半球修正版](pet_halves_evidence/front.png)
+![耳朵与五官修正版](pet_faces_evidence/front.png)
+
+按最新参考调整动物耳根与脸部：猫耳上立，狗耳沿头部两侧自然下垂，兔耳和圆耳贴合头部；小圆眼降低并拉宽间距，小鼻小嘴居中，腮红位于眼下。去掉吐舌、门牙和夸张嘴形。兔子上半球改米白，隐藏猫皮肤改金色；其他毛色与六款下半壳配色保留。机台、机台猫耳、玻璃和交互代码未改。
+
+[最新侧面](pet_faces_evidence/side.png) · [最新背面](pet_faces_evidence/back.png) · [模型 12 项检查](pet_faces_evidence/pet-capsules-qa.json) · [出蛋 27 项检查](pet_faces_evidence/dispense-qa.json)。六款共 906 个姿态样本通过受检通道边界检查。
+
+下面链接保留上一轮上下半球结构的验收记录：
 
 [侧面](pet_halves_evidence/side.png) · [背面](pet_halves_evidence/back.png) · [模型检查](pet_halves_evidence/pet-capsules-qa.json) · [六款出蛋通道检查](pet_halves_evidence/dispense-qa.json)
 
@@ -17,11 +23,11 @@
 | 独立场景（`scenes/pets/`） | 外观与稀有度 |
 | --- | --- |
 | `cat.tscn` | 米白上半球、灰色花斑、尖耳，米色下壳；普通 |
-| `dog.tscn` | 棕色上半球、垂耳、奶白口鼻、吐舌，灰色下壳；普通 |
-| `hamster.tscn` | 浅棕、圆耳、胡须、门牙、青绿下壳；稀有 |
-| `rabbit.tscn` | 粉色长耳、粉色下壳；稀有 |
+| `dog.tscn` | 棕色上半球、垂耳、奶白口鼻，灰色下壳；普通 |
+| `hamster.tscn` | 浅棕、圆耳、胡须、青绿下壳；稀有 |
+| `rabbit.tscn` | 米白色长耳与上半球、粉色下壳；稀有 |
 | `bear.tscn` | 棕色圆耳、奶白口鼻、青绿下壳；稀有 |
-| `hidden_cat.tscn` | 深紫、柔金发光尖耳、像素眼、金色下壳；隐藏 |
+| `hidden_cat.tscn` | 金色上半球、柔金发光尖耳、小圆眼、金色下壳；隐藏 |
 
 调用方式：`load("res://scenes/pets/cat.tscn").instantiate()`，加入任意 Node3D 后调整位置与缩放。共享脚本为 `scripts/pet_capsule.gd`，没有碰撞体、奖励、随机概率、存档写入或额外灯光。
 

@@ -50,7 +50,7 @@ func face(x: float, y: float, lift := 0.0) -> Vector3:
 
 func line(points: Array, color: Color, thickness := 0.021) -> void:
 	var path := PackedVector3Array()
-	for p in points: path.append(face(p.x,p.y,0.12 if kind in [Kind.DOG,Kind.HAMSTER,Kind.BEAR] and absf(p.x)<0.32 else 0.012))
+	for p in points: path.append(face(p.x,p.y,0.06 if kind in [Kind.DOG,Kind.HAMSTER,Kind.BEAR] and absf(p.x)<0.32 else 0.012))
 	Craft.cable(self,path,color,thickness)
 
 static func cat_ear(parent: Node3D, side: float, coat: Color, inner: Color, glowing: bool) -> void:
@@ -74,8 +74,35 @@ static func cat_ear(parent: Node3D, side: float, coat: Color, inner: Color, glow
 		ear.material_override = ear.material_override.duplicate()
 		ear.material_override.cull_mode = BaseMaterial3D.CULL_DISABLED
 
+func droop_ear(side: float) -> void:
+	var key := "dog_drop_"+str(side)
+	if not shapes.has(key):
+		var centers := [Vector3(side*0.52,1.79,0.39),Vector3(side*0.70,1.72,0.46),Vector3(side*0.87,1.48,0.53),Vector3(side*0.92,1.24,0.58),Vector3(side*0.88,1.15,0.60)]
+		var widths := [0.10,0.18,0.17,0.12,0.015]
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for row in range(centers.size()-1):
+			for col in range(12):
+				var points: Array[Vector3] = []
+				for ij in [Vector2i(row,col),Vector2i(row,col+1),Vector2i(row+1,col+1),Vector2i(row+1,col)]:
+					var a: float = TAU*ij.y/12.0
+					points.append(centers[ij.x]+Vector3(cos(a)*widths[ij.x],0,sin(a)*widths[ij.x]*0.65))
+				var order := [0,1,2,0,2,3]
+				for index in order: st.add_vertex(points[index])
+		for row in [0,centers.size()-1]:
+			for col in range(12):
+				st.add_vertex(centers[row])
+				for index in ([col+1,col] if row==0 else [col,col+1]):
+					var angle: float = TAU*index/12.0
+					st.add_vertex(centers[row]+Vector3(cos(angle)*widths[row],0,sin(angle)*widths[row]*0.65))
+		st.generate_normals()
+		shapes[key] = st.commit()
+	var ear := part("DroopEar",shapes[key],Vector3.ZERO,Vector3.ONE,Color("a67653"))
+	ear.material_override = ear.material_override.duplicate()
+	ear.material_override.cull_mode = BaseMaterial3D.CULL_DISABLED
+
 func _ready() -> void:
-	var coats := [Color("e8dfc9"),Color("bd8d60"),Color("c69d70"),Color("e5b3c8"),Color("966c59"),Color("40304e")]
+	var coats := [Color("e8dfc9"),Color("bd8d60"),Color("c69d70"),Color("e8dfc9"),Color("966c59"),Color("e5b94f")]
 	var shells := [Color("cbbba1"),Color("b6b2b1"),Color("65ada4"),Color("bd789d"),Color("559b92"),Color("d5af59")]
 	var coat: Color = coats[kind]
 	var pink := Color("d98d9f")
@@ -102,38 +129,29 @@ func _ready() -> void:
 	ring.rings = 24; ring.ring_segments = 6
 	part("SeamRim",ring,Vector3(0,1,0),Vector3.ONE,shells[kind].lightened(0.15),0.22 if hidden else 0.0)
 	var pointed_ears := Node3D.new()
-	pointed_ears.position.y = -0.40
+	# Base corners follow the head silhouette; the shared machine-ear helper is unchanged.
+	pointed_ears.position.y = -1.1625
+	pointed_ears.scale.y = 1.25
 	add_child(pointed_ears)
 	for side in [-1.0,1.0]:
 		match kind:
 			Kind.CAT,Kind.HIDDEN_CAT: cat_ear(pointed_ears,side,Color("e9bf60") if hidden else coat,pink,hidden)
-			Kind.DOG:
-				var ear := ball("DroopEar",Vector3(side*0.89,1.52,0.20),Vector3(0.20,0.38,0.22),Color("a67653"))
-				ear.rotation_degrees.z = side*-15
+			Kind.DOG: droop_ear(side)
 			Kind.RABBIT:
-				ball("LongEar",Vector3(side*0.38,2.33,-0.05),Vector3(0.23,0.65,0.19),coat)
-				ball("LongInnerEar",Vector3(side*0.38,2.37,0.10),Vector3(0.14,0.48,0.07),pink)
+				ball("LongEar",Vector3(side*0.40,2.28,-0.05),Vector3(0.23,0.62,0.19),coat)
+				ball("LongInnerEar",Vector3(side*0.40,2.32,0.10),Vector3(0.14,0.46,0.07),pink)
 			_:
-				ball("RoundEar",Vector3(side*0.56,1.99,-0.04),Vector3(0.27,0.28,0.20),coat)
-				ball("RoundInnerEar",Vector3(side*0.56,2.01,0.13),Vector3(0.17,0.18,0.06),pink if kind==Kind.HAMSTER else Color("cead8e"))
-		ball("Blush",face(side*0.47,1.49,0.008),Vector3(0.12,0.075,0.028),pink)
-		if not hidden:
-			ball("Eye",face(side*0.27,1.73),Vector3(0.060,0.073,0.036),ink)
-			ball("EyeShine",face(side*0.27-0.015,1.755,0.035),Vector3.ONE*0.014,Color("fff3dc"))
+				ball("RoundEar",Vector3(side*0.64,1.93,-0.04),Vector3(0.25,0.28,0.20),coat)
+				ball("RoundInnerEar",Vector3(side*0.64,1.95,0.13),Vector3(0.16,0.18,0.06),pink if kind==Kind.HAMSTER else Color("cead8e"))
+		ball("Blush",face(side*0.55,1.23,0.004),Vector3(0.105,0.075,0.025),pink)
+		ball("Eye",face(side*0.36,1.43,0.004),Vector3(0.065,0.068,0.035),ink)
+		ball("EyeShine",face(side*0.36-0.015,1.45,0.033),Vector3.ONE*0.013,Color("fff3dc"))
 	if kind in [Kind.DOG,Kind.HAMSTER,Kind.BEAR]:
-		ball("CreamMuzzle",face(0,1.45,0.02),Vector3(0.31,0.20,0.07),Color("eddbc0"))
-	if hidden:
-		var gold := Color("f2cf69")
+		ball("CreamMuzzle",face(0,1.27,0.008),Vector3(0.22,0.13,0.045),Color("eddbc0"))
+	var nose_color := Color("926127") if hidden else ink
+	ball("Nose",face(0,1.31,0.055),Vector3(0.045,0.033,0.026),nose_color)
+	line([Vector2(0,1.285),Vector2(0,1.22)],nose_color,0.010)
+	line([Vector2(-0.065,1.22),Vector2(0,1.195),Vector2(0.065,1.22)],nose_color,0.010)
+	if kind in [Kind.CAT,Kind.HAMSTER,Kind.RABBIT,Kind.HIDDEN_CAT]:
 		for side in [-1,1]:
-			for cell in [Vector2(-1,0),Vector2(1,0),Vector2(-1,1),Vector2(1,1),Vector2(0,2)]:
-				Craft.box(self,face(side*0.28+cell.x*0.037,1.68+cell.y*0.037,0.025),Vector3.ONE*0.035,gold,0.002,0.6)
-		line([Vector2(-0.17,1.46),Vector2(-0.10,1.39),Vector2(0,1.46),Vector2(0.10,1.39),Vector2(0.17,1.46)],gold,0.025)
-	else:
-		ball("Nose",face(0,1.54,0.10),Vector3(0.067,0.044,0.033),ink)
-		line([Vector2(-0.16,1.43),Vector2(-0.09,1.38),Vector2(0,1.43),Vector2(0.09,1.38),Vector2(0.16,1.43)],ink)
-		if kind==Kind.DOG: ball("Tongue",face(0.055,1.32,0.16),Vector3(0.065,0.08,0.025),pink)
-		if kind==Kind.HAMSTER:
-			for x in [-0.04,0.04]: Craft.box(self,face(x,1.32,0.16),Vector3(0.065,0.105,0.04),Color("fff0d8"),0.012)
-		if kind in [Kind.CAT,Kind.HAMSTER,Kind.RABBIT]:
-			for side in [-1,1]:
-				for y in [1.49,1.57]: line([Vector2(side*0.54,y),Vector2(side*0.67,y+0.025)],ink,0.014)
+			for y in [1.27,1.34]: line([Vector2(side*0.61,y),Vector2(side*0.74,y+0.015)],ink,0.010)

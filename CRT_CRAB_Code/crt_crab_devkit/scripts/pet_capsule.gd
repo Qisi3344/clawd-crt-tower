@@ -135,13 +135,28 @@ func hamster_face(upper: MeshInstance3D, coat: Color, ink: Color) -> void:
 				var point := face(side*0.59+p.x,1.22+p.y,0.008)
 				cheek.set_normal((point-Vector3(0,1,0)).normalized()); cheek.add_vertex(point)
 		part("HamsterCheekLeft" if side<0 else "HamsterCheekRight",cheek.commit(),Vector3.ZERO,Vector3.ONE,Color("e9baa4"))
-		ball("Eye",face(side*0.40,1.57,0.004),Vector3(0.067,0.070,0.035),ink)
-		ball("EyeShine",face(side*0.40,1.57,0.004)+Vector3(-0.015,0.02,0.035),Vector3.ONE*0.012,Color("fff3dc"))
+		ball("Eye",face(side*0.35,1.57,0.004),Vector3(0.067,0.070,0.035),ink)
+		ball("EyeShine",face(side*0.35,1.57,0.004)+Vector3(-0.015,0.02,0.035),Vector3.ONE*0.012,Color("fff3dc"))
+	# Rounded triangular outline, projected onto the face and extruded slightly.
+	var outline := [Vector2(-0.065,1.355),Vector2(0.065,1.355),Vector2(0,1.25)]
+	var loop := PackedVector2Array()
+	for i in range(3):
+		var previous: Vector2 = outline[(i+2)%3]
+		var corner: Vector2 = outline[i]
+		var next: Vector2 = outline[(i+1)%3]
+		for step in range(5):
+			var t := step/4.0
+			loop.append(previous.lerp(corner,0.72).lerp(corner,t).lerp(corner.lerp(next,0.28).lerp(corner,1-t),t))
 	var nose := SurfaceTool.new(); nose.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var points: Array[Vector3] = []
-	for lift in [0.025,0.002]:
-		for p in [Vector2(-0.055,1.335),Vector2(0.055,1.335),Vector2(0,1.26)]: points.append(face(p.x,p.y,lift))
-	for i in [0,1,2,3,5,4,0,3,4,0,4,1,1,4,5,1,5,2,2,5,3,2,3,0]: nose.add_vertex(points[i])
+	var center := Vector2(0,1.32)
+	for i in range(loop.size()):
+		var j := (i+1)%loop.size()
+		for p in [center,loop[i],loop[j]]: nose.add_vertex(face(p.x,p.y,0.032))
+		var a := face(loop[i].x,loop[i].y,0.032)
+		var b := face(loop[j].x,loop[j].y,0.032)
+		var c := face(loop[j].x,loop[j].y,0.002)
+		var d := face(loop[i].x,loop[i].y,0.002)
+		for v in [a,d,c,a,c,b]: nose.add_vertex(v)
 	nose.generate_normals()
 	part("PinkTriangleNose",nose.commit(),Vector3.ZERO,Vector3.ONE,Color("dba1a2"))
 

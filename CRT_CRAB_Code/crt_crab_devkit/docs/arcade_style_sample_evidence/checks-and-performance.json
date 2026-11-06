@@ -1,0 +1,51 @@
+{
+	"checks": [
+		{
+			"name": "internal pixel framebuffer remains byte-identical",
+			"passed": true
+		},
+		{
+			"name": "CRT pixel shader and 320x240 viewport stay unchanged",
+			"passed": true
+		},
+		{
+			"name": "QA disables formal progress writes",
+			"passed": true
+		},
+		{
+			"name": "only local sample materials replaced",
+			"passed": true
+		},
+		{
+			"name": "sample actually applies cel material and visible-source lighting",
+			"passed": true
+		},
+		{
+			"name": "no bloom in sample",
+			"passed": true
+		},
+		{
+			"name": "five physical-source lights; no spotlight",
+			"passed": true
+		},
+		{
+			"name": "sample can restore original environment and materials",
+			"passed": true
+		}
+	],
+	"passed": true,
+	"perf": [
+		{
+			"draw_calls": 1202.0,
+			"median_ms": 20.136,
+			"p95_ms": 21.275,
+			"sample_enabled": false
+		},
+		{
+			"draw_calls": 524.0,
+			"median_ms": 21.282,
+			"p95_ms": 22.625,
+			"sample_enabled": true
+		}
+	]
+}

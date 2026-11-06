@@ -120,7 +120,17 @@ def run(data,layout):
                     unintended_supports.append([d['index'],pa['name'],pb['name']])
     if decor_collisions: errors.append('CRT intersects existing large exterior props')
     if unintended_supports: errors.append('CRT rests on an exterior prop')
-    return {'passed':not errors,'devices':reports,'collisions':collisions,'below_floor':below_floor,'decor_collisions':decor_collisions,'unintended_supports':unintended_supports,'mesh_checks_passed':data['passed'],'errors':errors,'method':'Actual mesh flat-face hulls + yaw-transformed component OBB SAT; uniform case/base mass proxy with cumulative upper loads; 0.0001 contact tolerance.'}
+    filler_collisions=[]
+    fillers=data.get('filler_units',[])
+    for i,unit in enumerate(fillers):
+        others=[p for d in devices for p in d['parts_world']]
+        others += [p for later in fillers[i+1:] for p in later['parts']]
+        others += [p for p in data['exterior_parts'] if '/GapFillers/' not in p['name']]
+        for a in unit['parts']:
+            for b in others:
+                if overlaps(a,b): filler_collisions.append([unit['name'],a['name'],b['name']])
+    if filler_collisions: errors.append('new floor props intersect other equipment')
+    return {'passed':not errors,'devices':reports,'collisions':collisions,'below_floor':below_floor,'decor_collisions':decor_collisions,'unintended_supports':unintended_supports,'filler_collisions':filler_collisions,'filler_count':len(fillers),'mesh_checks_passed':data['passed'],'errors':errors,'method':'Actual mesh flat-face hulls + yaw-transformed component OBB SAT; uniform case/base mass proxy with cumulative upper loads; 0.0001 contact tolerance.'}
 
 
 if __name__=='__main__':

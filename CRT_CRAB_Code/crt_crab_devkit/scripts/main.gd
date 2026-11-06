@@ -202,6 +202,7 @@ func _build_shell() -> void:
 	shell.add_child(dressing)
 	ExteriorDressing.build(dressing,devices)
 	Craft.batch_static(dressing)
+	ExteriorDressing.build_fillers(shell)
 	if "--no-surroundings" not in OS.get_cmdline_user_args():
 		surroundings = (load("res://scenes/environment/surroundings_root.tscn") as PackedScene).instantiate() as EnvironmentSurroundings
 		shell.add_child(surroundings)

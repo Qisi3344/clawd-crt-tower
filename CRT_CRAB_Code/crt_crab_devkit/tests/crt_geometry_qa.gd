@@ -112,11 +112,30 @@ func _run() -> void:
 			for point in p.poly:
 				point[0] *= device.scale.x; point[1] *= device.scale.z
 		devices.append({"computer_id":device.computer_id,"top_polygon":top_poly,"bottom_polygon":bottom_poly,"top_y":top_box.end.y*device.scale.y,"bottom_y":bottom_box.position.y*device.scale.y,"mass":mass*device.scale.x*device.scale.y*device.scale.z,"mass_center":[mass_center.x*device.scale.x,mass_center.z*device.scale.z],"parts":parts})
+	var filler_units: Array = game.shell.get_node("GapFillers").get_children()
+	var filler_records: Array = []
+	check("three 3D speakers and two 3D towers are present",filler_units.size()==5)
+	for unit in filler_units:
+		var parts: Array = []
+		for node in unit.find_children("*","MeshInstance3D",true,false):
+			if not node.mesh is QuadMesh: parts.append(part(node,node.global_transform,str(node.get_path())))
+		for batch in unit.find_children("*","MultiMeshInstance3D",true,false):
+			var proxy := MeshInstance3D.new()
+			proxy.mesh = batch.multimesh.mesh
+			for i in range(batch.multimesh.instance_count):
+				parts.append(part(proxy,batch.global_transform*batch.multimesh.get_instance_transform(i),str(batch.get_path())+"/"+str(i)))
+			proxy.free()
+		var bottom: float = parts.map(func(p): return p.low).min()
+		check(str(unit.name)+" detailed 3D geometry rests on the platform",absf(bottom+1.1)<0.0001 and parts.size()>20 and unit.find_children("*","PhysicsBody3D",true,false).is_empty())
+		filler_records.append({"name":str(unit.name),"parts":parts})
 	# A tighter array must still expose every screen and front control when focused.
+	var occluder_units: Array = []
+	occluder_units.append_array(game.devices)
+	occluder_units.append_array(filler_units)
 	for device in game.devices:
 		var blocked := 0
 		var targets := [Vector3(0,0.2,1.72),Vector3(-1.95,-1.20,1.72),Vector3(1.95,-1.20,1.72),Vector3(-1.95,1.60,1.72),Vector3(1.95,1.60,1.72),Vector3(-1.35,-1.88,1.89),Vector3(1.46,-1.9,1.90),Vector3(1.82,-1.89,1.90)]
-		for other in game.devices:
+		for other in occluder_units:
 			if other==device: continue
 			for node in other.find_children("*","MeshInstance3D",true,false):
 				for target in targets:
@@ -164,8 +183,23 @@ func _run() -> void:
 			for i in range(3): await process_frame
 			RenderingServer.force_draw()
 			root.get_texture().get_image().save_png("res://artifacts/crt-model-%d.png"%model)
+	if DisplayServer.get_name()!="headless":
+		game.set_process(false)
+		# Inspection fixture only: reveal all five native models without the CRTs.
+		# Normal four-direction gameplay captures above retain the complete scene.
+		for child in game.shell.get_children():
+			if child is WorldEnvironment or child is Light3D or child.name=="GapFillers": continue
+			if child is MeshInstance3D and child.position.y < -1.1: continue
+			if child is Node3D: child.hide()
+		game.surroundings.process_mode = Node.PROCESS_MODE_DISABLED
+		for shot in [["front",Vector3(11,7,15)],["back",Vector3(-11,7,-15)]]:
+			game.director.camera.position = shot[1]
+			game.director.camera.look_at(Vector3(0,1.5,0))
+			for i in range(3): await process_frame
+			RenderingServer.force_draw()
+			root.get_texture().get_image().save_png("res://artifacts/fillers-detail-"+shot[0]+".png")
 	var file := FileAccess.open("res://artifacts/crt-geometry.json",FileAccess.WRITE)
-	file.store_string(JSON.stringify({"devices":devices,"exterior_parts":exterior_parts,"mesh_checks":geometry_checks,"checks":checks,"passed":checks.all(func(c): return c.passed)},"\t"))
+	file.store_string(JSON.stringify({"devices":devices,"filler_units":filler_records,"exterior_parts":exterior_parts,"mesh_checks":geometry_checks,"checks":checks,"passed":checks.all(func(c): return c.passed)},"\t"))
 	file.close()
 	game.audio.stop_all()
 	OS.delay_msec(80)

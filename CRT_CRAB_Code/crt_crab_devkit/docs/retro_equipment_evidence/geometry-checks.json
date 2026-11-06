@@ -1,0 +1,247 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "00 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "00 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "00 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "01 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "01 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "01 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "02 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "02 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "02 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "03 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "03 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "03 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "04 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "04 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "04 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "05 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "05 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "05 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "06 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "06 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "06 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "07 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "07 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "07 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "08 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "08 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "08 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "09 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "09 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "09 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "10 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "10 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "10 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "11 continuous closed bezel with outward normals",
+      "passed": true
+    },
+    {
+      "name": "11 unchanged 4.16 x 3.12 glass, shader and inset depth",
+      "passed": true
+    },
+    {
+      "name": "11 functional status text stays flush and visible",
+      "passed": true
+    },
+    {
+      "name": "three 3D speakers and two 3D towers are present",
+      "passed": true
+    },
+    {
+      "name": "Speaker_A detailed 3D geometry rests on the platform",
+      "passed": true
+    },
+    {
+      "name": "Speaker_B detailed 3D geometry rests on the platform",
+      "passed": true
+    },
+    {
+      "name": "Speaker_C detailed 3D geometry rests on the platform",
+      "passed": true
+    },
+    {
+      "name": "Tower_A detailed 3D geometry rests on the platform",
+      "passed": true
+    },
+    {
+      "name": "Tower_B detailed 3D geometry rests on the platform",
+      "passed": true
+    },
+    {
+      "name": "00 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "01 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "02 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "03 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "04 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "05 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "06 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "07 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "08 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "09 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "10 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "11 focus view exposes glass corners, sticker, button and indicator",
+      "passed": true
+    },
+    {
+      "name": "72 angles through full 360 degrees keep overview camera clear",
+      "passed": true
+    }
+  ],
+  "units": [
+    {
+      "name": "Speaker_A",
+      "solid_components": 25
+    },
+    {
+      "name": "Speaker_B",
+      "solid_components": 25
+    },
+    {
+      "name": "Speaker_C",
+      "solid_components": 25
+    },
+    {
+      "name": "Tower_A",
+      "solid_components": 43
+    },
+    {
+      "name": "Tower_B",
+      "solid_components": 43
+    }
+  ]
+}

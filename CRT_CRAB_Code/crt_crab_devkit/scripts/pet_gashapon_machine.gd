@@ -169,7 +169,8 @@ func glass_mesh() -> ArrayMesh:
 func mounting_groove(label: String, y: float, direction: float, parent: Node3D) -> MeshInstance3D:
     var radius := glass_radius(y)
     # U-section: 0.04-wide groove receives the glass edge, with a supporting bottom.
-    var profile := [Vector2(-0.09,0.08),Vector2(-0.02,0.08),Vector2(-0.02,0),Vector2(0.02,0),Vector2(0.02,0.08),Vector2(0.09,0.08),Vector2(0.09,-0.15),Vector2(-0.09,-0.15)]
+    var lip := 0.035 if direction<0 else 0.08
+    var profile := [Vector2(-0.09,lip),Vector2(-0.02,lip),Vector2(-0.02,0),Vector2(0.02,0),Vector2(0.02,lip),Vector2(0.09,lip),Vector2(0.09,-0.15),Vector2(-0.09,-0.15)]
     var vertices := PackedVector3Array()
     for row in range(profile.size()):
         var next := (row+1)%profile.size()
@@ -225,6 +226,80 @@ func lower_dressing() -> void:
         quad(points,Vector3(outer[i].x,outer[i].y,1.590),Vector3(outer[j].x,outer[j].y,1.590),Vector3(inner[j].x,inner[j].y,1.590),Vector3(inner[i].x,inner[i].y,1.590),Vector3.BACK)
     var lip := mesh_node("OutletTrim",points,Color("e2c8ad")); lip.reparent(details,false)
 
+func rounded_hood(top: Node3D, color: Color) -> void:
+    var profile := [Vector2(0,0),Vector2(1.68,0),Vector2(1.74,0.025),Vector2(1.78,0.10),Vector2(1.79,0.18),Vector2(1.73,0.28),Vector2(1.58,0.39),Vector2(1.27,0.49),Vector2(0.82,0.55),Vector2(0,0.58)]
+    var st := SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
+    for row in range(profile.size()-1):
+        for col in range(40):
+            var points: Array[Vector3] = []
+            for rc in [Vector2i(row,col),Vector2i(row,col+1),Vector2i(row+1,col+1),Vector2i(row+1,col)]:
+                var a: float = TAU*rc.y/40.0
+                var p: Vector2 = profile[rc.x]
+                points.append(Vector3(cos(a)*p.x,p.y,sin(a)*p.x))
+            var delta: Vector2 = profile[row+1]-profile[row]
+            var normal := Vector3(delta.y*cos(TAU*(col+0.5)/40),-delta.x,delta.y*sin(TAU*(col+0.5)/40))
+            var indices := [0,1,2,0,2,3]
+            if (points[1]-points[0]).cross(points[2]-points[0]).dot(normal)>0: indices = [0,2,1,0,3,2]
+            for index in indices:
+                var r: int = row if index<2 else row+1
+                var a: float = TAU*(col+(1 if index in [1,2] else 0))/40.0
+                var tangent: Vector2 = profile[mini(r+1,profile.size()-1)]-profile[maxi(r-1,0)]
+                st.set_normal(Vector3(tangent.y*cos(a),-tangent.x,tangent.y*sin(a)).normalized())
+                st.add_vertex(points[index])
+    var hood := MeshInstance3D.new(); hood.name = "RoundedHood"; hood.mesh = st.commit(); hood.material_override = Craft.material(color); top.add_child(hood)
+
+func soft_machine_ear(top: Node3D, side: float, cream: Color, pink: Color) -> void:
+    var corners := [Vector2(-0.38,0),Vector2(0.38,0),Vector2(side*0.16,0.79)]
+    var loop := PackedVector2Array()
+    for i in range(3):
+        var a: Vector2 = corners[(i+2)%3].lerp(corners[i],0.80)
+        var b: Vector2 = corners[i].lerp(corners[(i+1)%3],0.20)
+        for step in range(7):
+            var t := step/6.0
+            loop.append(a*(1-t)*(1-t)+corners[i]*2*t*(1-t)+b*t*t)
+    for layer in range(2):
+        var points := PackedVector3Array()
+        var scale := 1.0 if layer==0 else 0.66
+        var depth := 0.18 if layer==0 else 0.202
+        var offset := 0.0 if layer==0 else 0.105
+        var ids := Geometry2D.triangulate_polygon(loop)
+        for z in ([depth,-0.13] if layer==0 else [depth]):
+            for i in range(0,ids.size(),3):
+                var a := Vector3(loop[ids[i]].x*scale,loop[ids[i]].y*scale+offset,z)
+                var b := Vector3(loop[ids[i+1]].x*scale,loop[ids[i+1]].y*scale+offset,z)
+                var c := Vector3(loop[ids[i+2]].x*scale,loop[ids[i+2]].y*scale+offset,z)
+                points.append_array(PackedVector3Array([a,c,b] if (b-a).cross(c-a).z*(1 if z>0 else -1)>0 else [a,b,c]))
+        if layer==0:
+            for i in range(loop.size()):
+                var j := (i+1)%loop.size()
+                var a := Vector3(loop[i].x,loop[i].y,depth); var b := Vector3(loop[j].x,loop[j].y,depth)
+                quad(points,a,b,Vector3(b.x,b.y,-0.13),Vector3(a.x,a.y,-0.13),(a+b)/2-Vector3(0,0.25,depth))
+        var ear := mesh_node("SoftEar"+str(side)+str(layer),points,cream if layer==0 else pink)
+        ear.reparent(top,false); ear.position = Vector3(side*0.83,0.22,0)
+
+func inset_sign(top: Node3D, cream: Color, dark: Color) -> void:
+    Craft.box(top,Vector3(0,0.24,1.48),Vector3(0.90,0.25,0.65),cream,0.06)
+    var outer := rounded(Rect2(-0.69,-0.20,1.38,0.40),0.20)
+    var inner := rounded(Rect2(-0.60,-0.14,1.20,0.28),0.14)
+    var vertices := PackedVector3Array()
+    for i in range(outer.size()):
+        var j := (i+1)%outer.size()
+        var a := Vector3(outer[i].x,outer[i].y,1.84); var b := Vector3(outer[j].x,outer[j].y,1.84)
+        var c := Vector3(inner[j].x,inner[j].y,1.84); var d := Vector3(inner[i].x,inner[i].y,1.84)
+        quad(vertices,a,b,c,d,Vector3.BACK)
+        quad(vertices,d,c,Vector3(c.x,c.y,1.70),Vector3(d.x,d.y,1.70),Vector3(-d.x,-d.y,0))
+        quad(vertices,a,Vector3(a.x,a.y,1.70),Vector3(b.x,b.y,1.70),b,Vector3(a.x,a.y,0))
+    var frame := mesh_node("InsetSignRim",vertices,cream); frame.reparent(top,false); frame.position.y = 0.24
+    var fill := PackedVector3Array(); var ids := Geometry2D.triangulate_polygon(inner)
+    for i in range(0,ids.size(),3):
+        for index in [ids[i],ids[i+2],ids[i+1]]: fill.append(Vector3(inner[index].x,inner[index].y,1.825))
+    var plate := mesh_node("TitlePlate",fill,dark); plate.reparent(top,false); plate.position.y = 0.24
+    Craft.label(top,"PET GASHAPON",Vector3(0.07,0.24,1.837),Color("dd98bd"),0.0032,32)
+    var mint := Color("88d8c8")
+    var pad := orb(top,Vector3(-0.46,0.21,1.84),Vector3(0.042,0.032,0.012),mint); pad.material_override = Craft.material(mint,0.25)
+    for p in [Vector2(-0.50,0.265),Vector2(-0.46,0.283),Vector2(-0.42,0.265)]:
+        var toe := orb(top,Vector3(p.x,p.y,1.84),Vector3(0.015,0.019,0.010),mint); toe.material_override = Craft.material(mint,0.25)
+
 func _ready() -> void:
     name = "PetGashaponMachine"; set_meta("scenery_group",true)
     var cream := Color("d4b49d"); var teal := Color("437e76"); var dark := Color("332b3b"); var pink := Color("c77b9d")
@@ -270,18 +345,17 @@ func _ready() -> void:
     mounting_groove("BaseGroove",GLASS_BOTTOM,1,self)
     var top := Node3D.new(); top.name = "TopCap"; top.position.y = GLASS_TOP; add_child(top)
     mounting_groove("LidGroove",GLASS_TOP,-1,top)
-    var lid := MeshInstance3D.new(); lid.name = "FlatLid"
-    var cylinder := CylinderMesh.new(); cylinder.top_radius = glass_radius(GLASS_TOP)+0.12; cylinder.bottom_radius = cylinder.top_radius; cylinder.height = 0.36; cylinder.radial_segments = 32
-    lid.mesh = cylinder; lid.position.y = 0.21; lid.material_override = Craft.material(cream); top.add_child(lid)
-    orb(top,Vector3(0,0.40,0),Vector3(0.48,0.08,0.40),teal)
-    var ears := Node3D.new(); ears.position.y = -1.97; top.add_child(ears)
-    PetCapsule.cat_ear(ears,-1,cream,pink,false); PetCapsule.cat_ear(ears,1,cream,pink,false)
-    var title := box(top,"TitlePlate",Vector3(0,0.21,1.75),Vector3(1.20,0.28,0.12),dark)
-    Craft.label(top,"PET GASHAPON",Vector3(0,0.21,1.83),Color("dd98bd"),0.0032,32)
+    rounded_hood(top,cream)
+    orb(top,Vector3(0,0.62,0),Vector3(0.48,0.08,0.40),teal)
+    soft_machine_ear(top,-1,cream,pink); soft_machine_ear(top,1,cream,pink)
+    inset_sign(top,cream,dark)
     for side in [-1,1]:
-        for y in [0.10,0.17,0.24]:
-            var whisker := box(top,"Whisker",Vector3(side*1.40,y,1.0),Vector3(0.23,0.025,0.025),dark)
-            whisker.rotation.y = atan2(side*1.40,1.0)
+        for spec in [Vector2(0.14,1.785),Vector2(0.23,1.760),Vector2(0.32,1.6755)]:
+            var y: float = spec.x
+            var radius: float = spec.y+0.012
+            var angle: float = side*0.98
+            var whisker := box(top,"Whisker",Vector3(sin(angle)*radius,y,cos(angle)*radius),Vector3(0.19,0.020,0.020),dark)
+            whisker.rotation.y = angle
     box(self,"LampFixture",Vector3(0,6.02,0),Vector3(0.48,0.08,0.40),dark)
     Craft.box(self,Vector3(0,5.965,0),Vector3(0.4,0.025,0.34),Color("eedab1"),0.01,0.4)
     var lamp := SpotLight3D.new(); lamp.name = "HopperLamp"; lamp.position.y = 5.94; lamp.rotation_degrees.x = -90

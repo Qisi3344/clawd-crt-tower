@@ -1,0 +1,60 @@
+{
+	"checks": [
+		{
+			"meshes": 26,
+			"model": "猫猫 / CAT",
+			"passed": true
+		},
+		{
+			"model": "猫猫 / CAT glass and base",
+			"passed": true
+		},
+		{
+			"meshes": 21,
+			"model": "狗狗 / DOG",
+			"passed": true
+		},
+		{
+			"model": "狗狗 / DOG glass and base",
+			"passed": true
+		},
+		{
+			"meshes": 28,
+			"model": "仓鼠 / HAMSTER",
+			"passed": true
+		},
+		{
+			"model": "仓鼠 / HAMSTER glass and base",
+			"passed": true
+		},
+		{
+			"meshes": 25,
+			"model": "兔兔 / RABBIT",
+			"passed": true
+		},
+		{
+			"model": "兔兔 / RABBIT glass and base",
+			"passed": true
+		},
+		{
+			"meshes": 22,
+			"model": "小熊 / BEAR",
+			"passed": true
+		},
+		{
+			"model": "小熊 / BEAR glass and base",
+			"passed": true
+		},
+		{
+			"meshes": 26,
+			"model": "隐藏猫猫 / SECRET",
+			"passed": true
+		},
+		{
+			"model": "隐藏猫猫 / SECRET glass and base",
+			"passed": true
+		}
+	],
+	"passed": true,
+	"renderer": "NVIDIA GeForce RTX 5060 Ti"
+}

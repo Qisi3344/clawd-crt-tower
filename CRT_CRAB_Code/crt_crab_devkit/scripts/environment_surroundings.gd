@@ -31,7 +31,15 @@ func _ready() -> void:
 	_build_stage()
 	# Bounds describe actual imported geometry, not assumed primitive placeholders.
 	for node in find_children("*","Node3D",true,false):
-		if node is EnvironmentProp:
+		if node.has_meta("scenery_group"):
+			var bounds := AABB()
+			var first := true
+			for mesh in node.find_children("*","MeshInstance3D",true,false):
+				var box: AABB = mesh.global_transform*mesh.get_aabb()
+				bounds = box if first else bounds.merge(box)
+				first = false
+			occluders.append({"node":node,"bounds":bounds.grow(0.12)})
+		elif node is EnvironmentProp:
 			registered_model_count += 1
 			occluders.append({"node":node,"bounds":node.world_bounds().grow(0.12)})
 			for mesh in node.meshes:
@@ -43,7 +51,7 @@ func _ready() -> void:
 			var ancestor := node.get_parent()
 			var in_model := false
 			while ancestor!=self and ancestor!=null:
-				if ancestor is EnvironmentProp: in_model = true
+				if ancestor is EnvironmentProp or ancestor.has_meta("scenery_group"): in_model = true
 				ancestor = ancestor.get_parent()
 			if not in_model:
 				occluders.append({"node":node,"bounds":(node.global_transform*node.get_aabb()).grow(0.08)})

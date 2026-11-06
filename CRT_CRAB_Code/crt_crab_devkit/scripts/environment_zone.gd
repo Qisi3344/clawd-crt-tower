@@ -100,9 +100,12 @@ func _screen(parent: Node3D, p: Vector3, size: Vector2, index: int, pitch: float
 	displays.append({"node":node,"material":mat,"index":index})
 
 func _arcade() -> void:
-	var a := _model("arcade_cabinet",Vector3(-2.0,0,0),-8)
+	var gacha := Node3D.new()
+	gacha.set_script(load("res://scripts/pet_gashapon_machine.gd"))
+	gacha.position = Vector3(-2,0,0.7)
+	gacha.rotation_degrees.y = -8
+	add_child(gacha)
 	var b := _model("arcade_cabinet",Vector3(2.5,0,-1.8),17)
-	_decal(a,"crt_crab",Vector3(0,0.85,1.34),1.25)
 	_decal(b,"boot_ok",Vector3(0,0.85,1.34),1.7)
 	var vending := _model("vending_machine",Vector3(6.1,0,-3.8),-4)
 	# A shallow, stocked insert sits in front of the imported curved glass.
@@ -125,8 +128,8 @@ func _arcade() -> void:
 		Craft.box(vending,Vector3(x,4.13,2.3),Vector3(0.08,3.8,0.4),Color("53616b"),0.015)
 	_model("ticket_machine",Vector3(-5,0,0.7),12)
 	# Display overlays and marquees are authored locally; these are scenery only.
-	for i in range(2):
-		var machine := a if i==0 else b
+	for i in [1]:
+		var machine := b
 		# Match the imported glass slope (normal 0, .316, .949), with a small depth offset.
 		_screen(machine,Vector3(0,3.537,0.553),Vector2(2.38,1.48),i,-18.435)
 		_sign(machine,"AFTER HOURS" if i==0 else "IDLE / 02",Vector3(0,5.55,1.39),Vector2(2.75,0.5),Color("ad7298"))

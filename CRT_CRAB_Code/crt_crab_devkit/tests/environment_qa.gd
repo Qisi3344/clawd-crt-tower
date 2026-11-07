@@ -95,11 +95,8 @@ func run(qa: Node) -> void:
 	environment.occlusion_enabled = true
 	if qa.visual:
 		game.hud.set_paused(true)
-		game.hud.credits_button.pressed.emit()
-		await qa.frames(4)
-		qa.check("pause menu opens readable material credits",game.hud.credits_dialog.visible and game.hud.credits_dialog.dialog_text.contains("Kenney"))
-		await qa.capture("environment-credits")
-		game.hud.credits_dialog.hide()
+		# The compact pause menu removed the credits action in 81fe22a.
+		qa.check("material attribution remains available in bundled documentation",FileAccess.get_file_as_string("res://docs/ASSET_CREDITS.md").contains("Kenney"))
 		game.hud.set_paused(false)
 		var views := [
 			["front",Vector3(27,23,36),Vector3(0,6,0)],

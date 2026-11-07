@@ -106,9 +106,10 @@ func cable_anchor() -> Vector3:
 
 func set_status(value: String) -> void:
 	status = value
-	var color := Color("54cfc3") if status=="ACTIVE" else (Color("dce65b") if status=="CONNECTED" else Color("52686b"))
+	var colors := {"ACTIVE":"54cfc3","CONNECTED":"dce65b","READY":"dce65b","REPAIRED":"54cfc3","UNLOCKING":"efd58a","CORRUPTED":"ea5985","LOCKED":"52686b","SLEEP":"52686b"}
+	var color := Color(colors.get(status,"52686b"))
 	indicator.material_override = Craft.material(color,0.5)
-	status_label.text = screen_id+" / "+status if status in ["ACTIVE","CONNECTED"] else ""
+	status_label.text = screen_id+" / "+status if status not in ["SLEEP","LOCKED"] else ""
 	status_label.modulate = color
 
 func _build_keyboard(shell: Color) -> void:
@@ -135,7 +136,14 @@ func focus_position() -> Vector3:
 	return to_global(Vector3(0.18,0.58,1.72+distance))
 
 func set_texture(texture: Texture2D) -> void:
-	screen_material.set_shader_parameter("screen_texture",texture)
+	if texture is AtlasTexture:
+		var atlas := texture as AtlasTexture
+		var size := atlas.atlas.get_size()
+		screen_material.set_shader_parameter("screen_texture",atlas.atlas)
+		screen_material.set_shader_parameter("screen_region",Vector4(atlas.region.position.x/size.x,atlas.region.position.y/size.y,atlas.region.size.x/size.x,atlas.region.size.y/size.y))
+	else:
+		screen_material.set_shader_parameter("screen_texture",texture)
+		screen_material.set_shader_parameter("screen_region",Vector4(0,0,1,1))
 
 func _standby_texture() -> Texture2D:
 	return load("res://assets/pixel/standby_%d.png"%device_index)

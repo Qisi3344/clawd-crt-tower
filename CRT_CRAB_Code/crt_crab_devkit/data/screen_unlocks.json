@@ -1,0 +1,8 @@
+{
+  "BOOT": {"device_index":0,"computer_id":"crt_boot_00","standby_theme":"standby","requires":"","repair_flag":"boot_access"},
+  "ARCHIVE": {"device_index":5,"computer_id":"crt_archive_05","standby_theme":"lock","requires":"boot_access","repair_flag":"archive_key"},
+  "POP-UP": {"device_index":4,"computer_id":"crt_sleep_04","standby_theme":"sleep","requires":"archive_key","repair_flag":"popup_power_restored"},
+  "RECYCLE": {"device_index":6,"computer_id":"crt_sleep_06","standby_theme":"standby","requires":"popup_power_restored","repair_flag":"recycle_route_repaired"},
+  "SIGNAL": {"device_index":9,"computer_id":"crt_sleep_09","standby_theme":"signal","requires":"message_packet_restored","repair_flag":"signal_core_ready"},
+  "ERROR": {"device_index":11,"computer_id":"crt_sleep_11","standby_theme":"lock","requires":"signal_core_ready","repair_flag":"error_core_disabled"}
+}

@@ -153,6 +153,9 @@ func _run() -> void:
 	await frames(32)
 	await capture("m2-04-transition")
 	await frames(80)
+	for i in range(150):
+		if not game.transitioning: break
+		await frames(1)
 	check("BOOT to ARCHIVE via actual E interaction",game.active_id=="ARCHIVE" and not game.transitioning)
 	if game.active_id!="ARCHIVE":
 		finish()
@@ -280,7 +283,7 @@ func disk_checks() -> void:
 	check("disk world reload reproduces stone and pressure signal",game.world.blocks[1].position.distance_to(expected_stone)<0.2 and game.save.data.flags.get("signal_archive_gate",false)==expected_flag)
 	var old := {"version":1,"active":"ARCHIVE","health":2,"flags":{"record":true},"worlds":{"ARCHIVE":{"position":[4,1,2]}}}
 	var migrated := SaveStore.migrate(old)
-	check("legacy 3D save preserved with safe 2D spawn",migrated.version==3 and migrated.active=="BOOT" and migrated.health==2 and migrated.legacy_progress==old and migrated.worlds.is_empty())
+	check("legacy 3D save preserved with safe 2D spawn",migrated.version==SaveStore.VERSION and migrated.active=="BOOT" and migrated.health==2 and migrated.legacy_progress==old and migrated.worlds.is_empty())
 	var corrupt := FileAccess.open(disk.path,FileAccess.WRITE)
 	corrupt.store_string("{bad")
 	corrupt.close()

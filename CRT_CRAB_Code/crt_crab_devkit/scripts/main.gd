@@ -21,6 +21,9 @@ var front_end: FrontEnd
 var in_menu := true
 var transfer_phase := ""
 var surroundings: EnvironmentSurroundings
+var unlock_director: ScreenUnlockDirector
+var auxiliary_unlock: ScreenUnlockDirector
+var repaired_count := 0
 enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED, MAIN_MENU, WARDROBE, SETTINGS, TRANSITION_EXIT_2D, TRANSITION_ENTER_2D }
 var input_mode := InputMode.PLAY_2D
 
@@ -48,6 +51,12 @@ func _ready() -> void:
 	add_child(viewport)
 	audio = GameAudio.new()
 	add_child(audio)
+	unlock_director = ScreenUnlockDirector.new()
+	unlock_director.audio = audio
+	add_child(unlock_director)
+	auxiliary_unlock = ScreenUnlockDirector.new()
+	auxiliary_unlock.audio = audio
+	add_child(auxiliary_unlock)
 	if test_mode and DisplayServer.get_name()=="headless": audio.enabled = false
 	hud = GameHUD.new()
 	add_child(hud)
@@ -85,7 +94,9 @@ func _ready() -> void:
 		director.focus(_device(active_id),true)
 		_control_state()
 		var harness := Node.new()
-		harness.set_script(load("res://tests/performance_probe.gd" if "--perf" in OS.get_cmdline_user_args() else "res://tests/sideview_qa.gd"))
+		var test_script := "res://tests/performance_probe.gd" if "--perf" in OS.get_cmdline_user_args() else "res://tests/sideview_qa.gd"
+		if "--unlock-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/unlock_qa.gd"
+		harness.set_script(load(test_script))
 		add_child(harness)
 	else:
 		front_end = FrontEnd.new()
@@ -359,6 +370,7 @@ func _travel(link: Dictionary) -> void:
 	dot.mesh=ball;dot.material_override=Craft.material(Color("54cfc3"),0.4);dot.visible=not director.reduced_motion
 	signal_root.add_child(dot)
 	var success := [false]
+	var first_entry: bool = save.data.screen_unlocked.get(link.to,false) and not save.data.screen_unlock_seen.get(link.to,false)
 	await director.travel(_device(link.to),func():
 		if DisplayServer.get_name()!="headless":
 			RenderingServer.force_draw()
@@ -368,6 +380,7 @@ func _travel(link: Dictionary) -> void:
 		if _load_world(link.to,link.spawn_id):
 			success[0] = true
 			world.player.sprite.visible = false
+			if first_entry: _device(link.to).set_texture(unlock_director.frame(_device(link.to).device_index,0))
 			previous.free()
 		else:
 			world = previous
@@ -378,6 +391,16 @@ func _travel(link: Dictionary) -> void:
 	signal_root.queue_free()
 	director.focus(_device(active_id),true)
 	if success[0]:
+		if first_entry:
+			transfer_phase = "UNLOCK"
+			hud.show_message("首次唤醒 / "+str(link.to)+" · E / Esc 跳过")
+			await unlock_director.play(_device(active_id),director.reduced_motion)
+			var candidate := save.data.duplicate(true)
+			candidate.screen_unlock_seen[active_id] = true
+			if not save.commit(candidate): hud.show_message("解锁记录未保存，可继续探索，重访时会重播。")
+			world.flags = save.data.flags
+			world.session = save.data
+			_device(active_id).set_texture(viewport.get_texture())
 		audio.play("transfer_enter")
 		await _pixel_phase(true)
 	world.player.sprite.visible = true
@@ -468,9 +491,22 @@ func _control_state() -> void:
 
 func _progress() -> void:
 	if save.data.collected.has("archive_hidden") and not save.data.wardrobe.owned.has("glitch_crab"): save.data.wardrobe.owned.append("glitch_crab")
+	WorldProgress.synchronize(save.data,manifest)
 	hud.update_progress(active_id,save.data)
 	for device in devices:
-		device.set_status("ACTIVE" if device.screen_id==active_id else ("CONNECTED" if device.screen_id in ["BOOT","ARCHIVE"] and save.data.flags.get("boot_access",false) else "SLEEP"))
+		if device.status=="UNLOCKING": continue
+		if device.screen_id==active_id:
+			device.set_status("ACTIVE")
+		elif manifest.has(device.screen_id):
+			var unlocked: bool = save.data.screen_unlocked.get(device.screen_id,false)
+			device.set_status("REPAIRED" if save.data.screen_repaired.get(device.screen_id,false) else ("READY" if unlocked else "LOCKED"))
+			if unlocked and save.data.screen_unlock_seen.get(device.screen_id,false): device.set_texture(unlock_director.frame(device.device_index,36))
+		else:
+			device.set_status("SLEEP")
+	var count: int = save.data.screen_repaired.size()
+	if count>repaired_count and not auxiliary_unlock.playing:
+		auxiliary_unlock.play(devices[1],audio.reduced_motion)
+	repaired_count = count
 	_checkpoint()
 
 func _checkpoint() -> bool:

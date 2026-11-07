@@ -1,0 +1,57 @@
+{
+	"passed": true,
+	"tests": [
+		{
+			"passed": true,
+			"test": "v3 is accepted and backed up byte for byte"
+		},
+		{
+			"passed": true,
+			"test": "v3 inventory worlds and wardrobe survive"
+		},
+		{
+			"passed": true,
+			"test": "old adventure continues without forcing an intro"
+		},
+		{
+			"passed": true,
+			"test": "old entered ARCHIVE will not replay unlock"
+		},
+		{
+			"passed": true,
+			"test": "v4 keeps active screen BOOT"
+		},
+		{
+			"passed": true,
+			"test": "v4 keeps active screen ARCHIVE"
+		},
+		{
+			"passed": true,
+			"test": "v4 keeps active screen POP-UP"
+		},
+		{
+			"passed": true,
+			"test": "v4 keeps active screen RECYCLE"
+		},
+		{
+			"passed": true,
+			"test": "v4 keeps active screen SIGNAL"
+		},
+		{
+			"passed": true,
+			"test": "v4 keeps active screen ERROR"
+		},
+		{
+			"passed": true,
+			"test": "invalid story and unearned delivery are normalized"
+		},
+		{
+			"passed": true,
+			"test": "new adventure uses a fresh intro and keeps wardrobe"
+		},
+		{
+			"passed": true,
+			"test": "failed story commit leaves state unchanged"
+		}
+	]
+}

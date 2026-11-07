@@ -1,0 +1,159 @@
+{
+	"note": "Theme playback isolates devices; gameplay unlock/roundtrip is covered by sideview QA.",
+	"passed": true,
+	"renderer": "Windows",
+	"tests": [
+		{
+			"passed": true,
+			"test": "six physical mappings and six auxiliary CRTs"
+		},
+		{
+			"passed": true,
+			"test": "physical identity preserved BOOT"
+		},
+		{
+			"passed": true,
+			"test": "physical identity preserved ARCHIVE"
+		},
+		{
+			"passed": true,
+			"test": "physical identity preserved POP-UP"
+		},
+		{
+			"passed": true,
+			"test": "physical identity preserved RECYCLE"
+		},
+		{
+			"passed": true,
+			"test": "physical identity preserved SIGNAL"
+		},
+		{
+			"passed": true,
+			"test": "physical identity preserved ERROR"
+		},
+		{
+			"passed": true,
+			"test": "unlock begins with exact standby pixels 5"
+		},
+		{
+			"passed": true,
+			"test": "theme completes on the actual glass 5"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion finishes without waiting for full animation 5"
+		},
+		{
+			"passed": true,
+			"test": "focus suspension stops clock 5"
+		},
+		{
+			"passed": true,
+			"test": "skip is idempotent and reaches READY 5"
+		},
+		{
+			"passed": true,
+			"test": "unlock begins with exact standby pixels 9"
+		},
+		{
+			"passed": true,
+			"test": "theme completes on the actual glass 9"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion finishes without waiting for full animation 9"
+		},
+		{
+			"passed": true,
+			"test": "focus suspension stops clock 9"
+		},
+		{
+			"passed": true,
+			"test": "skip is idempotent and reaches READY 9"
+		},
+		{
+			"passed": true,
+			"test": "unlock begins with exact standby pixels 1"
+		},
+		{
+			"passed": true,
+			"test": "theme completes on the actual glass 1"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion finishes without waiting for full animation 1"
+		},
+		{
+			"passed": true,
+			"test": "focus suspension stops clock 1"
+		},
+		{
+			"passed": true,
+			"test": "skip is idempotent and reaches READY 1"
+		},
+		{
+			"passed": true,
+			"test": "unlock begins with exact standby pixels 4"
+		},
+		{
+			"passed": true,
+			"test": "theme completes on the actual glass 4"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion finishes without waiting for full animation 4"
+		},
+		{
+			"passed": true,
+			"test": "focus suspension stops clock 4"
+		},
+		{
+			"passed": true,
+			"test": "skip is idempotent and reaches READY 4"
+		},
+		{
+			"passed": true,
+			"test": "unlock begins with exact standby pixels 6"
+		},
+		{
+			"passed": true,
+			"test": "theme completes on the actual glass 6"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion finishes without waiting for full animation 6"
+		},
+		{
+			"passed": true,
+			"test": "focus suspension stops clock 6"
+		},
+		{
+			"passed": true,
+			"test": "skip is idempotent and reaches READY 6"
+		},
+		{
+			"passed": true,
+			"test": "unlock begins with exact standby pixels 2"
+		},
+		{
+			"passed": true,
+			"test": "theme completes on the actual glass 2"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion finishes without waiting for full animation 2"
+		},
+		{
+			"passed": true,
+			"test": "focus suspension stops clock 2"
+		},
+		{
+			"passed": true,
+			"test": "skip is idempotent and reaches READY 2"
+		},
+		{
+			"passed": true,
+			"test": "one 2D player and one gameplay viewport after all themes"
+		}
+	]
+}

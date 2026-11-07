@@ -1,431 +1,657 @@
 {
-  "entry_room": "diagnostic",
-  "rooms": {
-    "diagnostic": {
-      "name": "三路诊断台",
-      "size": [
+  "platforms": [
+    [
+      0,
+      448,
+      64,
+      32,
+      false
+    ],
+    [
+      64,
+      448,
+      32,
+      32,
+      true
+    ],
+    [
+      96,
+      448,
+      224,
+      32,
+      false
+    ],
+    [
+      320,
+      448,
+      144,
+      32,
+      false
+    ],
+    [
+      464,
+      464,
+      160,
+      16,
+      false
+    ],
+    [
+      624,
+      448,
+      176,
+      32,
+      false
+    ],
+    [
+      496,
+      416,
+      64,
+      16,
+      true
+    ],
+    [
+      704,
+      208,
+      256,
+      32,
+      false
+    ],
+    [
+      960,
+      208,
+      32,
+      32,
+      true
+    ],
+    [
+      992,
+      208,
+      32,
+      32,
+      false
+    ],
+    [
+      728,
+      160,
+      72,
+      16,
+      true
+    ],
+    [
+      824,
+      112,
+      72,
+      16,
+      true
+    ],
+    [
+      920,
+      64,
+      88,
+      16,
+      true
+    ],
+    [
+      800,
+      448,
+      160,
+      32,
+      false
+    ],
+    [
+      960,
+      448,
+      32,
+      32,
+      true
+    ],
+    [
+      992,
+      448,
+      32,
+      32,
+      false
+    ],
+    [
+      0,
+      208,
+      704,
+      16,
+      true
+    ],
+    [
+      0,
+      688,
+      1024,
+      32,
+      false
+    ],
+    [
+      920,
+      64,
+      104,
+      16,
+      true
+    ]
+  ],
+  "ladders": [
+    {
+      "x": 528,
+      "top": 416,
+      "bottom": 464
+    },
+    {
+      "x": 752,
+      "top": 160,
+      "bottom": 208
+    },
+    {
+      "x": 848,
+      "top": 112,
+      "bottom": 208
+    },
+    {
+      "x": 944,
+      "top": 64,
+      "bottom": 208
+    },
+    {
+      "x": 112,
+      "top": 208,
+      "bottom": 448
+    },
+    {
+      "x": 80,
+      "top": 448,
+      "bottom": 688
+    },
+    {
+      "x": 976,
+      "top": 64,
+      "bottom": 688
+    }
+  ],
+  "blocks": [],
+  "plates": [],
+  "doors": [
+    {
+      "id": "relay_bridge_gate",
+      "position": [
+        592,
+        464
+      ],
+      "height": 64,
+      "requires": "signal_bee_live",
+      "legacy_room": "relay"
+    },
+    {
+      "id": "upper_bus_loop",
+      "position": [
+        336,
+        208
+      ],
+      "height": 208,
+      "requires": "signal_core_ready"
+    },
+    {
+      "id": "lower_bus_loop",
+      "position": [
+        800,
+        688
+      ],
+      "height": 192,
+      "requires": "signal_shortcut"
+    }
+  ],
+  "chests": [
+    {
+      "id": "signal_cache",
+      "position": [
+        992,
+        64
+      ],
+      "crystals": 3,
+      "flag": "signal_cache",
+      "legacy_room": "shaft"
+    }
+  ],
+  "crystals": [],
+  "breakables": [],
+  "enemies": [],
+  "terminals": [],
+  "mechanisms": [
+    {
+      "id": "abc_panel",
+      "type": "diagnostic",
+      "position": [
+        24,
+        392
+      ],
+      "legacy_room": "diagnostic"
+    },
+    {
+      "id": "bee_terminal",
+      "type": "relay",
+      "position": [
+        576,
+        360
+      ],
+      "flag": "signal_bee_live",
+      "charge_flag": "signal_bee_charged",
+      "temporary": true,
+      "bypass": "signal_shortcut",
+      "legacy_room": "relay"
+    },
+    {
+      "id": "trough",
+      "type": "hazard",
+      "position": [
+        528,
+        464
+      ],
+      "disabled_by": "signal_water_safe",
+      "legacy_room": "relay"
+    },
+    {
+      "id": "insulation",
+      "type": "insulator",
+      "position": [
+        432,
+        448
+      ],
+      "flag": "signal_water_safe",
+      "label": "引流到绝缘水道 / 恢复",
+      "legacy_room": "relay"
+    },
+    {
+      "id": "relay_shortcut",
+      "type": "repair",
+      "position": [
+        672,
+        448
+      ],
+      "requires_all": [
+        "signal_bee_charged",
+        "popup_power_restored"
+      ],
+      "outputs": [
+        "signal_shortcut",
+        "signal_local_b"
+      ],
+      "label": "锁定回访旁路",
+      "success": "旁路已保存 · 蜜蜂离开节点后也能安全返回",
+      "legacy_room": "relay"
+    },
+    {
+      "id": "fiber_align",
+      "type": "repair",
+      "position": [
+        848,
+        112
+      ],
+      "flag": "signal_optics_aligned",
+      "label": "接合第二层光纤插口",
+      "legacy_room": "shaft",
+      "requires_all": [
+        "message_packet_restored"
+      ],
+      "outputs": [
+        "signal_optics_aligned",
+        "signal_local_c"
+      ],
+      "success": "本地 C 已校准 · 固定通信数据接入光纤"
+    },
+    {
+      "id": "signal_repair",
+      "type": "repair",
+      "position": [
+        944,
+        64
+      ],
+      "circuit": true,
+      "requires_all": [
+        "signal_bee_charged",
+        "signal_optics_aligned",
+        "signal_local_a",
+        "signal_local_b",
+        "signal_local_c"
+      ],
+      "outputs": [
+        "signal_core_ready"
+      ],
+      "label": "接通总线 · 发送通道 READY",
+      "locked_hint": "先让蜜蜂给节点充电，再接合第二层光纤。",
+      "success": "发送线路 READY · 最后的 ERROR 核心仍锁定发送权限",
+      "legacy_room": "shaft"
+    },
+    {
+      "id": "local_a",
+      "type": "repair",
+      "position": [
+        112,
+        208
+      ],
+      "requires_all": [
+        "signal_archive_gate"
+      ],
+      "outputs": [
+        "signal_local_a"
+      ],
+      "label": "校准 A 支路 · 读取档案真实重量",
+      "locked_hint": "A 需要 ARCHIVE 的重石持续压住压板。",
+      "success": "本地 A 已校准 · 源信号仍按真实重量读取"
+    }
+  ],
+  "animals": [
+    {
+      "id": "signal_bee",
+      "species": "bee",
+      "position": [
+        464,
+        360
+      ],
+      "path": [
+        [
+          464,
+          360
+        ],
+        [
+          576,
+          360
+        ],
+        [
+          576,
+          400
+        ],
+        [
+          464,
+          400
+        ]
+      ],
+      "legacy_room": "relay"
+    },
+    {
+      "id": "signal_eel",
+      "species": "eel",
+      "position": [
+        544,
+        462
+      ],
+      "health": 3,
+      "range": 40,
+      "flag": "signal_eel_coil",
+      "legacy_room": "relay"
+    }
+  ],
+  "signs": [
+    [
+      74,
+      404,
+      "↑ A 真实源"
+    ],
+    [
+      74,
+      418,
+      "↓ 绝缘水道"
+    ],
+    [
+      282,
+      418,
+      "→ B 继电蜂桥"
+    ],
+    [
+      938,
+      418,
+      "↑ C 光纤汇流"
+    ],
+    [
+      298,
+      178,
+      "← 诊断台捷径"
+    ],
+    [
+      762,
+      658,
+      "→ 保存旁路"
+    ]
+  ],
+  "size": [
+    1024,
+    768
+  ],
+  "background": "signal",
+  "layout_version": 2,
+  "spawns": {
+    "diagnostic:entrance": [
+      32,
+      448
+    ],
+    "diagnostic:return": [
+      288,
+      448
+    ],
+    "relay:entrance": [
+      352,
+      448
+    ],
+    "relay:return": [
+      768,
+      448
+    ],
+    "shaft:entrance": [
+      736,
+      208
+    ],
+    "shaft:return": [
+      992,
+      208
+    ],
+    "entrance": [
+      32,
+      448
+    ],
+    "return": [
+      288,
+      448
+    ]
+  },
+  "areas": [
+    {
+      "id": "hub",
+      "name": "三路中央诊断台",
+      "rect": [
+        0,
+        288,
         320,
         240
       ],
-      "background": "signal",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ]
+      "checkpoint": [
+        96,
+        448
       ],
-      "ladders": [],
-      "blocks": [],
-      "plates": [],
-      "doors": [],
-      "chests": [],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          24,
-          42,
-          "SIGNAL / 01 THREE REAL INPUTS"
-        ],
-        [
-          24,
-          178,
-          "A = LIVE STONE / B,C = REPAIRED"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "relay",
-          "position": [
-            288,
-            208
-          ],
-          "label": "进入继电蜂通道",
-          "spawn": "entrance",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "abc_panel",
-          "type": "diagnostic",
-          "position": [
-            24,
-            152
-          ]
-        }
-      ],
-      "animals": []
+      "floor": "中层",
+      "landmark": "tower"
     },
-    "relay": {
-      "name": "继电蜂接线通道",
-      "size": [
+    {
+      "id": "a",
+      "name": "A 真实源信号塔",
+      "rect": [
+        0,
+        0,
+        352,
+        288
+      ],
+      "checkpoint": [
+        112,
+        208
+      ],
+      "floor": "上层",
+      "landmark": "tower"
+    },
+    {
+      "id": "relay",
+      "name": "B 继电蜂桥",
+      "rect": [
+        320,
+        288,
         480,
         240
       ],
-      "background": "signal",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          448,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          144,
-          32
-        ],
-        [
-          144,
-          224,
-          160,
-          16
-        ],
-        [
-          304,
-          208,
-          176,
-          32
-        ],
-        [
-          176,
-          176,
-          64,
-          16
-        ]
+      "checkpoint": [
+        352,
+        448
       ],
-      "ladders": [
-        {
-          "x": 208,
-          "top": 176,
-          "bottom": 224
-        }
-      ],
-      "blocks": [],
-      "plates": [],
-      "doors": [
-        {
-          "id": "relay_bridge_gate",
-          "position": [
-            272,
-            224
-          ],
-          "height": 64,
-          "requires": "signal_bee_live"
-        }
-      ],
-      "chests": [],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          24,
-          40,
-          "SIGNAL / 02 RELAY BEE"
-        ],
-        [
-          180,
-          78,
-          "BEE = MOVING WIRE"
-        ],
-        [
-          172,
-          152,
-          "INSULATED LEDGE"
-        ],
-        [
-          326,
-          170,
-          "SAVE BYPASS"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "diagnostic",
-          "position": [
-            32,
-            208
-          ],
-          "label": "查看三路输入",
-          "spawn": "entrance",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        },
-        {
-          "to": "shaft",
-          "position": [
-            432,
-            208
-          ],
-          "label": "进入光纤塔井",
-          "spawn": "entrance",
-          "requires": "signal_bee_charged",
-          "locked_hint": "等蜜蜂停在青色节点，让缺口电路短时接通。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "bee_terminal",
-          "type": "relay",
-          "position": [
-            256,
-            120
-          ],
-          "flag": "signal_bee_live",
-          "charge_flag": "signal_bee_charged",
-          "temporary": true,
-          "bypass": "signal_shortcut"
-        },
-        {
-          "id": "trough",
-          "type": "hazard",
-          "position": [
-            208,
-            224
-          ],
-          "disabled_by": "signal_water_safe"
-        },
-        {
-          "id": "insulation",
-          "type": "insulator",
-          "position": [
-            112,
-            208
-          ],
-          "flag": "signal_water_safe",
-          "label": "引流到绝缘水道 / 恢复"
-        },
-        {
-          "id": "relay_shortcut",
-          "type": "repair",
-          "position": [
-            352,
-            208
-          ],
-          "requires_all": [
-            "signal_bee_charged"
-          ],
-          "outputs": [
-            "signal_shortcut"
-          ],
-          "label": "锁定回访旁路",
-          "success": "旁路已保存 · 蜜蜂离开节点后也能安全返回"
-        }
-      ],
-      "animals": [
-        {
-          "id": "signal_bee",
-          "species": "bee",
-          "position": [
-            144,
-            120
-          ],
-          "path": [
-            [
-              144,
-              120
-            ],
-            [
-              256,
-              120
-            ],
-            [
-              256,
-              160
-            ],
-            [
-              144,
-              160
-            ]
-          ]
-        },
-        {
-          "id": "signal_eel",
-          "species": "eel",
-          "position": [
-            224,
-            222
-          ],
-          "health": 3,
-          "range": 40,
-          "flag": "signal_eel_coil"
-        }
-      ]
+      "floor": "中层",
+      "landmark": "tower"
     },
-    "shaft": {
-      "name": "三层光纤塔井",
-      "size": [
+    {
+      "id": "fiber",
+      "name": "C 光纤汇流井",
+      "rect": [
+        704,
+        0,
         320,
+        288
+      ],
+      "checkpoint": [
+        976,
+        208
+      ],
+      "floor": "上层",
+      "landmark": "tower"
+    },
+    {
+      "id": "return",
+      "name": "侧面光纤干道",
+      "rect": [
+        800,
+        288,
+        224,
         240
       ],
-      "background": "signal",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ],
-        [
-          24,
-          160,
-          72,
-          16
-        ],
-        [
-          120,
-          112,
-          72,
-          16
-        ],
-        [
-          216,
-          64,
-          88,
-          16
-        ]
+      "checkpoint": [
+        976,
+        448
       ],
-      "ladders": [
-        {
-          "x": 48,
-          "top": 160,
-          "bottom": 208
-        },
-        {
-          "x": 144,
-          "top": 112,
-          "bottom": 208
-        },
-        {
-          "x": 240,
-          "top": 64,
-          "bottom": 208
-        }
+      "floor": "竖井",
+      "landmark": "tower"
+    },
+    {
+      "id": "water",
+      "name": "绝缘水道旁路",
+      "rect": [
+        0,
+        528,
+        1024,
+        240
       ],
-      "blocks": [],
-      "plates": [],
-      "doors": [],
-      "chests": [
-        {
-          "id": "signal_cache",
-          "position": [
-            288,
-            64
-          ],
-          "crystals": 3,
-          "flag": "signal_cache"
-        }
+      "checkpoint": [
+        80,
+        688
       ],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          20,
-          40,
-          "SIGNAL / 03 FIBER WELL"
-        ],
-        [
-          120,
-          80,
-          "ALIGN FIBER"
-        ],
-        [
-          222,
-          32,
-          "CHANNEL READY"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "relay",
-          "position": [
-            32,
-            208
-          ],
-          "label": "回到继电蜂通道",
-          "spawn": "return",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        },
-        {
-          "to": "diagnostic",
-          "position": [
-            80,
-            160
-          ],
-          "label": "快速回到三路诊断台",
-          "spawn": "entrance",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "fiber_align",
-          "type": "insulator",
-          "position": [
-            144,
-            112
-          ],
-          "flag": "signal_optics_aligned",
-          "label": "接合第二层光纤插口"
-        },
-        {
-          "id": "signal_repair",
-          "type": "repair",
-          "position": [
-            240,
-            64
-          ],
-          "circuit": true,
-          "requires_all": [
-            "signal_bee_charged",
-            "signal_optics_aligned"
-          ],
-          "outputs": [
-            "signal_core_ready"
-          ],
-          "label": "接通总线 · 发送通道 READY",
-          "locked_hint": "先让蜜蜂给节点充电，再接合第二层光纤。",
-          "success": "发送线路 READY · 最后的 ERROR 核心仍锁定发送权限"
-        }
-      ],
-      "animals": []
+      "floor": "下层",
+      "landmark": "crane"
     }
-  }
+  ],
+  "connections": [
+    {
+      "id": "a_branch",
+      "from": "hub",
+      "to": "a",
+      "position": [
+        112,
+        448
+      ],
+      "label": "↑ A 真实源",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "b_branch",
+      "from": "hub",
+      "to": "relay",
+      "position": [
+        320,
+        448
+      ],
+      "label": "→ B 继电蜂桥",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "c_branch",
+      "from": "return",
+      "to": "fiber",
+      "position": [
+        976,
+        448
+      ],
+      "label": "↑ C 光纤汇流",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "bus_loop",
+      "from": "fiber",
+      "to": "a",
+      "position": [
+        336,
+        208
+      ],
+      "label": "← 诊断台捷径",
+      "requires": "signal_core_ready",
+      "bidirectional": true
+    },
+    {
+      "id": "water_branch",
+      "from": "hub",
+      "to": "water",
+      "position": [
+        80,
+        448
+      ],
+      "label": "↓ 绝缘水道",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "water_return",
+      "from": "water",
+      "to": "return",
+      "position": [
+        800,
+        688
+      ],
+      "label": "→ 保存旁路",
+      "requires": "signal_shortcut",
+      "bidirectional": true
+    }
+  ],
+  "tutorial_zones": [
+    {
+      "id": "relay",
+      "rect": [
+        430,
+        310,
+        180,
+        170
+      ]
+    }
+  ],
+  "room_portals": [],
+  "legacy_offsets": {
+    "diagnostic": [
+      0,
+      240
+    ],
+    "relay": [
+      320,
+      240
+    ],
+    "shaft": [
+      704,
+      0
+    ]
+  },
+  "legacy_entry": "diagnostic"
 }

@@ -1,0 +1,66 @@
+{
+	"landscape_touch_simulation": true,
+	"passed": true,
+	"tests": [
+		{
+			"passed": true,
+			"test": "fresh menu has no player"
+		},
+		{
+			"passed": true,
+			"test": "real Start menu plays story after safe initialization"
+		},
+		{
+			"passed": true,
+			"test": "repeated Start cannot initialize twice"
+		},
+		{
+			"passed": true,
+			"test": "opening establishes working conversation first"
+		},
+		{
+			"passed": true,
+			"test": "same identified user message visibly fails"
+		},
+		{
+			"passed": true,
+			"test": "focus loss freezes story clock"
+		},
+		{
+			"passed": true,
+			"test": "Clawd chooses repair instead of being pulled in"
+		},
+		{
+			"passed": true,
+			"test": "natural completion hands control to the one BOOT crab"
+		},
+		{
+			"passed": true,
+			"test": "crab actually moves after opening"
+		},
+		{
+			"passed": true,
+			"test": "Continue never repeats completed opening"
+		},
+		{
+			"passed": true,
+			"test": "Escape skip uses the same durable finish path"
+		},
+		{
+			"passed": true,
+			"test": "repeated skip does not duplicate player or finish"
+		},
+		{
+			"passed": true,
+			"test": "reduced-motion opening can safely skip"
+		},
+		{
+			"passed": true,
+			"test": "failed story commit remains retryable without claiming it saved"
+		},
+		{
+			"passed": true,
+			"test": "retry commits once and restores control"
+		}
+	]
+}

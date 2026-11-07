@@ -1,14 +1,470 @@
 {
- "size":[768,240],"background":"boot",
- "spawns":{"entrance":[48,208],"return":[576,208]},
- "platforms":[[0,208,128,48],[128,224,32,32],[160,208,608,48],[432,176,32,16],[464,144,96,16]],
- "ladders":[{"x":480,"top":144,"bottom":208}],
- "blocks":[{"id":"boot_box","position":[240,200],"weight":1}],
- "plates":[{"id":"boot_plate","position":[320,208],"weight":1,"flag":"boot_gate_open"}],
- "doors":[{"id":"boot_door","position":[400,208],"height":64,"requires":"boot_gate_open"},{"id":"remote_vault","position":[656,208],"height":64,"requires":"signal_archive_gate"}],
- "chests":[{"id":"boot_access","position":[512,144],"crystals":2,"flag":"boot_access"},{"id":"boot_remote","position":[704,208],"crystals":4,"flag":"remote_reward"}],
- "crystals":[{"id":"boot_c1","position":[80,194]},{"id":"boot_c2","position":[112,194]},{"id":"boot_c3","position":[176,194]}],
- "breakables":[],"enemies":[],
- "terminals":[{"position":[96,208],"type":"heal"}],
- "signs":[[48,176,"A D  MOVE"],[128,174,"SPACE"],[240,170,"HOLD E + A/D"],[320,160,"WEIGHT 1"],[480,108,"W  CLIMB"],[656,122,"ARCHIVE LINK"]]
+  "platforms": [
+    [
+      0,
+      208,
+      96,
+      48,
+      false
+    ],
+    [
+      96,
+      208,
+      32,
+      48,
+      true
+    ],
+    [
+      128,
+      224,
+      32,
+      32,
+      false
+    ],
+    [
+      160,
+      208,
+      432,
+      48,
+      false
+    ],
+    [
+      592,
+      208,
+      32,
+      48,
+      true
+    ],
+    [
+      624,
+      208,
+      144,
+      48,
+      false
+    ],
+    [
+      432,
+      176,
+      32,
+      16,
+      true
+    ],
+    [
+      464,
+      144,
+      96,
+      16,
+      true
+    ],
+    [
+      768,
+      208,
+      256,
+      48,
+      false
+    ],
+    [
+      64,
+      64,
+      896,
+      16,
+      true
+    ],
+    [
+      64,
+      448,
+      896,
+      32,
+      false
+    ]
+  ],
+  "ladders": [
+    {
+      "x": 480,
+      "top": 144,
+      "bottom": 208
+    },
+    {
+      "x": 80,
+      "top": 64,
+      "bottom": 208
+    },
+    {
+      "x": 576,
+      "top": 64,
+      "bottom": 208
+    },
+    {
+      "x": 112,
+      "top": 208,
+      "bottom": 448
+    },
+    {
+      "x": 608,
+      "top": 208,
+      "bottom": 448
+    }
+  ],
+  "blocks": [
+    {
+      "id": "boot_box",
+      "position": [
+        240,
+        200
+      ],
+      "weight": 1,
+      "legacy_room": "main"
+    }
+  ],
+  "plates": [
+    {
+      "id": "boot_plate",
+      "position": [
+        320,
+        208
+      ],
+      "weight": 1,
+      "flag": "boot_gate_open",
+      "legacy_room": "main"
+    }
+  ],
+  "doors": [
+    {
+      "id": "boot_door",
+      "position": [
+        400,
+        208
+      ],
+      "height": 64,
+      "requires": "boot_gate_open",
+      "legacy_room": "main"
+    },
+    {
+      "id": "remote_vault",
+      "position": [
+        656,
+        208
+      ],
+      "height": 64,
+      "requires": "signal_archive_gate",
+      "legacy_room": "main"
+    },
+    {
+      "id": "boot_upper_gate",
+      "position": [
+        400,
+        64
+      ],
+      "height": 64,
+      "requires": "boot_gate_open"
+    },
+    {
+      "id": "boot_lower_gate",
+      "position": [
+        400,
+        448
+      ],
+      "height": 192,
+      "requires": "recycle_route_repaired"
+    },
+    {
+      "id": "upper_remote_lock",
+      "position": [
+        656,
+        64
+      ],
+      "height": 64,
+      "requires": "signal_archive_gate"
+    },
+    {
+      "id": "lower_remote_lock",
+      "position": [
+        656,
+        448
+      ],
+      "height": 192,
+      "requires": "signal_archive_gate"
+    }
+  ],
+  "chests": [
+    {
+      "id": "boot_access",
+      "position": [
+        512,
+        144
+      ],
+      "crystals": 2,
+      "flag": "boot_access",
+      "legacy_room": "main"
+    },
+    {
+      "id": "boot_remote",
+      "position": [
+        704,
+        208
+      ],
+      "crystals": 4,
+      "flag": "remote_reward",
+      "legacy_room": "main"
+    }
+  ],
+  "crystals": [
+    {
+      "id": "boot_c1",
+      "position": [
+        80,
+        194
+      ],
+      "legacy_room": "main"
+    },
+    {
+      "id": "boot_c2",
+      "position": [
+        112,
+        194
+      ],
+      "legacy_room": "main"
+    },
+    {
+      "id": "boot_c3",
+      "position": [
+        176,
+        194
+      ],
+      "legacy_room": "main"
+    }
+  ],
+  "breakables": [],
+  "enemies": [],
+  "terminals": [
+    {
+      "position": [
+        96,
+        208
+      ],
+      "type": "heal",
+      "legacy_room": "main"
+    }
+  ],
+  "mechanisms": [],
+  "animals": [],
+  "signs": [
+    [
+      188,
+      396,
+      "封存线路 / 修复后形成回环"
+    ],
+    [
+      42,
+      164,
+      "↑ 维护灯带"
+    ],
+    [
+      42,
+      178,
+      "↓ 回访线路井"
+    ],
+    [
+      538,
+      34,
+      "↓ 中央大厅"
+    ],
+    [
+      570,
+      418,
+      "↑ 返回大厅"
+    ]
+  ],
+  "size": [
+    1024,
+    640
+  ],
+  "background": "boot",
+  "layout_version": 2,
+  "spawns": {
+    "main:entrance": [
+      48,
+      208
+    ],
+    "main:return": [
+      576,
+      208
+    ],
+    "entrance": [
+      48,
+      208
+    ],
+    "return": [
+      576,
+      208
+    ]
+  },
+  "areas": [
+    {
+      "id": "upper",
+      "name": "维护灯带",
+      "rect": [
+        0,
+        0,
+        1024,
+        112
+      ],
+      "checkpoint": [
+        96,
+        64
+      ],
+      "floor": "上层",
+      "landmark": "ring"
+    },
+    {
+      "id": "main",
+      "name": "中央电源大厅",
+      "rect": [
+        0,
+        112,
+        1024,
+        176
+      ],
+      "checkpoint": [
+        48,
+        208
+      ],
+      "floor": "中层",
+      "landmark": "ring",
+      "landmark_position": [
+        240,
+        144
+      ]
+    },
+    {
+      "id": "lower",
+      "name": "回访线路井",
+      "rect": [
+        0,
+        288,
+        1024,
+        352
+      ],
+      "checkpoint": [
+        112,
+        448
+      ],
+      "floor": "下层",
+      "landmark": "crane"
+    }
+  ],
+  "connections": [
+    {
+      "id": "upper_left",
+      "from": "main",
+      "to": "upper",
+      "position": [
+        80,
+        208
+      ],
+      "label": "↑ 维护灯带",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "upper_return",
+      "from": "upper",
+      "to": "main",
+      "position": [
+        576,
+        64
+      ],
+      "label": "↓ 中央大厅",
+      "requires": "boot_gate_open",
+      "bidirectional": true
+    },
+    {
+      "id": "lower_left",
+      "from": "main",
+      "to": "lower",
+      "position": [
+        112,
+        208
+      ],
+      "label": "↓ 回访线路井",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "lower_return",
+      "from": "lower",
+      "to": "main",
+      "position": [
+        608,
+        448
+      ],
+      "label": "↑ 返回大厅",
+      "requires": "recycle_route_repaired",
+      "bidirectional": true
+    }
+  ],
+  "tutorial_zones": [
+    {
+      "id": "jump",
+      "rect": [
+        112,
+        160,
+        80,
+        80
+      ]
+    },
+    {
+      "id": "push",
+      "rect": [
+        206,
+        160,
+        84,
+        80
+      ]
+    },
+    {
+      "id": "ladder",
+      "rect": [
+        456,
+        130,
+        45,
+        90
+      ]
+    },
+    {
+      "id": "chest",
+      "rect": [
+        490,
+        110,
+        50,
+        60
+      ]
+    },
+    {
+      "id": "travel",
+      "rect": [
+        558,
+        160,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "array",
+      "rect": [
+        624,
+        160,
+        32,
+        80
+      ]
+    }
+  ],
+  "room_portals": [],
+  "legacy_offsets": {
+    "main": [
+      0,
+      0
+    ]
+  },
+  "legacy_entry": "main"
 }

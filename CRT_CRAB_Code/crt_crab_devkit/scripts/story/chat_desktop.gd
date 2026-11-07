@@ -20,6 +20,7 @@ var beat := "desktop"
 var kind := "intro"
 var clock := 0.0
 var portal := Vector2.ZERO
+var code_panel: PanelContainer
 
 func label(text: String, font_size: int=22, color: String="dfd8d0") -> Label:
 	var item:=Label.new();item.text=text;item.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -59,11 +60,11 @@ func _ready() -> void:
 	reply=label("Clawd  /  "+str(dialogue.clawd_reply).replace("🦀",""),26,"8cd5c4");conversation.add_child(reply)
 	var spacer:=Control.new();spacer.size_flags_vertical=Control.SIZE_EXPAND_FILL;spacer.custom_minimum_size.y=64;conversation.add_child(spacer)
 	footer=label("本地会话 · 与 User 一起写代码",16,"92899c");conversation.add_child(footer)
-	var code_panel:=panel();grid.add_child(code_panel)
+	code_panel=panel();grid.add_child(code_panel)
 	var code:=VBoxContainer.new();code.add_theme_constant_override("separation",14);code_panel.add_child(code)
 	code.add_child(label("workspace / hello_clawd.gd",20,"ada3c3"));code.add_child(HSeparator.new())
 	editor=label("01  func hello_user():\n02      build_small_feature()\n03      print(\"Hello, User!\")\n04\n05  # BUILD SUCCEEDED\n06  # 0 errors · 0 warnings\n07\n08  ready_for_next_message()",20,"8cbab7");code.add_child(editor)
-	diagnosis=label("LOCAL DIAGNOSTIC\n\n异常链路：6 段\n□ BOOT    □ ARCHIVE\n□ POP-UP  □ RECYCLE\n□ SIGNAL  □ ERROR\n\n手动修复可用",22,"cfc4a9");code.add_child(diagnosis)
+	diagnosis=label("本地诊断 · 异常链路 6 段\n□ BOOT    □ ARCHIVE\n□ POP-UP  □ RECYCLE\n□ SIGNAL  □ ERROR\n手动修复可用",18,"cfc4a9");code.add_child(diagnosis)
 	repair=label("[  REPAIR / 手动修复  ]",25,"efd58a");code.add_child(repair)
 	code_panel.custom_minimum_size.x=300
 	crab=Sprite2D.new();crab.texture=Cosmetics.frame(skin,0);crab.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;crab.z_index=10;add_child(crab)
@@ -86,6 +87,7 @@ func set_beat(value: String) -> void:
 		footer.text="连接中断 · 请稍后重试" if failed else "本地会话 · 与 User 一起写代码"
 		editor.text="01  func hello_user():\n02      build_small_feature()\n03      print(\"Hello, User!\")\n04\n05  # NO SIGNAL\n06  # link diagnostics available" if failed else "01  func hello_user():\n02      build_small_feature()\n03      print(\"Hello, User!\")\n04\n05  # BUILD SUCCEEDED\n06  # 0 errors · 0 warnings"
 		if value=="repair": repair.text="[  REPAIR OK  ]  "+str(dialogue.clawd_decision)
+		if diagnosis.visible: editor.text="LOCAL DIAGNOSTIC\n连接中断 · 检查线路";editor.add_theme_font_size_override("font_size",18)
 		if value in ["jump_in","boot"]: footer.text="CONNECTING... BOOT / "+str(dialogue.mission)
 	else:
 		diagnosis.hide();repair.hide()
@@ -99,6 +101,8 @@ func set_beat(value: String) -> void:
 func animate(t: float) -> void:
 	clock=t
 	grid.columns=1 if size.x<size.y else 2
+	chat_panel.custom_minimum_size.x=size.x*.53 if grid.columns==2 else 0
+	code_panel.custom_minimum_size.x=size.x*.29 if grid.columns==2 else 0
 	var rect:=chat_panel.get_global_rect()
 	var home:=Vector2(rect.end.x-70,rect.end.y-84)
 	portal=home+Vector2(-110,0)

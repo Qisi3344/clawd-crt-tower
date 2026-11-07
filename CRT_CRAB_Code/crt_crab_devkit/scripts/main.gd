@@ -30,6 +30,11 @@ var story_active := false
 var story_commit_dialog: AcceptDialog
 var delivery_pending := false
 var ending_tour_clock := 0.0
+var controls:=ControlProfile.new()
+var input_router: ControlRouter
+var touch_controls: TouchControls
+var tutorial:=TutorialDirector.new()
+var orientation_blocked:=false
 enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED, MAIN_MENU, WARDROBE, SETTINGS, TRANSITION_EXIT_2D, TRANSITION_ENTER_2D, STORY }
 var input_mode := InputMode.PLAY_2D
 
@@ -39,12 +44,17 @@ func _ready() -> void:
 	if not test_mode: pet_gacha.load_collection()
 	save.enabled = not test_mode
 	save.load_progress()
+	controls.enabled=not test_mode
+	controls.load_preferences()
+	input_router=ControlRouter.new();input_router.profile=controls;add_child(input_router)
+	tutorial.game=self
 	manifest = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_manifest.json"))
 	links = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_links.json"))
 	treasure_count = _treasure_total()
 	_input_map()
 	_build_shell()
 	director = ShellDirector.new()
+	director.touch_framing=controls.profile=="touch"
 	add_child(director)
 	if surroundings!=null: surroundings.configure(director,devices)
 	viewport = SubViewport.new()
@@ -69,6 +79,7 @@ func _ready() -> void:
 	if test_mode and DisplayServer.get_name()=="headless": audio.enabled = false
 	hud = GameHUD.new()
 	add_child(hud)
+	touch_controls=TouchControls.new();touch_controls.game=self;add_child(touch_controls)
 	hud.gacha_requested.connect(open_gacha)
 	hud.pause_changed.connect(func(_v: bool): _control_state())
 	hud.overview_requested.connect(_toggle_overview)
@@ -105,8 +116,9 @@ func _ready() -> void:
 		var harness := Node.new()
 		var test_script := "res://tests/performance_probe.gd" if "--perf" in OS.get_cmdline_user_args() else "res://tests/sideview_qa.gd"
 		if "--unlock-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/unlock_qa.gd"
-		if "--chapter-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/chapter_qa.gd"
+		if "--chapter-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/exploration_qa.gd"
 		if "--ecology-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/ecology_qa.gd"
+		if "--touch-route-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/touch_route_qa.gd"
 		harness.set_script(load(test_script))
 		add_child(harness)
 	else:
@@ -117,7 +129,9 @@ func _ready() -> void:
 		director.frame_title()
 		if test_mode:
 			var harness := Node.new()
-			harness.set_script(load("res://tests/story_qa.gd" if "--story-qa" in OS.get_cmdline_user_args() else "res://tests/stage2_qa.gd"))
+			var script_path:="res://tests/story_qa.gd" if "--story-qa" in OS.get_cmdline_user_args() else "res://tests/stage2_qa.gd"
+			if "--controls-qa" in OS.get_cmdline_user_args(): script_path="res://tests/controls_qa.gd"
+			harness.set_script(load(script_path))
 			add_child(harness)
 
 func _prepare_ambience() -> void:
@@ -140,9 +154,12 @@ func apply_settings() -> void:
 		if button.text=="减少转场动态": button.set_pressed_no_signal(audio.reduced_motion)
 		if button.text=="环境微动态": button.set_pressed_no_signal(audio.environment_motion)
 		if button.text=="游戏厅氛围": button.set_pressed_no_signal(audio.arcade_ambience)
+		if button.text=="全屏显示": button.set_pressed_no_signal(audio.fullscreen)
 	hud.sfx_toggle.set_pressed_no_signal(audio.enabled)
 	hud.music_toggle.set_pressed_no_signal(audio.music_enabled)
 	hud.music_slider.set_value_no_signal(audio.music_volume)
+	hud.sfx_slider.set_value_no_signal(audio.sfx_volume)
+	hud.refresh_controls()
 
 func begin_adventure(reset: bool) -> void:
 	if transitioning or story_active or not in_menu: return
@@ -171,6 +188,32 @@ func begin_adventure(reset: bool) -> void:
 	if save.data.flags.get("message_delivered",false):
 		if not save.data.story.outro_seen: _start_story("outro")
 	elif not save.data.story.intro_seen: _start_story("intro")
+
+func request_adventure(reset: bool) -> void:
+	if not controls.chosen: front_end.choose_controls(reset)
+	else: begin_adventure(reset)
+
+func change_profile(value: String) -> bool:
+	if not controls.apply(value,controls.show_tutorial): return false
+	hud.refresh_controls()
+	input_router.release_all()
+	if is_instance_valid(touch_controls): touch_controls.release_all()
+	director.touch_framing=value=="touch"
+	if is_instance_valid(world):
+		world.last_prompt="";hud.set_prompt("")
+		if not save.data.tutorial.mode_hint_seen.get(value,false):
+			save.data.tutorial.mode_hint_seen[value]=true
+			hud.show_message("左侧摇杆移动，右侧跳跃 / 螯击 / 互动。按住互动配合摇杆推拉。" if value=="touch" else "已切回键鼠，操作指南可从暂停查看。")
+	_control_state();_checkpoint()
+	return true
+
+func set_tutorial_enabled(value: bool) -> void:
+	if not controls.apply(controls.profile,value): hud.show_message("操作偏好保存失败。")
+	hud.refresh_controls()
+
+func toggle_local_map() -> void:
+	if in_menu or transitioning or story_active or hud.paused or director.overview or is_instance_valid(gacha_panel): return
+	hud.set_map(not hud.map_open,world);_control_state()
 
 func _start_story(kind: String) -> void:
 	if story_active: return
@@ -325,6 +368,10 @@ func _load_world(id: String, spawn_id: String = "", requested_room: String = "")
 	if not saved is Dictionary: saved = {}
 	var room_id := ""
 	var config := root_definition
+	if not root_definition.has("rooms") and not requested_room.is_empty():
+		var legacy_spawn:=requested_room+":"+(spawn_id if not spawn_id.is_empty() else "entrance")
+		if not config.spawns.has(legacy_spawn): return false
+		spawn_id=legacy_spawn
 	if root_definition.has("rooms"):
 		room_id = requested_room if not requested_room.is_empty() else (str(saved.get("room_id",root_definition.entry_room)) if spawn_id.is_empty() else str(root_definition.entry_room))
 		config = RoomCatalog.room(root_definition,room_id)
@@ -344,6 +391,7 @@ func _load_world(id: String, spawn_id: String = "", requested_room: String = "")
 	world.level_id = manifest[id].level_id
 	world.definition = config
 	world.session = save.data
+	world.controls=input_router
 	world.flags = save.data.flags
 	world.room_id = room_id
 	if not room_id.is_empty():
@@ -356,9 +404,9 @@ func _load_world(id: String, spawn_id: String = "", requested_room: String = "")
 	var spawn_point := SideWorld.point(config.spawns.get(spawn_id,config.spawns.entrance))
 	world.player.spawn = spawn_point
 	world.player.position = spawn_point if spawn_id!="" else SideWorld.point(world.state.get("position"),spawn_point)
-	if world.player.position.x<8 or world.player.position.x>bounds.x-8 or world.player.position.y<18 or world.player.position.y>bounds.y: world.player.position=entrance
+	if world.player.position.x<8 or world.player.position.x>bounds.x-8 or world.player.position.y<18 or world.player.position.y>bounds.y: world.player.position=_safe_checkpoint(config,world.state,world.player.position)
 	if world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
-		if spawn_id=="": world.player.position = entrance
+		if spawn_id=="": world.player.position = _safe_checkpoint(config,world.state,world.player.position)
 		if spawn_id!="" or world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
 			viewport.remove_child(world)
 			world.free()
@@ -369,9 +417,10 @@ func _load_world(id: String, spawn_id: String = "", requested_room: String = "")
 			return false
 	var saved_health = save.data.get("health",3)
 	world.player.health = clampi(int(saved_health),1,3) if saved_health is float or saved_health is int else 3
-	world._snap_camera()
+	world._snap_camera(true)
 	world.message.connect(hud.show_message)
-	world.prompt_changed.connect(func(text: String): hud.prompt_label.text = text)
+	world.prompt_changed.connect(hud.set_prompt)
+	world.learning_event.connect(tutorial.observe)
 	world.travel_requested.connect(_travel)
 	world.room_requested.connect(_change_room)
 	world.sound_requested.connect(audio.play)
@@ -382,6 +431,18 @@ func _load_world(id: String, spawn_id: String = "", requested_room: String = "")
 	hud.set_health(world.player.health)
 	_progress()
 	return true
+
+func _safe_checkpoint(config: Dictionary, state: Dictionary, p: Vector2) -> Vector2:
+	var choices:Array=config.get("areas",[]).duplicate()
+	choices.sort_custom(func(a,b):return SideWorld.point(a.checkpoint).distance_squared_to(p)<SideWorld.point(b.checkpoint).distance_squared_to(p))
+	for area in choices:
+		if str(area.id)==str(state.get("current_area","")): choices.erase(area);choices.push_front(area);break
+	for area in choices:
+		var checkpoint:=SideWorld.point(area.checkpoint)
+		world.player.position=checkpoint
+		if not world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
+			world.player.spawn=checkpoint;return checkpoint
+	return SideWorld.point(config.spawns.entrance)
 
 func _level_definition(id: String) -> Dictionary:
 	if not manifest.has(id): return {}
@@ -528,11 +589,13 @@ func _travel(link: Dictionary) -> void:
 	transfer_phase = ""
 	_control_state()
 	var saved := _checkpoint()
-	hud.show_message("LINK ESTABLISHED / "+str(manifest[active_id].name) if success[0] else "NO SIGNAL / 连接失败，已返回原屏幕")
+	if success[0]: tutorial.observe("travel")
+	hud.show_message("LINK ESTABLISHED / "+str(link.from)+" → "+str(link.to) if success[0] else "NO SIGNAL / 连接失败，已返回原屏幕")
 	if not saved: hud.show_message("已连接，但进度未保存，请检查存储空间。")
 	if not success[0]: audio.play("error")
 
 func _process(delta: float) -> void:
+	if is_instance_valid(touch_controls): touch_controls.refresh()
 	if story_active:
 		if story.kind=="outro" and story.playing and not story.suspended and story.clock<3.8:
 			ending_tour_clock=story.clock
@@ -571,12 +634,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_instance_valid(gacha_panel): return
 	if in_menu: return
 	if event.is_action_pressed("pause") and not transitioning:
-		if director.overview:
+		if hud.map_open: toggle_local_map()
+		elif hud.paused and hud.pause_page_id!="main": hud.show_pause_page("settings" if hud.pause_page_id in ["controls","audio","video"] else "main")
+		elif director.overview:
 			_toggle_overview()
 		else:
 			hud.set_paused(not hud.paused)
 	if event.is_action_pressed("overview"):
 		_toggle_overview()
+	if event.is_action_pressed("local_map"): toggle_local_map()
 	if event.is_action_pressed("debug"):
 		hud.debug_label.visible = not hud.debug_label.visible
 	if event is InputEventMouseMotion:
@@ -587,9 +653,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: director.elevation = clampf(director.elevation+1,5,30)
 
 func _toggle_overview() -> void:
-	if in_menu or transitioning or hud.paused or is_instance_valid(gacha_panel):
+	if in_menu or transitioning or story_active or hud.map_open or hud.paused or is_instance_valid(gacha_panel):
 		return
 	director.toggle_overview()
+	if not director.overview: tutorial.observe("array")
 	hud.overview_panel.visible = director.overview
 	hud.prompt_label.text = ""
 	_control_state()
@@ -613,12 +680,15 @@ func _control_state() -> void:
 	elif transitioning:
 		input_mode = InputMode.TRANSITION_EXIT_2D if transfer_phase=="EXIT" else (InputMode.TRANSITION_ENTER_2D if transfer_phase=="ENTER" else InputMode.TRANSITION_3D)
 	else:
-		input_mode = InputMode.PAUSED if hud.paused else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D)
+		input_mode = InputMode.PAUSED if hud.paused or hud.map_open or orientation_blocked else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D)
 	if is_instance_valid(world):
-		var allowed := not in_menu and not transitioning and not story_active and not hud.paused and not director.overview and not is_instance_valid(gacha_panel)
+		var allowed := not in_menu and not transitioning and not story_active and not orientation_blocked and not hud.map_open and not hud.paused and not director.overview and not is_instance_valid(gacha_panel)
 		world.enabled = allowed
 		world.player.enabled = allowed
 		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED
+		input_router.allowed=allowed
+		if not allowed: input_router.release_all()
+	if is_instance_valid(touch_controls): touch_controls.refresh()
 
 func _progress() -> void:
 	if save.data.collected.has("archive_hidden") and not save.data.wardrobe.owned.has("glitch_crab"): save.data.wardrobe.owned.append("glitch_crab")
@@ -663,6 +733,9 @@ func _device(id: String) -> MonitorDevice:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()
+	if what==NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(input_router):
+		input_router.release_all()
+		if is_instance_valid(touch_controls): touch_controls.release_all()
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning and not in_menu and not story_active:
 		hud.set_paused(true)
 
@@ -674,7 +747,7 @@ func _quit() -> void:
 	get_tree().quit()
 
 func _input_map() -> void:
-	var map := {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"move_up":[KEY_W,KEY_UP],"move_down":[KEY_S,KEY_DOWN],"jump":[KEY_SPACE],"attack":[KEY_J],"dash":[KEY_SHIFT],"interact":[KEY_E,KEY_K],"reset_puzzle":[KEY_R],"overview":[KEY_TAB],"pause":[KEY_ESCAPE],"debug":[KEY_F3]}
+	var map := {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"move_up":[KEY_W,KEY_UP],"move_down":[KEY_S,KEY_DOWN],"jump":[KEY_SPACE],"attack":[KEY_J],"dash":[KEY_SHIFT],"interact":[KEY_E,KEY_K],"reset_puzzle":[KEY_R],"overview":[KEY_TAB],"local_map":[KEY_M],"pause":[KEY_ESCAPE],"debug":[KEY_F3]}
 	for action in map:
 		InputMap.add_action(action)
 		for key in map[action]:
@@ -683,7 +756,7 @@ func _input_map() -> void:
 			InputMap.action_add_event(action,event)
 	var mouse := InputEventMouseButton.new()
 	mouse.button_index = MOUSE_BUTTON_LEFT
-	InputMap.action_add_event("attack",mouse)
+	# Left click is admitted only through unhandled input, after GUI consumption.
 	var buttons := {"jump":JOY_BUTTON_A,"attack":JOY_BUTTON_X,"interact":JOY_BUTTON_Y,"reset_puzzle":JOY_BUTTON_LEFT_STICK,"overview":JOY_BUTTON_BACK,"pause":JOY_BUTTON_START}
 	for action in buttons:
 		var event:=InputEventJoypadButton.new();event.button_index=buttons[action];InputMap.action_add_event(action,event)
@@ -700,6 +773,6 @@ func _input_map() -> void:
 func _resize_ui() -> void:
 	var window := get_tree().root
 	var portrait := float(window.size.x)/maxf(window.size.y,1)<1.1
-	var reference := Vector2i(900,1125) if portrait else (Vector2i(960,600) if window.size.x<1000 else Vector2i(1440,900))
+	var reference := Vector2i(900,1125) if portrait else Vector2i(960,540)
 	if window.content_scale_size != reference:
 		window.content_scale_size = reference

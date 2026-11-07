@@ -2,7 +2,7 @@ class_name SaveStore
 extends RefCounted
 
 const PATH := "user://progress.json"
-const VERSION := 4
+const VERSION := 5
 const SCREENS := ["BOOT","ARCHIVE","POP-UP","RECYCLE","SIGNAL","ERROR"]
 var path := PATH
 var data: Dictionary = fresh()
@@ -11,7 +11,7 @@ var status := "missing"
 var writable := true
 
 static func fresh() -> Dictionary:
-	return {"version":VERSION,"started":false,"active":"BOOT","computer_id":"crt_boot_00","level_id":"boot_01","health":3,"crystals":0,"collected":[],"pickups":[],"flags":{},"worlds":{},"wardrobe":{"owned":["classic_orange"],"equipped":"classic_orange"},"story":{"intro_seen":false,"outro_seen":false,"message_state":"pending"},"screen_unlocked":{"BOOT":true},"screen_unlock_seen":{"BOOT":true},"screen_repaired":{}}
+	return {"version":VERSION,"started":false,"active":"BOOT","computer_id":"crt_boot_00","level_id":"boot_01","health":3,"crystals":0,"collected":[],"pickups":[],"flags":{},"worlds":{},"wardrobe":{"owned":["classic_orange"],"equipped":"classic_orange"},"story":{"intro_seen":false,"outro_seen":false,"message_state":"pending"},"screen_unlocked":{"BOOT":true},"screen_unlock_seen":{"BOOT":true},"screen_repaired":{},"tutorial":{"completed":[],"skipped":false,"mode_hint_seen":{}}}
 
 static func version_of(parsed: Dictionary) -> int:
 	var value = parsed.get("version",0)
@@ -26,7 +26,7 @@ static func migrate(parsed: Dictionary) -> Dictionary:
 		result.started = true
 		result.story = {"intro_seen":true,"outro_seen":false,"message_state":"failed"}
 		return result
-	if version not in [2,3,4]: return result
+	if version not in [2,3,4,5]: return result
 	for field in result:
 		if parsed.has(field) and typeof(parsed[field])==typeof(result[field]): result[field] = parsed[field].duplicate(true) if parsed[field] is Dictionary or parsed[field] is Array else parsed[field]
 	if parsed.has("legacy_progress"): result.legacy_progress = parsed.legacy_progress
@@ -62,6 +62,15 @@ static func migrate(parsed: Dictionary) -> Dictionary:
 	if delivered: result.story.intro_seen=true
 	result.story.message_state = "delivered" if delivered else ("ready" if result.flags.get("signal_core_ready",false) else ("failed" if result.story.intro_seen else "pending"))
 	if not delivered: result.story.outro_seen = false
+	var learned=result.tutorial.get("completed",[])
+	result.tutorial.completed=learned.filter(func(v):return v is String) if learned is Array else []
+	result.tutorial.skipped=result.tutorial.get("skipped",false) is bool and result.tutorial.get("skipped",false)
+	if not result.tutorial.get("mode_hint_seen") is Dictionary: result.tutorial.mode_hint_seen={}
+	if version<5 and result.flags.get("boot_access",false):
+		for id in ["move","jump","push","ladder","chest","travel"]:
+			if not result.tutorial.completed.has(id): result.tutorial.completed.append(id)
+	if version<5 and result.flags.get("archive_key",false): result.tutorial.completed.append_array(["attack","heavy"])
+	LayoutMigration.apply(result)
 	WorldProgress.restore_supported_signals(result)
 	result.version = VERSION
 	return result
@@ -75,11 +84,11 @@ func load_progress() -> void:
 		return
 	var parsed: Dictionary = parser.data
 	var version := version_of(parsed)
-	if version not in [1,2,3,4]:
+	if version not in [1,2,3,4,5]:
 		status = "unsupported"
 		writable = false
 		return
-	if version in [2,3,4]:
+	if version in [2,3,4,5]:
 		for key in ["active","collected","pickups","flags","worlds"]:
 			if not parsed.has(key) or typeof(parsed[key])!=typeof(fresh()[key]):
 				status = "damaged"
@@ -89,12 +98,18 @@ func load_progress() -> void:
 		status = "backup_failed"
 		writable = false
 		return
+	if version==VERSION and parsed.worlds.values().any(func(w):return w is Dictionary and not w.is_empty() and int(w.get("layout_version",1))<2) and not backup(".layout-v1-backup"):
+		status="backup_failed";writable=false;return
 	data = migrate(parsed)
 	status = "valid"
 
 func backup(suffix: String) -> bool:
-	if not enabled or not FileAccess.file_exists(path) or FileAccess.file_exists(path+suffix): return true
-	return DirAccess.copy_absolute(path,path+suffix)==OK
+	if not enabled or not FileAccess.file_exists(path): return true
+	var target:=path+suffix
+	if FileAccess.file_exists(target):
+		if FileAccess.get_sha256(target)==FileAccess.get_sha256(path): return true
+		target+="-"+str(Time.get_unix_time_from_system()).replace(".","-")
+	return DirAccess.copy_absolute(path,target)==OK
 
 func _write(candidate: Dictionary) -> bool:
 	if not enabled: return true

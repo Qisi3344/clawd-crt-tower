@@ -1,568 +1,745 @@
 {
-  "entry_room": "sorter",
-  "rooms": {
-    "sorter": {
-      "name": "输送带分拣区",
-      "size": [
-        480,
+  "platforms": [
+    [
+      0,
+      448,
+      432,
+      32,
+      false
+    ],
+    [
+      432,
+      448,
+      32,
+      32,
+      true
+    ],
+    [
+      464,
+      448,
+      16,
+      32,
+      false
+    ],
+    [
+      512,
+      688,
+      320,
+      32,
+      false
+    ],
+    [
+      576,
+      608,
+      80,
+      16,
+      true
+    ],
+    [
+      512,
+      208,
+      320,
+      32,
+      false
+    ],
+    [
+      640,
+      144,
+      176,
+      16,
+      true
+    ],
+    [
+      0,
+      688,
+      320,
+      32,
+      false
+    ],
+    [
+      320,
+      688,
+      192,
+      32,
+      false
+    ],
+    [
+      832,
+      688,
+      192,
+      32,
+      false
+    ],
+    [
+      832,
+      208,
+      192,
+      16,
+      true
+    ],
+    [
+      80,
+      64,
+      944,
+      16,
+      true
+    ]
+  ],
+  "ladders": [
+    {
+      "x": 592,
+      "top": 608,
+      "bottom": 688
+    },
+    {
+      "x": 656,
+      "top": 144,
+      "bottom": 208
+    },
+    {
+      "x": 448,
+      "top": 448,
+      "bottom": 688
+    },
+    {
+      "x": 80,
+      "top": 64,
+      "bottom": 448
+    },
+    {
+      "x": 976,
+      "top": 64,
+      "bottom": 688
+    }
+  ],
+  "blocks": [
+    {
+      "id": "sorter_metal",
+      "position": [
+        144,
+        440
+      ],
+      "weight": 2,
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "recycle_metal",
+      "position": [
+        616,
+        600
+      ],
+      "weight": 2,
+      "legacy_room": "well"
+    },
+    {
+      "id": "tunnel_metal",
+      "position": [
+        144,
+        680
+      ],
+      "weight": 2,
+      "legacy_room": "tunnel"
+    }
+  ],
+  "plates": [
+    {
+      "id": "recycle_weight",
+      "position": [
+        744,
+        688
+      ],
+      "weight": 2,
+      "flag": "recycle_heavy_supported",
+      "legacy_room": "well"
+    }
+  ],
+  "doors": [
+    {
+      "id": "recycle_gate",
+      "position": [
+        792,
+        688
+      ],
+      "height": 56,
+      "requires": "recycle_heavy_supported",
+      "legacy_room": "well"
+    },
+    {
+      "id": "tunnel_gate",
+      "position": [
+        192,
+        688
+      ],
+      "height": 64,
+      "requires": "recycle_roller_signal",
+      "legacy_room": "tunnel"
+    },
+    {
+      "id": "hoist_loop_lock",
+      "position": [
+        496,
+        208
+      ],
+      "height": 208,
+      "requires": "recycle_route_repaired"
+    },
+    {
+      "id": "return_tunnel_lock",
+      "position": [
+        336,
+        688
+      ],
+      "height": 160,
+      "requires": "recycle_route_repaired"
+    }
+  ],
+  "chests": [
+    {
+      "id": "recycle_cache",
+      "position": [
+        784,
+        144
+      ],
+      "crystals": 3,
+      "flag": "recycle_cache",
+      "legacy_room": "cache"
+    },
+    {
+      "id": "recycle_hidden",
+      "position": [
+        128,
+        688
+      ],
+      "crystals": 4,
+      "flag": "recycle_hidden",
+      "legacy_room": "tunnel"
+    }
+  ],
+  "crystals": [],
+  "breakables": [
+    {
+      "id": "scrap_bridge",
+      "position": [
+        744,
+        640
+      ],
+      "legacy_room": "well"
+    },
+    {
+      "id": "scrap_tunnel",
+      "position": [
+        128,
+        680
+      ],
+      "legacy_room": "tunnel"
+    }
+  ],
+  "enemies": [],
+  "terminals": [],
+  "mechanisms": [
+    {
+      "id": "belt_a",
+      "type": "conveyor",
+      "position": [
+        192,
+        448
+      ],
+      "control": [
+        80,
+        448
+      ],
+      "width": 176,
+      "label": "REVERSE · 改变输送带方向",
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "press_a",
+      "type": "crusher",
+      "position": [
+        288,
+        448
+      ],
+      "stop": "safe_stop",
+      "flag": "recycle_press_used",
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "safe_stop",
+      "type": "stop",
+      "position": [
+        112,
+        448
+      ],
+      "label": "SAFE STOP · 停止 / 启动压机",
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "roller",
+      "type": "sensor",
+      "position": [
+        264,
+        448
+      ],
+      "flag": "recycle_roller_signal",
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "fragment1",
+      "type": "fragment",
+      "position": [
+        400,
+        672
+      ],
+      "flag": "recycle_part_1",
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "magnet_well",
+      "type": "magnet",
+      "position": [
+        680,
+        576
+      ],
+      "control": [
+        672,
+        688
+      ],
+      "target": [
+        744,
+        600
+      ],
+      "range": 165,
+      "label": "磁吸爪：吸起 / 放下钢块",
+      "legacy_room": "well"
+    },
+    {
+      "id": "fragment2",
+      "type": "fragment",
+      "position": [
+        592,
+        592
+      ],
+      "flag": "recycle_part_2",
+      "legacy_room": "well"
+    },
+    {
+      "id": "fragment3",
+      "type": "fragment",
+      "position": [
+        608,
+        192
+      ],
+      "flag": "recycle_part_3",
+      "legacy_room": "cache"
+    },
+    {
+      "id": "assembly",
+      "type": "assembly",
+      "position": [
+        768,
+        208
+      ],
+      "label": "重构固定的 3 片通信数据",
+      "requires_all": [
+        "recycle_part_1",
+        "recycle_part_2",
+        "recycle_part_3"
+      ],
+      "outputs": [
+        "recycle_route_repaired",
+        "message_packet_restored"
+      ],
+      "locked_hint": "需分拣区、磁吸井和重构室的三片通信数据。",
+      "success": "数据包已重构 · SIGNAL 通电，User 消息文字恢复，尚未送达",
+      "legacy_room": "cache"
+    },
+    {
+      "id": "magnet_tunnel",
+      "type": "magnet",
+      "position": [
+        176,
+        576
+      ],
+      "control": [
+        80,
+        688
+      ],
+      "target": [
+        240,
+        600
+      ],
+      "range": 160,
+      "label": "磁吸挪开暗道挡块",
+      "legacy_room": "tunnel"
+    }
+  ],
+  "animals": [
+    {
+      "id": "recycle_hamster",
+      "species": "hamster",
+      "position": [
+        208,
+        448
+      ],
+      "range": 80,
+      "legacy_room": "sorter"
+    },
+    {
+      "id": "tunnel_beaver",
+      "species": "beaver",
+      "position": [
+        112,
+        688
+      ],
+      "health": 3,
+      "range": 32,
+      "breaks": "scrap_tunnel",
+      "legacy_room": "tunnel"
+    }
+  ],
+  "signs": [
+    [
+      370,
+      630,
+      "通信碎片 1 / 3"
+    ],
+    [
+      594,
+      564,
+      "抬起 → 右移 → 放下"
+    ],
+    [
+      710,
+      650,
+      "击碎吊下的废料板"
+    ],
+    [
+      700,
+      174,
+      "三片数据 → 重构"
+    ],
+    [
+      42,
+      418,
+      "↑ 吊装观察台"
+    ],
+    [
+      410,
+      418,
+      "↓ 废料坑 / 磁吸井"
+    ],
+    [
+      474,
+      658,
+      "→ 磁吸井"
+    ],
+    [
+      754,
+      658,
+      "→ 维修井"
+    ],
+    [
+      938,
+      658,
+      "↑ 重构吊台"
+    ],
+    [
+      458,
+      34,
+      "← 分拣大厅捷径"
+    ],
+    [
+      298,
+      658,
+      "← 回访暗道"
+    ]
+  ],
+  "size": [
+    1024,
+    768
+  ],
+  "background": "recycle",
+  "layout_version": 2,
+  "spawns": {
+    "sorter:entrance": [
+      32,
+      448
+    ],
+    "sorter:return": [
+      432,
+      448
+    ],
+    "well:entrance": [
+      544,
+      688
+    ],
+    "well:return": [
+      800,
+      688
+    ],
+    "cache:entrance": [
+      544,
+      208
+    ],
+    "cache:return": [
+      800,
+      208
+    ],
+    "tunnel:entrance": [
+      32,
+      688
+    ],
+    "tunnel:return": [
+      288,
+      688
+    ],
+    "entrance": [
+      32,
+      448
+    ],
+    "return": [
+      432,
+      448
+    ]
+  },
+  "areas": [
+    {
+      "id": "upper_left",
+      "name": "吊装观察台",
+      "rect": [
+        0,
+        0,
+        512,
+        288
+      ],
+      "checkpoint": [
+        80,
+        64
+      ],
+      "floor": "上层",
+      "landmark": "crane"
+    },
+    {
+      "id": "cache",
+      "name": "数据重构吊台",
+      "rect": [
+        512,
+        0,
+        512,
+        288
+      ],
+      "checkpoint": [
+        928,
+        208
+      ],
+      "floor": "上层",
+      "landmark": "crane"
+    },
+    {
+      "id": "sorter",
+      "name": "中央分拣大厅",
+      "rect": [
+        0,
+        288,
+        512,
         240
       ],
-      "background": "recycle",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          432,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          480,
-          32
-        ]
+      "checkpoint": [
+        32,
+        448
       ],
-      "ladders": [],
-      "blocks": [
-        {
-          "id": "sorter_metal",
-          "position": [
-            144,
-            200
-          ],
-          "weight": 2
-        }
+      "floor": "中层",
+      "landmark": "ring"
+    },
+    {
+      "id": "maintenance",
+      "name": "侧面维护竖井",
+      "rect": [
+        832,
+        288,
+        192,
+        480
       ],
-      "plates": [],
-      "doors": [],
-      "chests": [],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          24,
-          42,
-          "RECYCLE / 01 SORTING"
-        ],
-        [
-          70,
-          156,
-          "REVERSE / SAFE STOP"
-        ],
-        [
-          240,
-          116,
-          "GEAR HAMSTER -> SENSOR"
-        ],
-        [
-          344,
-          156,
-          "PACKET 1 / 3"
-        ]
+      "checkpoint": [
+        976,
+        688
       ],
-      "room_portals": [
-        {
-          "to": "well",
-          "position": [
-            432,
-            208
-          ],
-          "label": "进入拆解井",
-          "spawn": "entrance",
-          "requires": "recycle_part_1",
-          "locked_hint": "右侧有第一片固定通信数据。"
-        }
+      "floor": "竖井",
+      "landmark": "tower"
+    },
+    {
+      "id": "scrap",
+      "name": "地下废料坑",
+      "rect": [
+        352,
+        528,
+        160,
+        240
       ],
-      "mechanisms": [
-        {
-          "id": "belt_a",
-          "type": "conveyor",
-          "position": [
-            192,
-            208
-          ],
-          "control": [
-            80,
-            208
-          ],
-          "width": 176,
-          "label": "REVERSE · 改变输送带方向"
-        },
-        {
-          "id": "press_a",
-          "type": "crusher",
-          "position": [
-            288,
-            208
-          ],
-          "stop": "safe_stop",
-          "flag": "recycle_press_used"
-        },
-        {
-          "id": "safe_stop",
-          "type": "stop",
-          "position": [
-            112,
-            208
-          ],
-          "label": "SAFE STOP · 停止 / 启动压机"
-        },
-        {
-          "id": "roller",
-          "type": "sensor",
-          "position": [
-            264,
-            208
-          ],
-          "flag": "recycle_roller_signal"
-        },
-        {
-          "id": "fragment1",
-          "type": "fragment",
-          "position": [
-            376,
-            192
-          ],
-          "flag": "recycle_part_1"
-        }
+      "checkpoint": [
+        448,
+        688
       ],
-      "animals": [
-        {
-          "id": "recycle_hamster",
-          "species": "hamster",
-          "position": [
-            208,
-            208
-          ],
-          "range": 80
-        }
+      "floor": "下层",
+      "landmark": "shelves"
+    },
+    {
+      "id": "well",
+      "name": "磁吸拆解井",
+      "rect": [
+        512,
+        528,
+        320,
+        240
+      ],
+      "checkpoint": [
+        560,
+        688
+      ],
+      "floor": "下层",
+      "landmark": "crane"
+    },
+    {
+      "id": "tunnel",
+      "name": "回访磁吸暗道",
+      "rect": [
+        0,
+        528,
+        352,
+        240
+      ],
+      "checkpoint": [
+        304,
+        688
+      ],
+      "floor": "下层",
+      "landmark": "shelves"
+    }
+  ],
+  "connections": [
+    {
+      "id": "observation",
+      "from": "sorter",
+      "to": "upper_left",
+      "position": [
+        80,
+        448
+      ],
+      "label": "↑ 吊装观察台",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "scrap_drop",
+      "from": "sorter",
+      "to": "scrap",
+      "position": [
+        448,
+        448
+      ],
+      "label": "↓ 废料坑 / 磁吸井",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "well_entry",
+      "from": "scrap",
+      "to": "well",
+      "position": [
+        512,
+        688
+      ],
+      "label": "→ 磁吸井",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "service_gate",
+      "from": "well",
+      "to": "maintenance",
+      "position": [
+        792,
+        688
+      ],
+      "label": "→ 维修井",
+      "requires": "recycle_heavy_supported",
+      "bidirectional": true
+    },
+    {
+      "id": "service_ladder",
+      "from": "maintenance",
+      "to": "cache",
+      "position": [
+        976,
+        688
+      ],
+      "label": "↑ 重构吊台",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "hoist_loop",
+      "from": "cache",
+      "to": "upper_left",
+      "position": [
+        496,
+        64
+      ],
+      "label": "← 分拣大厅捷径",
+      "requires": "recycle_route_repaired",
+      "bidirectional": true
+    },
+    {
+      "id": "hidden_return",
+      "from": "scrap",
+      "to": "tunnel",
+      "position": [
+        336,
+        688
+      ],
+      "label": "← 回访暗道",
+      "requires": "recycle_route_repaired",
+      "bidirectional": true
+    }
+  ],
+  "tutorial_zones": [
+    {
+      "id": "conveyor",
+      "rect": [
+        48,
+        386,
+        90,
+        80
       ]
     },
-    "well": {
-      "name": "碎桥与磁吸拆解井",
-      "size": [
-        320,
-        240
-      ],
-      "background": "recycle",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ],
-        [
-          64,
-          128,
-          80,
-          16
-        ]
-      ],
-      "ladders": [
-        {
-          "x": 80,
-          "top": 128,
-          "bottom": 208
-        }
-      ],
-      "blocks": [
-        {
-          "id": "recycle_metal",
-          "position": [
-            104,
-            120
-          ],
-          "weight": 2
-        }
-      ],
-      "plates": [
-        {
-          "id": "recycle_weight",
-          "position": [
-            232,
-            208
-          ],
-          "weight": 2,
-          "flag": "recycle_heavy_supported"
-        }
-      ],
-      "doors": [
-        {
-          "id": "recycle_gate",
-          "position": [
-            280,
-            208
-          ],
-          "height": 56,
-          "requires": "recycle_heavy_supported"
-        }
-      ],
-      "chests": [],
-      "crystals": [],
-      "breakables": [
-        {
-          "id": "scrap_bridge",
-          "position": [
-            232,
-            160
-          ]
-        }
-      ],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          16,
-          38,
-          "RECYCLE / 02 MAGNET WELL"
-        ],
-        [
-          96,
-          64,
-          "LIFT -> RIGHT -> RELEASE"
-        ],
-        [
-          204,
-          142,
-          "SCRAP / J"
-        ],
-        [
-          198,
-          184,
-          "WEIGHT 2"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "sorter",
-          "position": [
-            32,
-            208
-          ],
-          "label": "回到分拣区",
-          "spawn": "return",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        },
-        {
-          "to": "cache",
-          "position": [
-            304,
-            208
-          ],
-          "label": "进入缓存重构室",
-          "spawn": "entrance",
-          "requires": "recycle_heavy_supported",
-          "locked_hint": "先完成当前房间的机关。"
-        },
-        {
-          "to": "tunnel",
-          "position": [
-            80,
-            128
-          ],
-          "label": "下层暗道 · 修复后回访",
-          "spawn": "entrance",
-          "requires": "recycle_route_repaired",
-          "locked_hint": "数据包重构后，暗道端口会通电。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "magnet_well",
-          "type": "magnet",
-          "position": [
-            168,
-            96
-          ],
-          "control": [
-            160,
-            208
-          ],
-          "target": [
-            232,
-            120
-          ],
-          "range": 165,
-          "label": "磁吸爪：吸起 / 放下钢块"
-        },
-        {
-          "id": "fragment2",
-          "type": "fragment",
-          "position": [
-            80,
-            112
-          ],
-          "flag": "recycle_part_2"
-        }
-      ],
-      "animals": []
-    },
-    "cache": {
-      "name": "缓存重构室",
-      "size": [
-        320,
-        240
-      ],
-      "background": "recycle",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ],
-        [
-          128,
-          144,
-          176,
-          16
-        ]
-      ],
-      "ladders": [
-        {
-          "x": 144,
-          "top": 144,
-          "bottom": 208
-        }
-      ],
-      "blocks": [],
-      "plates": [],
-      "doors": [],
-      "chests": [
-        {
-          "id": "recycle_cache",
-          "position": [
-            272,
-            144
-          ],
-          "crystals": 3,
-          "flag": "recycle_cache"
-        }
-      ],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          24,
-          40,
-          "RECYCLE / 03 RECONSTRUCT"
-        ],
-        [
-          150,
-          176,
-          "PACKET ASSEMBLY"
-        ],
-        [
-          142,
-          112,
-          "OPTIONAL CACHE"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "well",
-          "position": [
-            32,
-            208
-          ],
-          "label": "返回拆解井",
-          "spawn": "return",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "fragment3",
-          "type": "fragment",
-          "position": [
-            96,
-            192
-          ],
-          "flag": "recycle_part_3"
-        },
-        {
-          "id": "assembly",
-          "type": "assembly",
-          "position": [
-            256,
-            208
-          ],
-          "label": "重构固定的 3 片通信数据",
-          "requires_all": [
-            "recycle_part_1",
-            "recycle_part_2",
-            "recycle_part_3"
-          ],
-          "outputs": [
-            "recycle_route_repaired",
-            "message_packet_restored"
-          ],
-          "locked_hint": "需分拣区、磁吸井和重构室的三片通信数据。",
-          "success": "数据包已重构 · SIGNAL 通电，User 消息文字恢复，尚未送达"
-        }
-      ],
-      "animals": []
-    },
-    "tunnel": {
-      "name": "回访磁吸暗道",
-      "size": [
-        320,
-        240
-      ],
-      "background": "recycle",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ]
-      ],
-      "ladders": [],
-      "blocks": [
-        {
-          "id": "tunnel_metal",
-          "position": [
-            144,
-            200
-          ],
-          "weight": 2
-        }
-      ],
-      "plates": [],
-      "doors": [
-        {
-          "id": "tunnel_gate",
-          "position": [
-            192,
-            208
-          ],
-          "height": 64,
-          "requires": "recycle_roller_signal"
-        }
-      ],
-      "chests": [
-        {
-          "id": "recycle_hidden",
-          "position": [
-            272,
-            208
-          ],
-          "crystals": 4,
-          "flag": "recycle_hidden"
-        }
-      ],
-      "crystals": [],
-      "breakables": [
-        {
-          "id": "scrap_tunnel",
-          "position": [
-            128,
-            200
-          ]
-        }
-      ],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          16,
-          40,
-          "RECYCLE / RETURN ROUTE"
-        ],
-        [
-          40,
-          132,
-          "SORTING ROLLER OPENS THIS GATE"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "well",
-          "position": [
-            32,
-            208
-          ],
-          "label": "回到磁吸井",
-          "spawn": "entrance",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "magnet_tunnel",
-          "type": "magnet",
-          "position": [
-            176,
-            96
-          ],
-          "control": [
-            80,
-            208
-          ],
-          "target": [
-            240,
-            120
-          ],
-          "range": 160,
-          "label": "磁吸挪开暗道挡块"
-        }
-      ],
-      "animals": [
-        {
-          "id": "tunnel_beaver",
-          "species": "beaver",
-          "position": [
-            112,
-            208
-          ],
-          "health": 3,
-          "range": 32,
-          "breaks": "scrap_tunnel"
-        }
+    {
+      "id": "magnet",
+      "rect": [
+        640,
+        600,
+        100,
+        110
       ]
     }
-  }
+  ],
+  "room_portals": [],
+  "legacy_offsets": {
+    "sorter": [
+      0,
+      240
+    ],
+    "well": [
+      512,
+      480
+    ],
+    "cache": [
+      512,
+      0
+    ],
+    "tunnel": [
+      0,
+      480
+    ]
+  },
+  "legacy_entry": "sorter"
 }

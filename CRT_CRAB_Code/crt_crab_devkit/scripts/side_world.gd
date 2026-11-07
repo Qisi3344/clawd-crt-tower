@@ -7,6 +7,8 @@ signal travel_requested(link: Dictionary)
 signal progress_changed
 signal sound_requested(kind: String)
 signal room_requested(portal: Dictionary)
+signal learning_event(id: String)
+var controls: ControlRouter
 var screen_id := "BOOT"
 var level_id := "boot_01"
 var definition: Dictionary = {}
@@ -33,6 +35,8 @@ var room_id := ""
 var room_states: Dictionary = {}
 var world_size := Vector2(768,240)
 var mechanisms: ChapterMechanics
+var current_area := ""
+var smooth_camera := Vector2.ZERO
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -40,12 +44,12 @@ func _ready() -> void:
 	for field in ["broken","defeated"]:
 		if not state.get(field) is Array: state[field] = []
 	if not state.get("blocks") is Dictionary: state.blocks = {}
-	var bg := Sprite2D.new()
-	bg.texture = load("res://assets/pixel/background_"+str(definition.background)+".png")
-	bg.centered = false
+	var bg := Node2D.new()
+	bg.set_script(load("res://scripts/world_backdrop.gd"))
+	bg.world = self
 	bg.z_index = -10
 	add_child(bg)
-	for platform in definition.platforms: _solid(Rect2(platform[0],platform[1],platform[2],platform[3]))
+	for platform in definition.platforms: _solid(Rect2(platform[0],platform[1],platform[2],platform[3]),bool(platform[4]) if platform.size()>4 else platform[1]<208)
 	_solid(Rect2(-16,0,16,world_size.y+16))
 	_solid(Rect2(world_size.x,0,16,world_size.y+16))
 	for ladder in definition.ladders:
@@ -56,6 +60,7 @@ func _ready() -> void:
 		block.weight = int(entry.weight)
 		block.origin = point(entry.position)
 		block.position = point(state.blocks.get(entry.id,entry.position),block.origin)
+		if not contains_point(block.position): block.position=block.origin
 		block.level = self
 		add_child(block)
 		blocks.append(block)
@@ -128,13 +133,13 @@ func _ready() -> void:
 	camera = Camera2D.new()
 	add_child(camera)
 	camera.enabled = true
-	_snap_camera()
+	_snap_camera(true)
 	if definition.has("mechanisms") or definition.has("animals"):
 		mechanisms=ChapterMechanics.new();mechanisms.world=self;add_child(mechanisms)
 	_update_plates()
 	queue_redraw()
 
-func _solid(rect: Rect2) -> void:
+func _solid(rect: Rect2, one_way := false) -> void:
 	var body := StaticBody2D.new()
 	body.position = rect.position+rect.size/2
 	add_child(body)
@@ -142,7 +147,7 @@ func _solid(rect: Rect2) -> void:
 	var box := RectangleShape2D.new()
 	box.size = rect.size
 	shape.shape = box
-	shape.one_way_collision = rect.position.y<208 and rect.position.y>0
+	shape.one_way_collision = one_way
 	if shape.one_way_collision: ladder_platforms.append(body)
 	body.add_child(shape)
 	for x in range(int(rect.position.x),int(rect.end.x),16):
@@ -156,6 +161,7 @@ func _physics_process(delta: float) -> void:
 	_update_plates()
 	_snap_camera()
 	_update_prompt()
+	_update_navigation()
 	for i in range(crystals.size()-1,-1,-1):
 		var crystal: Dictionary = crystals[i]
 		crystal.sprite.texture = PixelArt.frame(15,int(elapsed*8))
@@ -167,8 +173,8 @@ func _physics_process(delta: float) -> void:
 			crystals.remove_at(i)
 			sound_requested.emit("unlock")
 			progress_changed.emit()
-	if Input.is_action_just_pressed("interact"): interact()
-	if Input.is_action_just_pressed("reset_puzzle"): reset_puzzle()
+	if action_just("interact") and not player.pushing and absf(control_axis("move_left","move_right"))<.2: interact()
+	if action_just("reset_puzzle"): reset_puzzle()
 
 func _update_plates() -> void:
 	var changed := false
@@ -196,6 +202,7 @@ func _update_plates() -> void:
 			door.collider.set_deferred("disabled",open)
 			door.visual.modulate = Color(0.5,1,0.8,0.12) if open else Color.WHITE
 	if changed:
+		if flags.get("signal_archive_gate",false): learning_event.emit("heavy")
 		queue_redraw()
 		if plate_settle>0.1: progress_changed.emit()
 
@@ -215,6 +222,7 @@ func ladder_at(p: Vector2) -> Dictionary:
 	return {}
 
 func _update_prompt() -> void:
+	var previous_nearest:String=str(nearest.get("prompt",""))
 	nearest = {}
 	var distance := 27.0
 	var candidates: Array[Dictionary] = []
@@ -237,6 +245,7 @@ func _update_prompt() -> void:
 	if prompt!=last_prompt:
 		last_prompt = prompt
 		prompt_changed.emit(prompt)
+	if previous_nearest!=str(nearest.get("prompt","")): queue_redraw()
 
 func interact() -> void:
 	if not enabled or nearest.is_empty(): return
@@ -250,6 +259,7 @@ func interact() -> void:
 			session.crystals += int(chest.crystals)
 			flags[chest.flag] = true
 			chest.sprite.texture = PixelArt.frame(7)
+			learning_event.emit("chest")
 			pickup_burst(chest.sprite.position)
 			message.emit("宝箱已记录 · +%d 晶体"%int(chest.crystals))
 			if ["boot_access","boot_remote","archive_key","archive_hidden"].all(func(id): return session.collected.has(id)) and not flags.get("slice_complete",false):
@@ -289,6 +299,7 @@ func _attack() -> void:
 		var offset: Vector2 = block.body.position-(player.position-Vector2(0,8))
 		if absf(offset.x)<28 and absf(offset.y)<24 and offset.x*player.facing>-4:
 			state.broken.append(block.id)
+			learning_event.emit("attack")
 			block.body.queue_free()
 			breakables.remove_at(i)
 			sound_requested.emit("hit")
@@ -296,26 +307,41 @@ func _attack() -> void:
 
 func reset_puzzle() -> void:
 	if not enabled: return
-	for block in blocks: block.reset()
-	if is_instance_valid(mechanisms): mechanisms.reset_local()
+	var area:=area_definition()
+	for block in blocks:
+		if belongs_to_area(block.origin,area): block.reset()
+	if is_instance_valid(mechanisms): mechanisms.reset_local(area)
+	player.spawn=point(area.get("checkpoint"),player.spawn)
 	player.position = player.spawn
 	player.velocity = Vector2.ZERO
 	player.climbing = false
 	_update_plates()
-	_snap_camera()
+	_snap_camera(true)
 	progress_changed.emit()
-	message.emit("当前箱石谜题已复位；宝箱、密钥和晶体保留。")
+	learning_event.emit("reset")
+	message.emit("当前区域机关已复位；其他区域、永久捷径和收集保留。")
+
+func control_axis(negative: String,positive: String) -> float:
+	return controls.axis(negative,positive) if controls!=null else Input.get_axis(negative,positive)
+func action_pressed(action: String) -> bool:
+	return controls.pressed(action) if controls!=null else Input.is_action_pressed(action)
+func action_just(action: String) -> bool:
+	return controls.just_pressed(action) if controls!=null else Input.is_action_just_pressed(action)
 
 func _on_death() -> void:
 	player.respawn()
-	_snap_camera()
+	_snap_camera(true)
 	message.emit("已在当前屏幕检查点重连，机关与宝箱进度保留。")
 
-func _snap_camera() -> void:
-	camera.position = Vector2(clampf(roundf(player.position.x+56),160,world_size.x-160),120)
-	camera.reset_smoothing()
+func _snap_camera(instant := false) -> void:
+	var target:=Vector2(clampf(player.position.x+player.facing*38,160,world_size.x-160),clampf(player.position.y-42,120,world_size.y-120))
+	if not instant and not player.climbing and absf(target.y-smooth_camera.y)<20: target.y=smooth_camera.y
+	smooth_camera=target if instant else smooth_camera.lerp(target,minf(1,get_physics_process_delta_time()*8))
+	camera.position=smooth_camera.round()
+	if instant: camera.reset_smoothing()
 
 func snapshot() -> Dictionary:
+	state.layout_version=int(definition.get("layout_version",1))
 	state.position = [player.position.x,player.position.y]
 	state.blocks = {}
 	for block in blocks: state.blocks[block.block_id] = block.snapshot()
@@ -326,6 +352,13 @@ func snapshot() -> Dictionary:
 
 func _draw() -> void:
 	var font := preload("res://assets/fonts/fusion-pixel.otf")
+	if not nearest.is_empty():
+		var p:=point(nearest.position)-Vector2(0,10)
+		for sx in [-1,1]:
+			for sy in [-1,1]:
+				var corner:=p+Vector2(sx*14,sy*15)
+				draw_line(corner,corner-Vector2(sx*5,0),Color("efcd79"),1)
+				draw_line(corner,corner-Vector2(0,sy*5),Color("efcd79"),1)
 	for sign in definition.get("signs",[]): draw_string(font,Vector2(sign[0],sign[1]),str(sign[2]),HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("aec8ba"))
 	for plate in plates:
 		if int(plate.weight)<2: continue
@@ -338,8 +371,41 @@ func _draw() -> void:
 static func point(value, fallback := Vector2.ZERO) -> Vector2:
 	if value is Array and value.size()==2 and value.all(func(v): return v is float or v is int):
 		var p := Vector2(float(value[0]),float(value[1]))
-		if p.is_finite() and p.x>=0 and p.x<=768 and p.y>=0 and p.y<=256: return p
+		if p.is_finite(): return p
 	return fallback
+
+func contains_point(p: Vector2) -> bool:
+	return p.is_finite() and p.x>=8 and p.x<=world_size.x-8 and p.y>=8 and p.y<=world_size.y
+
+func area_definition() -> Dictionary:
+	for area in definition.get("areas",[]):
+		if str(area.id)==current_area: return area
+	return {}
+
+func belongs_to_area(p: Vector2, area: Dictionary) -> bool:
+	if area.is_empty(): return true
+	var r:Array=area.rect
+	return Rect2(r[0],r[1],r[2],r[3]).has_point(p)
+
+func _update_navigation() -> void:
+	for field in ["visited_areas","explored_cells","discovered_connections"]:
+		if not state.get(field) is Array: state[field]=[]
+	for area in definition.get("areas",[]):
+		if not belongs_to_area(player.position-Vector2(0,4),area): continue
+		if current_area!=str(area.id):
+			current_area=str(area.id);state.current_area=current_area
+			player.spawn=point(area.get("checkpoint"),player.spawn)
+			if not state.visited_areas.has(current_area):
+				state.visited_areas.append(current_area)
+				message.emit(str(area.name)+" · "+str(area.get("floor","")))
+		break
+	var view:=Rect2(camera.position-Vector2(160,120),Vector2(320,240))
+	for x in range(int(view.position.x/80),int(ceil(view.end.x/80))):
+		for y in range(int(view.position.y/80),int(ceil(view.end.y/80))):
+			var cell:="%d:%d"%[x,y]
+			if not state.explored_cells.has(cell): state.explored_cells.append(cell)
+	for connection in definition.get("connections",[]):
+		if player.position.distance_to(point(connection.position))<52 and not state.discovered_connections.has(connection.id): state.discovered_connections.append(connection.id)
 
 func pickup_burst(pos: Vector2) -> void:
 	for i in range(10):

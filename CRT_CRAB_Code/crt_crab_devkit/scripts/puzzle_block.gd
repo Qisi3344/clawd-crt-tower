@@ -9,6 +9,7 @@ var sprite: Sprite2D
 var level: SideWorld
 var was_falling := false
 var gravity_enabled := true
+var teaching_step:=false
 
 func _ready() -> void:
 	collision_layer = 4
@@ -28,6 +29,7 @@ func request_step(direction: int) -> bool:
 	var step := Vector2(direction*16,0)
 	if test_move(transform,step): return false
 	target_x = position.x+step.x
+	teaching_step=true
 	return true
 
 func _physics_process(delta: float) -> void:
@@ -47,6 +49,8 @@ func _physics_process(delta: float) -> void:
 	velocity.y = minf(320,velocity.y+580*delta) if gravity_enabled else 0
 	var fall_speed := velocity.y
 	move_and_slide()
+	if teaching_step and absf(target_x-position.x)<.6:
+		teaching_step=false;level.learning_event.emit("push")
 	if is_on_wall(): target_x = position.x
 	if was_falling and is_on_floor(): level.sound_requested.emit("hit")
 	was_falling = not is_on_floor() and fall_speed>40
@@ -59,7 +63,7 @@ func _physics_process(delta: float) -> void:
 		var p := level.player
 		if absf(p.position.x-position.x)<13 and p.position.y-position.y>0 and p.position.y-position.y<26:
 			p.take_damage(3)
-	if position.y>260: reset()
+	if position.y>level.world_size.y+20: reset()
 
 func reset() -> void:
 	position = origin

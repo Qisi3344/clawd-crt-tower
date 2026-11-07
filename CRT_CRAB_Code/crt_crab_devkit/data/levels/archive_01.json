@@ -1,15 +1,428 @@
 {
- "size":[768,240],"background":"archive",
- "spawns":{"entrance":[64,208],"return":[64,208]},
- "platforms":[[0,208,768,48],[224,176,32,16],[272,144,112,16],[592,184,32,16],[624,160,80,16]],
- "ladders":[{"x":288,"top":144,"bottom":208},{"x":656,"top":160,"bottom":208}],
- "blocks":[{"id":"archive_box","position":[192,200],"weight":1},{"id":"heavy_boulder","position":[344,136],"weight":2}],
- "plates":[{"id":"heavy_plate","position":[392,208],"weight":2,"flag":"signal_archive_gate"}],
- "doors":[{"id":"archive_door","position":[496,208],"height":64,"requires":"signal_archive_gate"}],
- "chests":[{"id":"archive_key","position":[560,208],"crystals":3,"flag":"archive_key"},{"id":"archive_hidden","position":[672,160],"crystals":4,"flag":"archive_hidden"}],
- "crystals":[{"id":"archive_c1","position":[128,194]}],
- "breakables":[{"id":"archive_crack","position":[320,136]},{"id":"hidden_crack","position":[624,200]}],
- "enemies":[{"id":"data_bug_01","position":[144,208]}],
- "terminals":[],
- "signs":[[64,170,"RETURN TO BOOT"],[288,110,"W  /  J"],[344,100,"PUSH RIGHT"],[392,174,"WEIGHT 2"],[496,122,"SIGNAL GATE"],[672,126,"SECRET"]]
+  "platforms": [
+    [
+      0,
+      208,
+      96,
+      48,
+      false
+    ],
+    [
+      96,
+      208,
+      32,
+      48,
+      true
+    ],
+    [
+      128,
+      208,
+      464,
+      48,
+      false
+    ],
+    [
+      592,
+      208,
+      32,
+      48,
+      true
+    ],
+    [
+      624,
+      208,
+      144,
+      48,
+      false
+    ],
+    [
+      224,
+      176,
+      32,
+      16,
+      true
+    ],
+    [
+      272,
+      144,
+      112,
+      16,
+      true
+    ],
+    [
+      592,
+      184,
+      32,
+      16,
+      true
+    ],
+    [
+      624,
+      160,
+      80,
+      16,
+      true
+    ],
+    [
+      768,
+      208,
+      256,
+      48,
+      false
+    ],
+    [
+      64,
+      64,
+      896,
+      16,
+      true
+    ],
+    [
+      64,
+      448,
+      896,
+      32,
+      false
+    ]
+  ],
+  "ladders": [
+    {
+      "x": 288,
+      "top": 144,
+      "bottom": 208
+    },
+    {
+      "x": 656,
+      "top": 160,
+      "bottom": 208
+    },
+    {
+      "x": 80,
+      "top": 64,
+      "bottom": 208
+    },
+    {
+      "x": 736,
+      "top": 64,
+      "bottom": 208
+    },
+    {
+      "x": 112,
+      "top": 208,
+      "bottom": 448
+    },
+    {
+      "x": 608,
+      "top": 208,
+      "bottom": 448
+    }
+  ],
+  "blocks": [
+    {
+      "id": "archive_box",
+      "position": [
+        192,
+        200
+      ],
+      "weight": 1,
+      "legacy_room": "main"
+    },
+    {
+      "id": "heavy_boulder",
+      "position": [
+        344,
+        136
+      ],
+      "weight": 2,
+      "legacy_room": "main"
+    }
+  ],
+  "plates": [
+    {
+      "id": "heavy_plate",
+      "position": [
+        392,
+        208
+      ],
+      "weight": 2,
+      "flag": "signal_archive_gate",
+      "legacy_room": "main"
+    }
+  ],
+  "doors": [
+    {
+      "id": "archive_door",
+      "position": [
+        496,
+        208
+      ],
+      "height": 64,
+      "requires": "signal_archive_gate",
+      "legacy_room": "main"
+    },
+    {
+      "id": "archive_upper_gate",
+      "position": [
+        496,
+        64
+      ],
+      "height": 64,
+      "requires": "signal_archive_gate"
+    },
+    {
+      "id": "archive_lower_gate",
+      "position": [
+        496,
+        448
+      ],
+      "height": 192,
+      "requires": "signal_archive_gate"
+    }
+  ],
+  "chests": [
+    {
+      "id": "archive_key",
+      "position": [
+        560,
+        208
+      ],
+      "crystals": 3,
+      "flag": "archive_key",
+      "legacy_room": "main"
+    },
+    {
+      "id": "archive_hidden",
+      "position": [
+        672,
+        160
+      ],
+      "crystals": 4,
+      "flag": "archive_hidden",
+      "legacy_room": "main"
+    }
+  ],
+  "crystals": [
+    {
+      "id": "archive_c1",
+      "position": [
+        128,
+        194
+      ],
+      "legacy_room": "main"
+    }
+  ],
+  "breakables": [
+    {
+      "id": "archive_crack",
+      "position": [
+        320,
+        136
+      ],
+      "legacy_room": "main"
+    },
+    {
+      "id": "hidden_crack",
+      "position": [
+        624,
+        200
+      ],
+      "legacy_room": "main"
+    }
+  ],
+  "enemies": [
+    {
+      "id": "data_bug_01",
+      "position": [
+        144,
+        208
+      ],
+      "legacy_room": "main"
+    }
+  ],
+  "terminals": [],
+  "mechanisms": [],
+  "animals": [],
+  "signs": [
+    [
+      188,
+      396,
+      "封存线路 / 修复后形成回环"
+    ],
+    [
+      42,
+      164,
+      "↑ 上层检索桥"
+    ],
+    [
+      42,
+      178,
+      "↓ 破损记录仓"
+    ],
+    [
+      698,
+      34,
+      "↓ 中央大厅"
+    ],
+    [
+      570,
+      418,
+      "↑ 返回大厅"
+    ]
+  ],
+  "size": [
+    1024,
+    640
+  ],
+  "background": "archive",
+  "layout_version": 2,
+  "spawns": {
+    "main:entrance": [
+      64,
+      208
+    ],
+    "main:return": [
+      64,
+      208
+    ],
+    "entrance": [
+      64,
+      208
+    ],
+    "return": [
+      64,
+      208
+    ]
+  },
+  "areas": [
+    {
+      "id": "upper",
+      "name": "上层检索桥",
+      "rect": [
+        0,
+        0,
+        1024,
+        112
+      ],
+      "checkpoint": [
+        96,
+        64
+      ],
+      "floor": "上层",
+      "landmark": "shelves"
+    },
+    {
+      "id": "main",
+      "name": "重压归档大厅",
+      "rect": [
+        0,
+        112,
+        1024,
+        176
+      ],
+      "checkpoint": [
+        64,
+        208
+      ],
+      "floor": "中层",
+      "landmark": "shelves",
+      "landmark_position": [
+        320,
+        144
+      ]
+    },
+    {
+      "id": "lower",
+      "name": "破损记录仓",
+      "rect": [
+        0,
+        288,
+        1024,
+        352
+      ],
+      "checkpoint": [
+        112,
+        448
+      ],
+      "floor": "下层",
+      "landmark": "shelves"
+    }
+  ],
+  "connections": [
+    {
+      "id": "upper_left",
+      "from": "main",
+      "to": "upper",
+      "position": [
+        80,
+        208
+      ],
+      "label": "↑ 上层检索桥",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "upper_return",
+      "from": "upper",
+      "to": "main",
+      "position": [
+        736,
+        64
+      ],
+      "label": "↓ 中央大厅",
+      "requires": "signal_archive_gate",
+      "bidirectional": true
+    },
+    {
+      "id": "lower_left",
+      "from": "main",
+      "to": "lower",
+      "position": [
+        112,
+        208
+      ],
+      "label": "↓ 破损记录仓",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "lower_return",
+      "from": "lower",
+      "to": "main",
+      "position": [
+        608,
+        448
+      ],
+      "label": "↑ 返回大厅",
+      "requires": "signal_archive_gate",
+      "bidirectional": true
+    }
+  ],
+  "tutorial_zones": [
+    {
+      "id": "attack",
+      "rect": [
+        104,
+        155,
+        80,
+        90
+      ]
+    },
+    {
+      "id": "heavy",
+      "rect": [
+        300,
+        90,
+        128,
+        128
+      ]
+    }
+  ],
+  "room_portals": [],
+  "legacy_offsets": {
+    "main": [
+      0,
+      0
+    ]
+  },
+  "legacy_entry": "main"
 }

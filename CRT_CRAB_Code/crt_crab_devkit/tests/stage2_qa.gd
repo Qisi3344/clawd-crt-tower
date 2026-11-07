@@ -31,6 +31,7 @@ func _run() -> void:
 	game.audio.reduced_motion = false
 	game.apply_settings()
 	await activate(button("游戏设置"))
+	await activate(button("画面设置"))
 	var art_toggle: CheckButton
 	for control in game.front_end.column.get_children():
 		if control is CheckButton and control.text=="游戏厅氛围": art_toggle = control
@@ -39,6 +40,7 @@ func _run() -> void:
 	check("settings switch restores original scene art",not game.ambience.enabled)
 	await activate(art_toggle)
 	check("settings switch reapplies arcade scene art",game.ambience.enabled)
+	await activate(button("返回设置"))
 	await activate(button("返回主菜单"))
 	await capture("stage2-title")
 	await capture("stage2-title-portrait")

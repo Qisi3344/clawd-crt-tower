@@ -4,6 +4,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 ROOT=Path(__file__).resolve().parents[1]
+if json.loads((ROOT/'data/levels/recycle_01.json').read_text(encoding='utf-8-sig')).get('layout_version',1)>=2:
+    raise SystemExit('Layout v1 authoring is archived. Use tools/rebuild_exploration.py; immutable v4 snapshots live in data/legacy_v4/.')
 
 def room(name, width=320, background='popup'):
     return dict(name=name,size=[width,240],background=background,spawns={'entrance':[32,208],'return':[width-32,208]},platforms=[[0,208,width,32]],ladders=[],blocks=[],plates=[],doors=[],chests=[],crystals=[],breakables=[],enemies=[],terminals=[],signs=[],room_portals=[],mechanisms=[],animals=[])

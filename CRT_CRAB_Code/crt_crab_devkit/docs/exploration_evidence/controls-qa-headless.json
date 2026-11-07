@@ -1,0 +1,87 @@
+{
+	"captures": [],
+	"passed": true,
+	"scope": "Desktop native touch events; no Android or iOS hardware claim",
+	"tests": [
+		{
+			"passed": true,
+			"test": "Start asks for two profiles before initializing adventure"
+		},
+		{
+			"passed": true,
+			"test": "cancel selection preserves adventure byte-equivalent state"
+		},
+		{
+			"passed": true,
+			"test": "confirmed choice enters original intro once"
+		},
+		{
+			"passed": true,
+			"test": "portrait guard pauses story time and draws above the cinematic"
+		},
+		{
+			"passed": true,
+			"test": "empty attack does not teach a hit"
+		},
+		{
+			"passed": true,
+			"test": "moving actual body completes movement teaching"
+		},
+		{
+			"passed": true,
+			"test": "two fingers move and jump the real crab"
+		},
+		{
+			"passed": true,
+			"test": "releasing jump preserves the moving finger"
+		},
+		{
+			"passed": true,
+			"test": "releasing joystick preserves held interaction"
+		},
+		{
+			"passed": true,
+			"test": "pause releases all virtual sources"
+		},
+		{
+			"passed": true,
+			"test": "changing profile preserves the same world and state"
+		},
+		{
+			"passed": true,
+			"test": "portrait touch is blocked with landscape guidance"
+		},
+		{
+			"passed": true,
+			"test": "landscape restores the existing world"
+		},
+		{
+			"passed": true,
+			"test": "all six touch CRT screens fit between HUD and thumb controls"
+		},
+		{
+			"passed": true,
+			"test": "local map freezes play separately from CRT array"
+		},
+		{
+			"passed": true,
+			"test": "pause replaces the local map instead of stacking two panels"
+		},
+		{
+			"passed": true,
+			"test": "array teaching completes only after returning"
+		},
+		{
+			"passed": true,
+			"test": "profile writes independently"
+		},
+		{
+			"passed": true,
+			"test": "profile and tutorial preference survive restart"
+		},
+		{
+			"passed": true,
+			"test": "failed preference write leaves choice unchanged"
+		}
+	]
+}

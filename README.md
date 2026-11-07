@@ -1,6 +1,6 @@
 # CRT小蟹闯塔记
 
-六段通信链首版：原 Godot 工程中已接入六关、多房间、机械动物、三阶段 Boss、开场与送达结局。[实现与真实验证](CRT_CRAB_Code/crt_crab_devkit/docs/SIX_LINK_PROGRESS.md)。Windows 仍使用原 `PLAY.cmd` 启动。
+六关现已改为连续的分层地图，加入键鼠/触屏选择、横屏双指操作、渐进教程、探索地图、区域复位与旧存档迁移；原剧情、九箱及核心 A→B→C 保留。[本轮交付与通关录像](CRT_CRAB_Code/crt_crab_devkit/docs/EXPLORATION_CONTROLS_REPORT.md)。Windows 仍使用原 `PLAY.cmd` 启动。
 
 当前默认启用复古游戏厅氛围：全场轻三渲二、实体灯具与屏幕局部光、房间围合及稀疏墙地面装饰，音响改为粉紫并加宽约 15%。主菜单设置与暂停菜单可关闭“游戏厅氛围”。[改造对比与验收](CRT_CRAB_Code/crt_crab_devkit/docs/ARCADE_HALL_UPDATE.md)。
 

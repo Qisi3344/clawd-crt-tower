@@ -33,7 +33,7 @@ func polish(node) -> void:
         ancestor=ancestor.get_parent()
     if node is Control:
         node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-        if node is Label or node is Button: node.add_theme_font_size_override("font_size",36 if node.get_theme_font_size("font_size")>=25 else 24)
+        # Respect authored heading/body/caption sizes; never promote every label.
         for property in node.get_property_list():
             var path: String = property.name
             if path.begins_with("theme_override_colors/") and node.get(path) is Color: node.set(path,nearest(node.get(path)))

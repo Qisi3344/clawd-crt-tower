@@ -1,0 +1,209 @@
+{
+	"passed": true,
+	"tests": [
+		{
+			"passed": true,
+			"test": "boot has one validated continuous multi-floor world"
+		},
+		{
+			"passed": true,
+			"test": "boot rejects a real entity beyond world bounds"
+		},
+		{
+			"passed": true,
+			"test": "boot / main preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "boot / main migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "archive has one validated continuous multi-floor world"
+		},
+		{
+			"passed": true,
+			"test": "archive rejects a real entity beyond world bounds"
+		},
+		{
+			"passed": true,
+			"test": "archive / main preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "archive / main migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "popup has one validated continuous multi-floor world"
+		},
+		{
+			"passed": true,
+			"test": "popup rejects a real entity beyond world bounds"
+		},
+		{
+			"passed": true,
+			"test": "popup / hall preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "popup / hall migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "popup / shaft preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "popup / shaft migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "popup / loft preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "popup / loft migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "recycle has one validated continuous multi-floor world"
+		},
+		{
+			"passed": true,
+			"test": "recycle rejects a real entity beyond world bounds"
+		},
+		{
+			"passed": true,
+			"test": "recycle / sorter preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "recycle / sorter migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "recycle / well preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "recycle / well migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "recycle / cache preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "recycle / cache migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "recycle / tunnel preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "recycle / tunnel migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "signal has one validated continuous multi-floor world"
+		},
+		{
+			"passed": true,
+			"test": "signal rejects a real entity beyond world bounds"
+		},
+		{
+			"passed": true,
+			"test": "signal / diagnostic preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "signal / diagnostic migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "signal / relay preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "signal / relay migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "signal / shaft preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "signal / shaft migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "error has one validated continuous multi-floor world"
+		},
+		{
+			"passed": true,
+			"test": "error rejects a real entity beyond world bounds"
+		},
+		{
+			"passed": true,
+			"test": "error / foyer preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "error / foyer migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "error / piston preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "error / piston migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "error / diagnostic preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "error / diagnostic migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "error / boss preserves each room's offset and object records"
+		},
+		{
+			"passed": true,
+			"test": "error / boss migration is idempotent without fabricated puzzle flags"
+		},
+		{
+			"passed": true,
+			"test": "unsafe v4 coordinates fall back without inventing a supported plate"
+		},
+		{
+			"passed": true,
+			"test": "v4 original receives a byte-identical rollback copy before migration"
+		},
+		{
+			"passed": true,
+			"test": "explicit migrated commit writes schema 5 while keeping layout 2"
+		},
+		{
+			"passed": true,
+			"test": "schema 5 layout 1 also receives a separate layout rollback copy"
+		},
+		{
+			"passed": true,
+			"test": "an identical existing backup is safely reused"
+		},
+		{
+			"passed": true,
+			"test": "a different existing backup is retained while the new source is copied"
+		},
+		{
+			"passed": true,
+			"test": "the additional rollback copy matches the newer source byte for byte"
+		}
+	]
+}

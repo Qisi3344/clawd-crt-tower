@@ -8,15 +8,20 @@ try {
     $mode = if ($Visual) { 'visual' } else { 'headless' }
     $checks = @(
         @{ Name='state'; Arguments=@('--headless','--path','.', '--script','tests/six_link_state_qa.gd'); Report='six-link-state-qa.json' },
+        @{ Name='layout'; Arguments=@('--headless','--path','.', '--script','tests/exploration_state_qa.gd'); Report='exploration-state-qa.json' },
         @{ Name='menu'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--menu-qa'); Report="stage2-qa-$mode.json" },
         @{ Name='story'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--menu-qa','--story-qa'); Report="story-qa-$mode.json" },
+        @{ Name='controls'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--menu-qa','--controls-qa'); Report="controls-qa-$mode.json" },
+        @{ Name='touch-route'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--touch-route-qa'); Report="touch-route-qa-$mode.json" },
         @{ Name='campaign'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--chapter-qa'); Report="chapter-qa-$mode.json" },
         @{ Name='ecology'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--ecology-qa'); Report="ecology-qa-$mode.json" },
+        @{ Name='unlock'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--unlock-qa'); Report="unlock-qa-$mode.json" },
         @{ Name='environment'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--environment-qa'); Report="sideview-qa-$mode.json" }
     )
+    if ($Visual) { $checks += @{ Name='gacha'; Arguments=@('--path','.', '--fixed-fps','60','--script','tests/gacha_qa.gd','--','--qa','--menu-qa'); Report='pet-gacha-qa.json' } }
     foreach ($check in $checks) {
         $runArguments = $check.Arguments
-        if (-not $Visual -and $check.Name -ne 'state') { $runArguments = @('--headless') + $runArguments }
+        if (-not $Visual -and $check.Name -notin @('state','layout')) { $runArguments = @('--headless') + $runArguments }
         $logPath = Join-Path $projectPath "artifacts/verify-$($check.Name)-$mode.log"
         & $enginePath @runArguments *> $logPath
         $exit = $LASTEXITCODE

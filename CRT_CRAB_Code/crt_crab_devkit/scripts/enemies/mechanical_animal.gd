@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 		"spider": _spider(delta)
 		"beaver": _beaver(delta)
 		"eel": _eel(delta)
-	if position.y>260: position=origin;velocity=Vector2.ZERO
+	if position.y>system.world.world_size.y+20: position=origin;velocity=Vector2.ZERO
 	if stun<=0 and position.distance_to(system.world.player.position-Vector2(0,8))<17 and (species!="eel" or not system.world.flags.get("signal_water_safe",false)): system.world.player.take_damage()
 	queue_redraw()
 
@@ -98,7 +98,7 @@ func _eel(_delta: float) -> void:
 	if phase=="pulse":
 		if system.world.flags.get("signal_water_safe",false):
 			if entry.has("flag"): system.latch(str(entry.flag))
-		elif system.world.player.position.y>209 and absf(system.world.player.position.x-origin.x)<85: system.world.player.take_damage()
+		elif system.world.player.position.y>origin.y-13 and absf(system.world.player.position.x-origin.x)<85: system.world.player.take_damage()
 
 func _bee(_delta: float) -> void:
 	var path: Array = entry.get("path",[entry.position,[origin.x+80,origin.y]])
@@ -130,6 +130,7 @@ func hit(crushed: bool = false) -> void:
 	if species=="snail" and not crushed and (system.world.player.position.x-position.x)*facing>0:
 		stun=.2;system.world.sound_requested.emit("hit");return
 	health-=3 if crushed else 1
+	if not crushed: system.world.learning_event.emit("attack")
 	stun=.35
 	system.world.sound_requested.emit("hit")
 	if health<=0:

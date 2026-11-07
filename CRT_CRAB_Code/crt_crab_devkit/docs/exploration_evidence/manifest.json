@@ -1,0 +1,136 @@
+{
+  "scope": "Windows native Godot QA; no mobile hardware or first-time-human-play claim",
+  "reports": [
+    {
+      "name": "six-link-state-qa",
+      "passed": true,
+      "checks": 17
+    },
+    {
+      "name": "exploration-state-qa",
+      "passed": true,
+      "checks": 51
+    },
+    {
+      "name": "chapter-qa-headless",
+      "passed": true,
+      "checks": 117
+    },
+    {
+      "name": "chapter-qa-visual",
+      "passed": true,
+      "checks": 118
+    },
+    {
+      "name": "controls-qa-headless",
+      "passed": true,
+      "checks": 20
+    },
+    {
+      "name": "controls-qa-visual",
+      "passed": true,
+      "checks": 20
+    },
+    {
+      "name": "touch-route-qa-headless",
+      "passed": true,
+      "checks": 9
+    },
+    {
+      "name": "touch-route-qa-visual",
+      "passed": true,
+      "checks": 9
+    },
+    {
+      "name": "stage2-qa-headless",
+      "passed": true,
+      "checks": 49
+    },
+    {
+      "name": "stage2-qa-visual",
+      "passed": true,
+      "checks": 49
+    },
+    {
+      "name": "story-qa-headless",
+      "passed": true,
+      "checks": 15
+    },
+    {
+      "name": "story-qa-visual",
+      "passed": true,
+      "checks": 15
+    },
+    {
+      "name": "ecology-qa-headless",
+      "passed": true,
+      "checks": 21
+    },
+    {
+      "name": "ecology-qa-visual",
+      "passed": true,
+      "checks": 21
+    },
+    {
+      "name": "unlock-qa-visual",
+      "passed": true,
+      "checks": 38
+    },
+    {
+      "name": "pet-gacha-qa",
+      "passed": true,
+      "checks": 47
+    },
+    {
+      "name": "sideview-qa-headless",
+      "passed": true,
+      "checks": 93
+    }
+  ],
+  "recordings": [
+    {
+      "name": "popup-v2.mp4",
+      "frames": 747,
+      "duration_seconds": 74.7,
+      "size": [
+        640,
+        480
+      ],
+      "source": "Native 320x240 gameplay, every sixth fixed-60 step; nearest-neighbour 2x encoding; no audio",
+      "sha256": "b4648e8848fb770792b6595a6f4486bab2ced2478a24c376f6219108b094fbf5"
+    },
+    {
+      "name": "recycle-v2.mp4",
+      "frames": 1346,
+      "duration_seconds": 134.6,
+      "size": [
+        640,
+        480
+      ],
+      "source": "Native 320x240 gameplay, every sixth fixed-60 step; nearest-neighbour 2x encoding; no audio",
+      "sha256": "19d155ed66444f88d1e334ad3e7de9efd2aed731d8a02bb37caa365f09f9950a"
+    },
+    {
+      "name": "signal-v2.mp4",
+      "frames": 734,
+      "duration_seconds": 73.4,
+      "size": [
+        640,
+        480
+      ],
+      "source": "Native 320x240 gameplay, every sixth fixed-60 step; nearest-neighbour 2x encoding; no audio",
+      "sha256": "710b4d22510ab02eb55787ff6bf8c9d61d136746c1d6797f36886391eb2e5e57"
+    },
+    {
+      "name": "error-v2.mp4",
+      "frames": 546,
+      "duration_seconds": 54.6,
+      "size": [
+        640,
+        480
+      ],
+      "source": "Native 320x240 gameplay, every sixth fixed-60 step; nearest-neighbour 2x encoding; no audio",
+      "sha256": "154867c514fe402206d62e530f51c22439678c60cf696d024505009b52d755dc"
+    }
+  ]
+}

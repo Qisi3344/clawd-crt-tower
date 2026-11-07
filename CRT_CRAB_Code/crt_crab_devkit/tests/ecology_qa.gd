@@ -1,4 +1,8 @@
 extends "res://tests/chapter_qa.gd"
+var fixture_offset:=Vector2.ZERO
+
+func walk_to(x: float, grab: bool = false, limit: int = 600) -> bool:
+	return await super.walk_to(x+fixture_offset.x,grab,limit)
 
 func _ready() -> void:
 	base_finished=true
@@ -9,6 +13,7 @@ func fixture(id: String, room: String) -> void:
 	game.hud.set_paused(false)
 	game.viewport.remove_child(game.world);game.world.free()
 	check("isolated room fixture loads "+id+" / "+room,game._load_world(id,"entrance",room))
+	fixture_offset=SideWorld.point(game.world.definition.legacy_offsets.get(room,[0,0]))
 	game.director.focus(game._device(id),true);game._control_state()
 	await frames(8)
 
@@ -32,7 +37,7 @@ func _run() -> void:
 	check("R restores puzzle species but keeps unique progress",game.world.mechanisms.animals.any(func(a):return is_instance_valid(a) and a.animal_id=="popup_moth_a") and game.save.data.flags.get("popup_fuse_a",false))
 	var flea:MechanicalAnimal
 	for animal in game.world.mechanisms.animals:
-		if animal.species=="flea": flea=animal
+		if is_instance_valid(animal) and animal.species=="flea": flea=animal
 	var highest:float=flea.position.y
 	for i in range(100):
 		highest=minf(highest,flea.position.y);await frames(1)
@@ -48,7 +53,7 @@ func _run() -> void:
 	check("spider wire enables an actual one-way bridge",game.save.data.flags.get("popup_wire_live",false) and not game.world.mechanisms.colliders.spider_bridge.disabled)
 	var spider: MechanicalAnimal
 	for animal in game.world.mechanisms.animals:
-		if animal.species=="spider": spider=animal
+		if is_instance_valid(animal) and animal.species=="spider": spider=animal
 	await walk_to(112);await press("move_up",60)
 	for i in range(500):
 		var offset:float=spider.position.x-game.world.player.position.x

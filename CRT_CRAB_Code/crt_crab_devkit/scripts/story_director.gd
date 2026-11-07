@@ -24,14 +24,17 @@ func play(value: String, outfit: String, reduced_motion: bool) -> void:
 	desktop=load("res://scenes/story/chat_desktop.tscn").instantiate()
 	desktop.dialogue=dialogue;desktop.skin=skin;desktop.reduced=reduced;desktop.kind=kind
 	add_child(desktop)
-	skip_button=Button.new();skip_button.text="跳过剧情  Esc";skip_button.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT);skip_button.offset_left=-210;skip_button.offset_top=-56;skip_button.offset_right=-24;skip_button.offset_bottom=-16
+	var control_profile:ControlProfile=get_parent().get("controls")
+	var touch:bool=control_profile!=null and control_profile.profile=="touch"
+	skip_button=Button.new();skip_button.text="跳过剧情" if touch else "跳过剧情  Esc";skip_button.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT);skip_button.offset_left=-210;skip_button.offset_top=-56;skip_button.offset_right=-24;skip_button.offset_bottom=-16
 	desktop.add_child(skip_button);skip_button.pressed.connect(skip);skip_button.grab_focus()
-	pause_button=Button.new();pause_button.text="演出已暂停 · 点击或 Enter 继续";pause_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER);pause_button.offset_left=-220;pause_button.offset_right=220;pause_button.offset_top=-28;pause_button.offset_bottom=28;pause_button.hide();desktop.add_child(pause_button)
+	pause_button=Button.new();pause_button.text="演出已暂停 · 点此继续" if touch else "演出已暂停 · 点击或 Enter 继续";pause_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER);pause_button.offset_left=-220;pause_button.offset_right=220;pause_button.offset_top=-28;pause_button.offset_bottom=28;pause_button.hide();desktop.add_child(pause_button)
 	pause_button.pressed.connect(func(): suspended=false;pause_button.hide();skip_button.grab_focus())
 	_process(0)
 
 func _process(delta: float) -> void:
 	if not playing: return
+	if bool(get_parent().get("orientation_blocked")): return
 	if suspended: return
 	clock+=delta
 	var timeline: Dictionary=timelines[kind]

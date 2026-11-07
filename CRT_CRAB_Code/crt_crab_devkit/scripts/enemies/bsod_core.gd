@@ -8,9 +8,11 @@ var core_health := 3
 var pulse_redirected := false
 var closing := false
 var status: Dictionary
+var arena_origin:=Vector2.ZERO
 
 func _ready() -> void:
-	position=Vector2(208,88)
+	arena_origin=SideWorld.point(system.world.definition.boss.get("offset",[0,0]))
+	position=arena_origin+Vector2(208,88)
 	if not system.world.state.get("boss") is Dictionary: system.world.state.boss={}
 	status=system.world.state.boss
 	stage=clampi(int(status.get("stage",0)),0,3)
@@ -23,11 +25,12 @@ func _physics_process(delta: float) -> void:
 	if stage==0 and system.world.flags.get("boss_weight_supported",false): advance()
 	if stage<2 and shot_clock>=2.8:
 		shot_clock=0
-		system.shoot(Vector2(272,120),Vector2.LEFT)
+		system.shoot(arena_origin+Vector2(272,120),Vector2.LEFT)
 	if stage==2:
 		var p:=fmod(clock,3.0)
 		if p>.9 and p<1.35:
-			var safe: bool=system.world.player.position.y<=161 or system.world.player.position.x<54 or system.world.player.position.x>274
+			var local:=system.world.player.position-arena_origin
+			var safe: bool=local.y<=161 or local.x<54 or local.x>274
 			if not safe: system.world.player.take_damage()
 			if pulse_redirected and WorldProgress.missing_inputs(system.world.flags).is_empty(): advance()
 	queue_redraw()
@@ -35,6 +38,7 @@ func _physics_process(delta: float) -> void:
 func advance() -> void:
 	stage+=1;clock=0;shot_clock=0
 	status.stage=stage
+	system.latch("error_node_"+["a","b","c"][mini(stage-1,2)])
 	status["node_a" if stage==1 else ("node_b" if stage==2 else "node_c")]=true
 	# Each repaired node is a generous combat checkpoint, not an attrition tax.
 	system.world.player.health=3
@@ -46,13 +50,13 @@ func advance() -> void:
 	system.world.progress_changed.emit()
 
 func receive(shot: SignalProjectile) -> bool:
-	if stage==1 and shot.reflected and shot.position.distance_to(Vector2(176,184))<11:
+	if stage==1 and shot.reflected and shot.position.distance_to(arena_origin+Vector2(176,184))<11:
 		advance();return true
 	return false
 
 func candidates() -> Array[Dictionary]:
-	if stage==2: return [{"type":"mechanism","position":[288,160],"object":{"id":"core_reverse","type":"core"},"prompt":"E  反接 SIGNAL 脉冲 · 随后站在绝缘高台"}]
-	if stage==3: return [{"type":"mechanism","position":[208,208],"object":{"id":"core_close","type":"core"},"prompt":"E  关闭错误隔离核心 · 恢复守护程序"}]
+	if stage==2: return [{"type":"mechanism","position":[arena_origin.x+288,arena_origin.y+160],"object":{"id":"core_reverse","type":"core"},"prompt":"E  反接 SIGNAL 脉冲 · 随后站在绝缘高台"}]
+	if stage==3: return [{"type":"mechanism","position":[arena_origin.x+208,arena_origin.y+208],"object":{"id":"core_close","type":"core"},"prompt":"E  关闭错误隔离核心 · 恢复守护程序"}]
 	return []
 
 func interact() -> void:
@@ -64,7 +68,7 @@ func interact() -> void:
 	elif stage==3: disable_core()
 
 func attack(p: Vector2) -> void:
-	if stage!=3 or p.distance_to(Vector2(208,192))>35: return
+	if stage!=3 or p.distance_to(arena_origin+Vector2(208,192))>35: return
 	core_health-=1
 	system.world.sound_requested.emit("hit")
 	if core_health<=0: disable_core()

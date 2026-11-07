@@ -12,7 +12,8 @@
     ],
     "requires": "boot_access",
     "label": "前往档案仓库",
-    "locked_hint": "先推箱压板开门，再爬梯开启启动宝箱。"
+    "locked_hint": "先推箱压板开门，再爬梯开启启动宝箱。",
+    "room": ""
   },
   {
     "id": "archive_boot",
@@ -27,7 +28,8 @@
     ],
     "requires": "",
     "label": "返回启动区 · 查看远端信号门",
-    "locked_hint": ""
+    "locked_hint": "",
+    "room": ""
   },
   {
     "id": "archive_exit",
@@ -42,7 +44,8 @@
     ],
     "requires": "archive_key",
     "label": "携档案密钥返回 BOOT",
-    "locked_hint": "先开启档案宝箱取得密钥。"
+    "locked_hint": "先开启档案宝箱取得密钥。",
+    "room": ""
   },
   {
     "id": "archive_popup",
@@ -57,19 +60,20 @@
     ],
     "requires": "archive_key",
     "label": "前往 POP-UP 修复供电",
-    "locked_hint": "先取得档案密钥。"
+    "locked_hint": "先取得档案密钥。",
+    "room": ""
   },
   {
     "id": "popup_archive",
     "from": "POP-UP",
-    "room": "hall",
+    "room": "",
     "to": "ARCHIVE",
     "source_computer_id": "crt_sleep_04",
     "target_computer_id": "crt_archive_05",
     "spawn_id": "return",
     "position": [
       32,
-      208
+      448
     ],
     "requires": "",
     "label": "回访 ARCHIVE",
@@ -79,12 +83,12 @@
     "id": "popup_recycle",
     "from": "POP-UP",
     "to": "RECYCLE",
-    "room": "shaft",
+    "room": "",
     "source_computer_id": "crt_sleep_04",
     "target_computer_id": "crt_sleep_06",
     "spawn_id": "entrance",
     "position": [
-      288,
+      800,
       80
     ],
     "requires": "popup_power_restored",
@@ -95,13 +99,13 @@
     "id": "recycle_popup",
     "from": "RECYCLE",
     "to": "POP-UP",
-    "room": "sorter",
+    "room": "",
     "source_computer_id": "crt_sleep_06",
     "target_computer_id": "crt_sleep_04",
     "spawn_id": "entrance",
     "position": [
       32,
-      208
+      448
     ],
     "requires": "",
     "label": "回访 POP-UP",
@@ -111,12 +115,12 @@
     "id": "recycle_signal",
     "from": "RECYCLE",
     "to": "SIGNAL",
-    "room": "cache",
+    "room": "",
     "source_computer_id": "crt_sleep_06",
     "target_computer_id": "crt_sleep_09",
     "spawn_id": "entrance",
     "position": [
-      288,
+      800,
       208
     ],
     "requires": "message_packet_restored",
@@ -127,13 +131,13 @@
     "id": "signal_recycle",
     "from": "SIGNAL",
     "to": "RECYCLE",
-    "room": "diagnostic",
+    "room": "",
     "source_computer_id": "crt_sleep_09",
     "target_computer_id": "crt_sleep_06",
     "spawn_id": "entrance",
     "position": [
       32,
-      208
+      448
     ],
     "requires": "",
     "label": "回访 RECYCLE",
@@ -143,13 +147,13 @@
     "id": "signal_archive",
     "from": "SIGNAL",
     "to": "ARCHIVE",
-    "room": "diagnostic",
+    "room": "",
     "source_computer_id": "crt_sleep_09",
     "target_computer_id": "crt_archive_05",
     "spawn_id": "entrance",
     "position": [
       64,
-      208
+      448
     ],
     "requires": "",
     "label": "返回 ARCHIVE 修复实时 A 输入",
@@ -159,12 +163,12 @@
     "id": "signal_error",
     "from": "SIGNAL",
     "to": "ERROR",
-    "room": "shaft",
+    "room": "",
     "source_computer_id": "crt_sleep_09",
     "target_computer_id": "crt_sleep_11",
     "spawn_id": "entrance",
     "position": [
-      288,
+      992,
       208
     ],
     "requires": "signal_core_ready",
@@ -175,13 +179,13 @@
     "id": "error_signal",
     "from": "ERROR",
     "to": "SIGNAL",
-    "room": "foyer",
+    "room": "",
     "source_computer_id": "crt_sleep_11",
     "target_computer_id": "crt_sleep_09",
     "spawn_id": "entrance",
     "position": [
       32,
-      208
+      448
     ],
     "requires": "",
     "label": "回访 SIGNAL",
@@ -191,12 +195,12 @@
     "id": "error_archive",
     "from": "ERROR",
     "to": "ARCHIVE",
-    "room": "diagnostic",
+    "room": "",
     "source_computer_id": "crt_sleep_11",
     "target_computer_id": "crt_archive_05",
     "spawn_id": "entrance",
     "position": [
-      64,
+      768,
       208
     ],
     "requires": "",
@@ -207,12 +211,12 @@
     "id": "recycle_boot",
     "from": "RECYCLE",
     "to": "BOOT",
-    "room": "cache",
+    "room": "",
     "source_computer_id": "crt_sleep_06",
     "target_computer_id": "crt_boot_00",
     "spawn_id": "return",
     "position": [
-      224,
+      736,
       144
     ],
     "requires": "recycle_route_repaired",

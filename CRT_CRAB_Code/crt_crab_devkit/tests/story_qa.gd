@@ -2,12 +2,14 @@ extends "res://tests/stage2_qa.gd"
 
 func screenshot(name: String, portrait: bool=false) -> void:
 	if not visual: return
-	get_tree().root.size=Vector2i(720,900) if portrait else Vector2i(1280,800)
+	get_tree().root.size=Vector2i(1280,720) if "--landscape-story-qa" in OS.get_cmdline_user_args() else (Vector2i(720,900) if portrait else Vector2i(1280,800))
 	await frames(8);RenderingServer.force_draw()
 	get_viewport().get_texture().get_image().save_png("res://artifacts/"+name+".png")
 
 func _run() -> void:
 	await frames(15)
+	if "--landscape-story-qa" in OS.get_cmdline_user_args():
+		get_tree().root.size=Vector2i(1280,720);game.change_profile("touch")
 	check("fresh menu has no player",game.in_menu and game.world==null)
 	await activate(button("开始游戏"))
 	check("real Start menu plays story after safe initialization",game.story_active and game.story.playing and game.active_id=="BOOT" and game.world!=null and not game.world.enabled)
@@ -34,7 +36,12 @@ func _run() -> void:
 	await frames(220)
 	check("natural completion hands control to the one BOOT crab",not game.story_active and game.world.player.enabled and game.save.data.story.intro_seen and game.save.data.story.message_state=="failed")
 	var before: Vector2=game.world.player.position
-	await press("move_right",15)
+	if "--landscape-story-qa" in OS.get_cmdline_user_args():
+		var points:Dictionary=game.touch_controls.centers()
+		var finger:=InputEventScreenTouch.new();finger.index=41;finger.position=points.stick+Vector2(54,0);finger.pressed=true;get_viewport().push_input(finger,true)
+		await frames(15)
+		finger=finger.duplicate();finger.pressed=false;get_viewport().push_input(finger,true);await frames(2)
+	else: await press("move_right",15)
 	check("crab actually moves after opening",game.world.player.position.x>before.x+8)
 	game.return_to_title();game.begin_adventure(false);await frames(3)
 	check("Continue never repeats completed opening",not game.story_active and game.world.enabled)
@@ -58,5 +65,5 @@ func _run() -> void:
 	game.story_commit_dialog.confirmed.emit();await frames(2)
 	check("retry commits once and restores control",not game.story_active and game.save.data.story.intro_seen and game.world.player.enabled)
 	var file:=FileAccess.open("res://artifacts/story-qa-"+("visual" if visual else "headless")+".json",FileAccess.WRITE)
-	file.store_string(JSON.stringify({"passed":not failed,"tests":results},"\t"));file.close()
+	file.store_string(JSON.stringify({"passed":not failed,"tests":results,"landscape_touch_simulation":"--landscape-story-qa" in OS.get_cmdline_user_args()},"\t"));file.close()
 	get_tree().quit(1 if failed else 0)

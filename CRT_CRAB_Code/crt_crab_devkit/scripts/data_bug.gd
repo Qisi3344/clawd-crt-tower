@@ -58,6 +58,7 @@ func crushed() -> void:
 func hit() -> void:
 	if stun>0: return
 	health -= 1
+	level.learning_event.emit("attack")
 	stun = 0.35
 	level.sound_requested.emit("hit")
 	if health<=0:

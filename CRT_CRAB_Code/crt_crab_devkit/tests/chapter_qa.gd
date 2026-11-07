@@ -13,6 +13,9 @@ func _process(_delta: float) -> void:
 	if sample_clock%6!=0: return
 	var directory: String="res://artifacts/chapter-clips/"+record_tag
 	DirAccess.make_dir_recursive_absolute(directory)
+	if not record_counts.has(record_tag):
+		for name in DirAccess.get_files_at(directory):
+			if name.ends_with(".png"): DirAccess.remove_absolute(directory+"/"+name)
 	RenderingServer.force_draw()
 	var index:int=int(record_counts.get(record_tag,0))
 	game.viewport.get_texture().get_image().save_png(directory+"/%04d.png"%index)

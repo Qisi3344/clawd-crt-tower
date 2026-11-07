@@ -1,0 +1,15 @@
+{
+ "size":[768,240],"background":"archive",
+ "spawns":{"entrance":[64,208],"return":[64,208]},
+ "platforms":[[0,208,768,48],[224,176,32,16],[272,144,112,16],[592,184,32,16],[624,160,80,16]],
+ "ladders":[{"x":288,"top":144,"bottom":208},{"x":656,"top":160,"bottom":208}],
+ "blocks":[{"id":"archive_box","position":[192,200],"weight":1},{"id":"heavy_boulder","position":[344,136],"weight":2}],
+ "plates":[{"id":"heavy_plate","position":[392,208],"weight":2,"flag":"signal_archive_gate"}],
+ "doors":[{"id":"archive_door","position":[496,208],"height":64,"requires":"signal_archive_gate"}],
+ "chests":[{"id":"archive_key","position":[560,208],"crystals":3,"flag":"archive_key"},{"id":"archive_hidden","position":[672,160],"crystals":4,"flag":"archive_hidden"}],
+ "crystals":[{"id":"archive_c1","position":[128,194]}],
+ "breakables":[{"id":"archive_crack","position":[320,136]},{"id":"hidden_crack","position":[624,200]}],
+ "enemies":[{"id":"data_bug_01","position":[144,208]}],
+ "terminals":[],
+ "signs":[[64,170,"RETURN TO BOOT"],[288,110,"W  /  J"],[344,100,"PUSH RIGHT"],[392,174,"WEIGHT 2"],[496,122,"SIGNAL GATE"],[672,126,"SECRET"]]
+}

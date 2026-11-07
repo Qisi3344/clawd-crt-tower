@@ -14,7 +14,7 @@ func _physics_process(delta: float) -> void:
 	var previous := position
 	position += velocity*delta
 	system.projectile_step(self,previous)
-	if age>9 or position.x<0 or position.x>system.world.world_size.x or position.y<8 or position.y>248: queue_free()
+	if age>9 or position.x<0 or position.x>system.world.world_size.x or position.y<8 or position.y>system.world.world_size.y+8: queue_free()
 	queue_redraw()
 func _draw() -> void:
 	var color := Color("54cfc3") if reflected else Color("ef8b9f")

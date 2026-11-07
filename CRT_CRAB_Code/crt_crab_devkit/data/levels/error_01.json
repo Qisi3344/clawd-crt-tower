@@ -1,479 +1,666 @@
 {
-  "entry_room": "foyer",
-  "rooms": {
-    "foyer": {
-      "name": "蓝屏前厅",
-      "size": [
-        480,
-        240
-      ],
-      "background": "error",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          448,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          480,
-          32
-        ],
-        [
-          96,
-          160,
-          64,
-          16
-        ]
-      ],
-      "ladders": [
-        {
-          "x": 112,
-          "top": 160,
-          "bottom": 208
-        }
-      ],
-      "blocks": [],
-      "plates": [],
-      "doors": [
-        {
-          "id": "foyer_gate",
-          "position": [
-            336,
-            208
-          ],
-          "height": 56,
-          "requires": "error_foyer_open"
-        }
-      ],
-      "chests": [
-        {
-          "id": "error_cache",
-          "position": [
-            144,
-            160
-          ],
-          "crystals": 4,
-          "flag": "error_cache"
-        }
-      ],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          16,
-          40,
-          "ERROR / 01 OWL FOYER"
-        ],
-        [
-          192,
-          128,
-          "LURE DIVE -> SCRAP"
-        ],
-        [
-          98,
-          128,
-          "OPTIONAL CACHE"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "piston",
-          "position": [
-            432,
-            208
-          ],
-          "label": "进入故障活塞走廊",
-          "spawn": "entrance",
-          "requires": "error_foyer_open",
-          "locked_hint": "引猫头鹰俯冲到裂纹板，或用 J 拆掉板件。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "owl_panel",
-          "type": "break_panel",
-          "position": [
-            256,
-            208
-          ],
-          "flag": "error_foyer_open"
-        }
-      ],
-      "animals": [
-        {
-          "id": "error_owl",
-          "species": "owl",
-          "position": [
-            240,
-            80
-          ],
-          "health": 4
-        }
-      ]
+  "platforms": [
+    [
+      0,
+      448,
+      64,
+      32,
+      false
+    ],
+    [
+      64,
+      448,
+      32,
+      32,
+      true
+    ],
+    [
+      96,
+      448,
+      384,
+      32,
+      false
+    ],
+    [
+      96,
+      400,
+      64,
+      16,
+      true
+    ],
+    [
+      512,
+      448,
+      448,
+      32,
+      false
+    ],
+    [
+      960,
+      448,
+      32,
+      32,
+      true
+    ],
+    [
+      704,
+      208,
+      256,
+      32,
+      false
+    ],
+    [
+      960,
+      208,
+      32,
+      32,
+      true
+    ],
+    [
+      992,
+      208,
+      32,
+      32,
+      false
+    ],
+    [
+      352,
+      688,
+      320,
+      32,
+      false
+    ],
+    [
+      352,
+      640,
+      64,
+      16,
+      true
+    ],
+    [
+      608,
+      640,
+      64,
+      16,
+      true
+    ],
+    [
+      480,
+      448,
+      32,
+      32,
+      false
+    ],
+    [
+      992,
+      448,
+      32,
+      32,
+      false
+    ],
+    [
+      0,
+      208,
+      704,
+      16,
+      true
+    ],
+    [
+      0,
+      688,
+      352,
+      32,
+      false
+    ],
+    [
+      672,
+      688,
+      352,
+      32,
+      false
+    ],
+    [
+      64,
+      64,
+      960,
+      16,
+      true
+    ]
+  ],
+  "ladders": [
+    {
+      "x": 112,
+      "top": 400,
+      "bottom": 448
     },
-    "piston": {
-      "name": "故障活塞走廊",
-      "size": [
-        480,
-        240
-      ],
-      "background": "error",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          448,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          480,
-          32
-        ]
-      ],
-      "ladders": [],
-      "blocks": [
-        {
-          "id": "error_steel",
-          "position": [
-            176,
-            200
-          ],
-          "weight": 2
-        }
-      ],
-      "plates": [
-        {
-          "id": "error_piston_plate",
-          "position": [
-            272,
-            208
-          ],
-          "weight": 2,
-          "flag": "error_piston_supported"
-        }
-      ],
-      "doors": [
-        {
-          "id": "error_piston_gate",
-          "position": [
-            336,
-            208
-          ],
-          "height": 56,
-          "requires": "error_piston_supported"
-        }
-      ],
-      "chests": [],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          24,
-          40,
-          "ERROR / 02 PISTON CORRIDOR"
-        ],
-        [
-          110,
-          150,
-          "SAFE STOP"
-        ],
-        [
-          242,
-          128,
-          "STEEL -> WEIGHT 2"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "foyer",
-          "position": [
-            32,
-            208
-          ],
-          "label": "回到蓝屏前厅",
-          "spawn": "return",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        },
-        {
-          "to": "diagnostic",
-          "position": [
-            432,
-            208
-          ],
-          "label": "核心诊断层",
-          "spawn": "entrance",
-          "requires": "error_piston_supported",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "error_press_a",
-          "type": "crusher",
-          "position": [
-            240,
-            208
-          ],
-          "stop": "error_press_stop"
-        },
-        {
-          "id": "error_press_b",
-          "type": "crusher",
-          "position": [
-            304,
-            208
-          ],
-          "stop": "error_press_stop",
-          "offset": 1.3
-        },
-        {
-          "id": "error_press_stop",
-          "type": "stop",
-          "position": [
-            112,
-            208
-          ],
-          "label": "活塞安全停止 / 重新启动"
-        }
-      ],
-      "animals": []
+    {
+      "x": 384,
+      "top": 640,
+      "bottom": 688
     },
-    "diagnostic": {
-      "name": "核心诊断层",
-      "size": [
-        320,
-        240
-      ],
-      "background": "error",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ]
-      ],
-      "ladders": [],
-      "blocks": [],
-      "plates": [],
-      "doors": [],
-      "chests": [],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          24,
-          40,
-          "ERROR / 03 LIVE DIAGNOSTIC"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "piston",
-          "position": [
-            32,
-            208
-          ],
-          "label": "回到活塞走廊",
-          "spawn": "return",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        },
-        {
-          "to": "boss",
-          "position": [
-            288,
-            208
-          ],
-          "label": "进入 BSOD CICADA 核心室",
-          "spawn": "entrance",
-          "requires": "error_diagnostic_cleared",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "final_diagnostic",
-          "type": "diagnostic",
-          "position": [
-            24,
-            144
-          ]
-        },
-        {
-          "id": "core_authorize",
-          "type": "repair",
-          "position": [
-            224,
-            208
-          ],
-          "circuit": true,
-          "requires_all": [
-            "signal_core_ready"
-          ],
-          "outputs": [
-            "error_diagnostic_cleared"
-          ],
-          "label": "确认真实线路，进入核心",
-          "locked_hint": "发送通道尚未就绪，返回 SIGNAL 检查。",
-          "success": "必要链路当前有效 · 核心隔离程序等待修复"
-        }
-      ],
-      "animals": []
+    {
+      "x": 640,
+      "top": 640,
+      "bottom": 688
     },
-    "boss": {
-      "name": "蓝屏核心 · 故障机蝉",
-      "size": [
-        320,
-        240
-      ],
-      "background": "error",
-      "spawns": {
-        "entrance": [
-          32,
-          208
-        ],
-        "return": [
-          288,
-          208
-        ]
-      },
-      "platforms": [
-        [
-          0,
-          208,
-          320,
-          32
-        ],
-        [
-          0,
-          160,
-          64,
-          16
-        ],
-        [
-          256,
-          160,
-          64,
-          16
-        ]
-      ],
-      "ladders": [
-        {
-          "x": 32,
-          "top": 160,
-          "bottom": 208
-        },
-        {
-          "x": 288,
-          "top": 160,
-          "bottom": 208
-        }
-      ],
-      "blocks": [
-        {
-          "id": "boss_steel",
-          "position": [
-            64,
-            200
-          ],
-          "weight": 2
-        }
-      ],
-      "plates": [
-        {
-          "id": "boss_weight",
-          "position": [
-            128,
-            208
-          ],
-          "weight": 2,
-          "flag": "boss_weight_supported"
-        }
-      ],
-      "doors": [],
-      "chests": [],
-      "crystals": [],
-      "breakables": [],
-      "enemies": [],
-      "terminals": [],
-      "signs": [
-        [
-          16,
-          28,
-          "ERROR / 04 CORE"
-        ],
-        [
-          10,
-          142,
-          "INSULATED"
-        ],
-        [
-          242,
-          142,
-          "INSULATED"
-        ]
-      ],
-      "room_portals": [
-        {
-          "to": "diagnostic",
-          "position": [
-            16,
-            208
-          ],
-          "label": "安全返回诊断层",
-          "spawn": "entrance",
-          "requires": "",
-          "locked_hint": "先完成当前房间的机关。"
-        }
-      ],
-      "mechanisms": [
-        {
-          "id": "boss_reflector",
-          "type": "reflector",
-          "position": [
-            176,
-            120
-          ],
-          "control": [
-            176,
-            208
-          ],
-          "label": "核心导流镜：把弹引向下方节点 B"
-        }
-      ],
-      "animals": [],
-      "boss": {}
+    {
+      "x": 80,
+      "top": 64,
+      "bottom": 688
+    },
+    {
+      "x": 976,
+      "top": 64,
+      "bottom": 688
     }
+  ],
+  "blocks": [
+    {
+      "id": "error_steel",
+      "position": [
+        688,
+        440
+      ],
+      "weight": 2,
+      "legacy_room": "piston"
+    },
+    {
+      "id": "boss_steel",
+      "position": [
+        416,
+        680
+      ],
+      "weight": 2,
+      "legacy_room": "boss"
+    }
+  ],
+  "plates": [
+    {
+      "id": "error_piston_plate",
+      "position": [
+        784,
+        448
+      ],
+      "weight": 2,
+      "flag": "error_piston_supported",
+      "legacy_room": "piston"
+    },
+    {
+      "id": "boss_weight",
+      "position": [
+        480,
+        688
+      ],
+      "weight": 2,
+      "flag": "boss_weight_supported",
+      "legacy_room": "boss"
+    }
+  ],
+  "doors": [
+    {
+      "id": "foyer_gate",
+      "position": [
+        336,
+        448
+      ],
+      "height": 56,
+      "requires": "error_foyer_open",
+      "legacy_room": "foyer"
+    },
+    {
+      "id": "error_piston_gate",
+      "position": [
+        848,
+        448
+      ],
+      "height": 56,
+      "requires": "error_piston_supported",
+      "legacy_room": "piston"
+    },
+    {
+      "id": "foyer_bulkhead",
+      "position": [
+        496,
+        448
+      ],
+      "height": 240,
+      "requires": "error_foyer_open"
+    },
+    {
+      "id": "core_authority_gate",
+      "position": [
+        688,
+        688
+      ],
+      "height": 192,
+      "requires": "error_diagnostic_cleared"
+    },
+    {
+      "id": "core_a_return",
+      "position": [
+        336,
+        688
+      ],
+      "height": 192,
+      "requires": "error_node_a"
+    },
+    {
+      "id": "core_b_upper_return",
+      "position": [
+        496,
+        64
+      ],
+      "height": 64,
+      "requires": "error_node_b"
+    }
+  ],
+  "chests": [
+    {
+      "id": "error_cache",
+      "position": [
+        144,
+        400
+      ],
+      "crystals": 4,
+      "flag": "error_cache",
+      "legacy_room": "foyer"
+    }
+  ],
+  "crystals": [],
+  "breakables": [],
+  "enemies": [],
+  "terminals": [],
+  "mechanisms": [
+    {
+      "id": "owl_panel",
+      "type": "break_panel",
+      "position": [
+        256,
+        448
+      ],
+      "flag": "error_foyer_open",
+      "legacy_room": "foyer"
+    },
+    {
+      "id": "error_press_a",
+      "type": "crusher",
+      "position": [
+        752,
+        448
+      ],
+      "stop": "error_press_stop",
+      "legacy_room": "piston"
+    },
+    {
+      "id": "error_press_b",
+      "type": "crusher",
+      "position": [
+        816,
+        448
+      ],
+      "stop": "error_press_stop",
+      "offset": 1.3,
+      "legacy_room": "piston"
+    },
+    {
+      "id": "error_press_stop",
+      "type": "stop",
+      "position": [
+        624,
+        448
+      ],
+      "label": "活塞安全停止 / 重新启动",
+      "legacy_room": "piston"
+    },
+    {
+      "id": "final_diagnostic",
+      "type": "diagnostic",
+      "position": [
+        728,
+        144
+      ],
+      "legacy_room": "diagnostic"
+    },
+    {
+      "id": "core_authorize",
+      "type": "repair",
+      "position": [
+        928,
+        208
+      ],
+      "circuit": true,
+      "requires_all": [
+        "signal_core_ready",
+        "error_piston_supported"
+      ],
+      "outputs": [
+        "error_diagnostic_cleared"
+      ],
+      "label": "确认真实线路，进入核心",
+      "locked_hint": "发送通道尚未就绪，返回 SIGNAL 检查。",
+      "success": "必要链路当前有效 · 核心隔离程序等待修复",
+      "legacy_room": "diagnostic"
+    },
+    {
+      "id": "boss_reflector",
+      "type": "reflector",
+      "position": [
+        528,
+        600
+      ],
+      "control": [
+        528,
+        688
+      ],
+      "label": "核心导流镜：把弹引向下方节点 B",
+      "legacy_room": "boss"
+    }
+  ],
+  "animals": [
+    {
+      "id": "error_owl",
+      "species": "owl",
+      "position": [
+        240,
+        320
+      ],
+      "health": 4,
+      "legacy_room": "foyer"
+    }
+  ],
+  "signs": [
+    [
+      458,
+      418,
+      "→ 活塞故障线"
+    ],
+    [
+      938,
+      418,
+      "↑ 核心诊断站"
+    ],
+    [
+      650,
+      658,
+      "← 核心 A → B → C"
+    ],
+    [
+      298,
+      658,
+      "← A 返回前厅"
+    ],
+    [
+      42,
+      418,
+      "↑ 核心观察环"
+    ],
+    [
+      458,
+      34,
+      "→ B 上层回环"
+    ]
+  ],
+  "size": [
+    1024,
+    768
+  ],
+  "background": "error",
+  "layout_version": 2,
+  "spawns": {
+    "foyer:entrance": [
+      32,
+      448
+    ],
+    "foyer:return": [
+      448,
+      448
+    ],
+    "piston:entrance": [
+      544,
+      448
+    ],
+    "piston:return": [
+      960,
+      448
+    ],
+    "diagnostic:entrance": [
+      736,
+      208
+    ],
+    "diagnostic:return": [
+      992,
+      208
+    ],
+    "boss:entrance": [
+      384,
+      688
+    ],
+    "boss:return": [
+      640,
+      688
+    ],
+    "entrance": [
+      32,
+      448
+    ],
+    "return": [
+      448,
+      448
+    ]
+  },
+  "areas": [
+    {
+      "id": "foyer",
+      "name": "蓝屏前厅",
+      "rect": [
+        0,
+        288,
+        512,
+        240
+      ],
+      "checkpoint": [
+        32,
+        448
+      ],
+      "floor": "中层",
+      "landmark": "core"
+    },
+    {
+      "id": "piston",
+      "name": "活塞故障线",
+      "rect": [
+        512,
+        288,
+        512,
+        240
+      ],
+      "checkpoint": [
+        552,
+        448
+      ],
+      "floor": "中层",
+      "landmark": "crane"
+    },
+    {
+      "id": "observation",
+      "name": "核心观察环",
+      "rect": [
+        0,
+        0,
+        704,
+        288
+      ],
+      "checkpoint": [
+        80,
+        208
+      ],
+      "floor": "上层",
+      "landmark": "core"
+    },
+    {
+      "id": "diagnostic",
+      "name": "核心诊断站",
+      "rect": [
+        704,
+        0,
+        320,
+        288
+      ],
+      "checkpoint": [
+        976,
+        208
+      ],
+      "floor": "上层",
+      "landmark": "tower"
+    },
+    {
+      "id": "west",
+      "name": "A 返回维护道",
+      "rect": [
+        0,
+        528,
+        352,
+        240
+      ],
+      "checkpoint": [
+        80,
+        688
+      ],
+      "floor": "下层",
+      "landmark": "shelves"
+    },
+    {
+      "id": "boss",
+      "name": "蓝屏核心室",
+      "rect": [
+        352,
+        528,
+        336,
+        240
+      ],
+      "checkpoint": [
+        656,
+        688
+      ],
+      "floor": "下层",
+      "landmark": "core"
+    },
+    {
+      "id": "east",
+      "name": "核心安全入口",
+      "rect": [
+        688,
+        528,
+        336,
+        240
+      ],
+      "checkpoint": [
+        976,
+        688
+      ],
+      "floor": "下层",
+      "landmark": "shelves"
+    }
+  ],
+  "connections": [
+    {
+      "id": "outer_piston",
+      "from": "foyer",
+      "to": "piston",
+      "position": [
+        496,
+        448
+      ],
+      "label": "→ 活塞故障线",
+      "requires": "error_foyer_open",
+      "bidirectional": true
+    },
+    {
+      "id": "diagnostic_ladder",
+      "from": "piston",
+      "to": "diagnostic",
+      "position": [
+        976,
+        448
+      ],
+      "label": "↑ 核心诊断站",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "core_entry",
+      "from": "east",
+      "to": "boss",
+      "position": [
+        688,
+        688
+      ],
+      "label": "← 核心 A → B → C",
+      "requires": "error_diagnostic_cleared",
+      "bidirectional": true
+    },
+    {
+      "id": "a_loop",
+      "from": "boss",
+      "to": "west",
+      "position": [
+        336,
+        688
+      ],
+      "label": "← A 返回前厅",
+      "requires": "error_node_a",
+      "bidirectional": true
+    },
+    {
+      "id": "outer_ladder",
+      "from": "foyer",
+      "to": "observation",
+      "position": [
+        80,
+        448
+      ],
+      "label": "↑ 核心观察环",
+      "requires": "",
+      "bidirectional": true
+    },
+    {
+      "id": "b_loop",
+      "from": "observation",
+      "to": "diagnostic",
+      "position": [
+        496,
+        64
+      ],
+      "label": "→ B 上层回环",
+      "requires": "error_node_b",
+      "bidirectional": true
+    }
+  ],
+  "tutorial_zones": [],
+  "room_portals": [],
+  "legacy_offsets": {
+    "foyer": [
+      0,
+      240
+    ],
+    "piston": [
+      512,
+      240
+    ],
+    "diagnostic": [
+      704,
+      0
+    ],
+    "boss": [
+      352,
+      480
+    ]
+  },
+  "legacy_entry": "foyer",
+  "boss": {
+    "offset": [
+      352,
+      480
+    ]
   }
 }

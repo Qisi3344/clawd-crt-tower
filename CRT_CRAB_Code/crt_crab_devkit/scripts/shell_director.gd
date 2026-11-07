@@ -9,6 +9,7 @@ var orbit := 0.5
 var elevation := 20.0
 var overview_radius := 35.0
 var busy := false
+var touch_framing:=false
 
 func _ready() -> void:
 	camera = Camera3D.new()
@@ -25,20 +26,24 @@ func _process(delta: float) -> void:
 		camera.position = camera.position.lerp(target,1-exp(-delta*5))
 		camera.look_at(Vector3(0,6,0))
 	else:
-		camera.position = camera.position.lerp(active.focus_position(),1-exp(-delta*8))
-		camera.look_at(active.focus_point())
+		camera.position = camera.position.lerp(play_position(active),1-exp(-delta*8))
+		camera.look_at(active.focus_point()-Vector3.UP*(.5 if touch_framing else 0))
+
+func play_position(device: MonitorDevice) -> Vector3:
+	var centre:=device.focus_point()
+	return centre+(device.focus_position()-centre)*(1.36 if touch_framing else 1.0)
 
 func focus(device: MonitorDevice, instant := false) -> void:
 	active = device
 	overview = false
 	if instant:
-		camera.position = active.focus_position()
-		camera.look_at(active.focus_point())
+		camera.position = play_position(active)
+		camera.look_at(active.focus_point()-Vector3.UP*(.5 if touch_framing else 0))
 
 func travel(device: MonitorDevice, midpoint: Callable, progress: Callable = Callable()) -> void:
 	busy = true
 	var old_position := camera.position
-	var new_position := device.focus_position()
+	var new_position := play_position(device)
 	var old_focus := active.focus_point()
 	var new_focus := device.focus_point()
 	var a := atan2(old_position.x,old_position.z)

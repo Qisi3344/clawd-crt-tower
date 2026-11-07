@@ -71,6 +71,7 @@ func _physics_process(delta: float) -> void:
 						active=true
 						if entry.has("charge_flag"): latch(str(entry.charge_flag))
 				if world.flags.get(entry.flag,false)!=active:
+					if active: world.learning_event.emit("relay")
 					world.flags[entry.flag]=active;world.progress_changed.emit()
 	queue_redraw()
 
@@ -84,6 +85,7 @@ func candidates() -> Array[Dictionary]:
 
 func interact(entry: Dictionary) -> void:
 	var id:=str(entry.id)
+	world.learning_event.emit(str(entry.type))
 	match str(entry.type):
 		"reflector":
 			switches[id]=(int(switches.get(id,0))+1)%3
@@ -185,19 +187,20 @@ func break_marked(id: String) -> void:
 		world.state.broken.append(id);block.body.queue_free();world.breakables.remove_at(i)
 		world.sound_requested.emit("hit");world.progress_changed.emit()
 
-func reset_local() -> void:
+func reset_local(area: Dictionary = {}) -> void:
 	for child in get_children():
-		if child is SignalProjectile: child.queue_free()
-	clock=0
+		if child is SignalProjectile and world.belongs_to_area(child.position,area): child.queue_free()
 	for entry in entries:
+		if not world.belongs_to_area(SideWorld.point(entry.get("control",entry.position)),area): continue
 		if entry.type=="insulator" and entry.has("flag"): world.flags[entry.flag]=bool(entry.get("on",false))
-	switches.clear()
-	if is_instance_valid(boss): boss.reset_attempt()
+		switches.erase(entry.id)
+	if is_instance_valid(boss) and world.belongs_to_area(boss.position,area): boss.reset_attempt()
 	# Any puzzle-dependent species can be recovered even after it was defeated.
-	for animal in animals:
-		if is_instance_valid(animal): animal.free()
-	animals.clear()
+	for i in range(animals.size()-1,-1,-1):
+		if not is_instance_valid(animals[i]): animals.remove_at(i)
+		elif world.belongs_to_area(animals[i].origin,area): animals[i].free();animals.remove_at(i)
 	for entry in world.definition.get("animals",[]):
+		if not world.belongs_to_area(SideWorld.point(entry.position),area): continue
 		world.state.defeated.erase(entry.id)
 		var animal:=MechanicalAnimal.new();animal.system=self;animal.entry=entry;add_child(animal);animals.append(animal)
 

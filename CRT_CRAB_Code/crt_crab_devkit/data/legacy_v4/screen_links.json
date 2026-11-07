@@ -1,0 +1,238 @@
+[
+  {
+    "id": "boot_archive",
+    "from": "BOOT",
+    "to": "ARCHIVE",
+    "source_computer_id": "crt_boot_00",
+    "target_computer_id": "crt_archive_05",
+    "spawn_id": "entrance",
+    "position": [
+      592,
+      208
+    ],
+    "requires": "boot_access",
+    "label": "前往档案仓库",
+    "locked_hint": "先推箱压板开门，再爬梯开启启动宝箱。"
+  },
+  {
+    "id": "archive_boot",
+    "from": "ARCHIVE",
+    "to": "BOOT",
+    "source_computer_id": "crt_archive_05",
+    "target_computer_id": "crt_boot_00",
+    "spawn_id": "return",
+    "position": [
+      40,
+      208
+    ],
+    "requires": "",
+    "label": "返回启动区 · 查看远端信号门",
+    "locked_hint": ""
+  },
+  {
+    "id": "archive_exit",
+    "from": "ARCHIVE",
+    "to": "BOOT",
+    "source_computer_id": "crt_archive_05",
+    "target_computer_id": "crt_boot_00",
+    "spawn_id": "return",
+    "position": [
+      736,
+      208
+    ],
+    "requires": "archive_key",
+    "label": "携档案密钥返回 BOOT",
+    "locked_hint": "先开启档案宝箱取得密钥。"
+  },
+  {
+    "id": "archive_popup",
+    "from": "ARCHIVE",
+    "to": "POP-UP",
+    "source_computer_id": "crt_archive_05",
+    "target_computer_id": "crt_sleep_04",
+    "spawn_id": "entrance",
+    "position": [
+      704,
+      208
+    ],
+    "requires": "archive_key",
+    "label": "前往 POP-UP 修复供电",
+    "locked_hint": "先取得档案密钥。"
+  },
+  {
+    "id": "popup_archive",
+    "from": "POP-UP",
+    "room": "hall",
+    "to": "ARCHIVE",
+    "source_computer_id": "crt_sleep_04",
+    "target_computer_id": "crt_archive_05",
+    "spawn_id": "return",
+    "position": [
+      32,
+      208
+    ],
+    "requires": "",
+    "label": "回访 ARCHIVE",
+    "locked_hint": ""
+  },
+  {
+    "id": "popup_recycle",
+    "from": "POP-UP",
+    "to": "RECYCLE",
+    "room": "shaft",
+    "source_computer_id": "crt_sleep_04",
+    "target_computer_id": "crt_sleep_06",
+    "spawn_id": "entrance",
+    "position": [
+      288,
+      80
+    ],
+    "requires": "popup_power_restored",
+    "label": "连接 RECYCLE",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "recycle_popup",
+    "from": "RECYCLE",
+    "to": "POP-UP",
+    "room": "sorter",
+    "source_computer_id": "crt_sleep_06",
+    "target_computer_id": "crt_sleep_04",
+    "spawn_id": "entrance",
+    "position": [
+      32,
+      208
+    ],
+    "requires": "",
+    "label": "回访 POP-UP",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "recycle_signal",
+    "from": "RECYCLE",
+    "to": "SIGNAL",
+    "room": "cache",
+    "source_computer_id": "crt_sleep_06",
+    "target_computer_id": "crt_sleep_09",
+    "spawn_id": "entrance",
+    "position": [
+      288,
+      208
+    ],
+    "requires": "message_packet_restored",
+    "label": "连接 SIGNAL",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "signal_recycle",
+    "from": "SIGNAL",
+    "to": "RECYCLE",
+    "room": "diagnostic",
+    "source_computer_id": "crt_sleep_09",
+    "target_computer_id": "crt_sleep_06",
+    "spawn_id": "entrance",
+    "position": [
+      32,
+      208
+    ],
+    "requires": "",
+    "label": "回访 RECYCLE",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "signal_archive",
+    "from": "SIGNAL",
+    "to": "ARCHIVE",
+    "room": "diagnostic",
+    "source_computer_id": "crt_sleep_09",
+    "target_computer_id": "crt_archive_05",
+    "spawn_id": "entrance",
+    "position": [
+      64,
+      208
+    ],
+    "requires": "",
+    "label": "返回 ARCHIVE 修复实时 A 输入",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "signal_error",
+    "from": "SIGNAL",
+    "to": "ERROR",
+    "room": "shaft",
+    "source_computer_id": "crt_sleep_09",
+    "target_computer_id": "crt_sleep_11",
+    "spawn_id": "entrance",
+    "position": [
+      288,
+      208
+    ],
+    "requires": "signal_core_ready",
+    "label": "连接 ERROR",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "error_signal",
+    "from": "ERROR",
+    "to": "SIGNAL",
+    "room": "foyer",
+    "source_computer_id": "crt_sleep_11",
+    "target_computer_id": "crt_sleep_09",
+    "spawn_id": "entrance",
+    "position": [
+      32,
+      208
+    ],
+    "requires": "",
+    "label": "回访 SIGNAL",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "error_archive",
+    "from": "ERROR",
+    "to": "ARCHIVE",
+    "room": "diagnostic",
+    "source_computer_id": "crt_sleep_11",
+    "target_computer_id": "crt_archive_05",
+    "spawn_id": "entrance",
+    "position": [
+      64,
+      208
+    ],
+    "requires": "",
+    "label": "返回 ARCHIVE 修复当前输入 A",
+    "locked_hint": "先完成当前屏幕的主修复目标。"
+  },
+  {
+    "id": "recycle_boot",
+    "from": "RECYCLE",
+    "to": "BOOT",
+    "room": "cache",
+    "source_computer_id": "crt_sleep_06",
+    "target_computer_id": "crt_boot_00",
+    "spawn_id": "return",
+    "position": [
+      224,
+      144
+    ],
+    "requires": "recycle_route_repaired",
+    "label": "RECYCLE 修复后的返向快捷链路",
+    "locked_hint": "RECYCLE 重构数据包后，此快捷端口会通电。"
+  },
+  {
+    "id": "boot_recycle",
+    "from": "BOOT",
+    "to": "RECYCLE",
+    "room": "",
+    "source_computer_id": "crt_boot_00",
+    "target_computer_id": "crt_sleep_06",
+    "spawn_id": "entrance",
+    "position": [
+      752,
+      208
+    ],
+    "requires": "recycle_route_repaired",
+    "label": "RECYCLE 修复后的返向快捷链路",
+    "locked_hint": "RECYCLE 重构数据包后，此快捷端口会通电。"
+  }
+]

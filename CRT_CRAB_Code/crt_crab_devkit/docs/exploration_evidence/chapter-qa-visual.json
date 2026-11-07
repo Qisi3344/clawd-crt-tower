@@ -1,0 +1,717 @@
+{
+	"captures": [
+		{
+			"draw_calls": 466.0,
+			"fps": 3.0,
+			"memory_mb": 82.6153049468994,
+			"name": "m1-01-boot",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 464.0,
+			"fps": 67.0,
+			"memory_mb": 83.1037883758545,
+			"name": "m1-02-pressure",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 466.0,
+			"fps": 124.0,
+			"memory_mb": 83.1027088165283,
+			"name": "m1-ladder-down",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 473.0,
+			"fps": 117.0,
+			"memory_mb": 83.2027797698975,
+			"name": "m1-03-treasure",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1401.0,
+			"fps": 95.0,
+			"memory_mb": 84.8030033111572,
+			"name": "m3-front",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1312.0,
+			"fps": 95.0,
+			"memory_mb": 84.8136425018311,
+			"name": "m3-back",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1280.0,
+			"fps": 108.0,
+			"memory_mb": 84.8752994537354,
+			"name": "m3-left",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1352.0,
+			"fps": 108.0,
+			"memory_mb": 85.0074825286865,
+			"name": "m3-right",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1326.0,
+			"fps": 108.0,
+			"memory_mb": 85.0083103179932,
+			"name": "m3-top",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1240.0,
+			"fps": 122.0,
+			"memory_mb": 85.5897655487061,
+			"name": "m2-04-transition",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 474.0,
+			"fps": 105.0,
+			"memory_mb": 85.5172367095947,
+			"name": "m2-05-archive",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 490.0,
+			"fps": 123.0,
+			"memory_mb": 85.883581161499,
+			"name": "m2-06-heavy-plate",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 475.0,
+			"fps": 119.0,
+			"memory_mb": 85.9524936676025,
+			"name": "m2-07-key",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 474.0,
+			"fps": 123.0,
+			"memory_mb": 85.9060192108154,
+			"name": "m2-08-remote-gate",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 479.0,
+			"fps": 121.0,
+			"memory_mb": 80.9872379302979,
+			"name": "m2-portrait",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 497.0,
+			"fps": 121.0,
+			"memory_mb": 81.1213550567627,
+			"name": "m2-pause",
+			"size": [
+				720,
+				900
+			]
+		},
+		{
+			"draw_calls": 492.0,
+			"fps": 123.0,
+			"memory_mb": 85.6442470550537,
+			"name": "exploration-popup-upper",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1104.0,
+			"fps": 124.0,
+			"memory_mb": 85.7337818145752,
+			"name": "exploration-recycle-lower",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1057.0,
+			"fps": 123.0,
+			"memory_mb": 85.8816967010498,
+			"name": "exploration-recycle-upper",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 351.0,
+			"fps": 124.0,
+			"memory_mb": 86.3719577789307,
+			"name": "exploration-signal-ready",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1025.0,
+			"fps": 124.0,
+			"memory_mb": 87.008131980896,
+			"name": "exploration-error-core",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1386.0,
+			"fps": 144.0,
+			"memory_mb": 88.8857908248901,
+			"name": "exploration-ending-delivered",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 1387.0,
+			"fps": 139.0,
+			"memory_mb": 89.3879365921021,
+			"name": "exploration-ending-reply",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"clips": {
+		"archive": 351,
+		"boot": 281,
+		"error-v2": 546,
+		"popup-v2": 747,
+		"recycle-v2": 1346,
+		"signal-v2": 734
+	},
+	"passed": true,
+	"tests": [
+		{
+			"passed": true,
+			"test": "single bundled pixel font"
+		},
+		{
+			"passed": true,
+			"test": "pause removes marked actions and debug copy"
+		},
+		{
+			"passed": true,
+			"test": "pixel depth styles and shared icons"
+		},
+		{
+			"passed": true,
+			"test": "M0 exterior twelve devices retained"
+		},
+		{
+			"passed": true,
+			"test": "upper keyboards absent and base configuration retained"
+		},
+		{
+			"passed": true,
+			"test": "real isolated 320x240 2D screen"
+		},
+		{
+			"passed": true,
+			"test": "only player belongs to internal screen"
+		},
+		{
+			"passed": true,
+			"test": "QA disables user save access"
+		},
+		{
+			"passed": true,
+			"test": "W away from a ladder never creates flying movement"
+		},
+		{
+			"passed": true,
+			"test": "walk toward gap"
+		},
+		{
+			"passed": true,
+			"test": "jump crosses gap and lands"
+		},
+		{
+			"passed": true,
+			"test": "walk to crate"
+		},
+		{
+			"passed": true,
+			"test": "push crate using held E"
+		},
+		{
+			"passed": true,
+			"test": "pull crate without changing facing"
+		},
+		{
+			"passed": true,
+			"test": "push to normal pressure plate"
+		},
+		{
+			"passed": true,
+			"test": "weight opens actual collision door"
+		},
+		{
+			"passed": true,
+			"test": "pass opened gate"
+		},
+		{
+			"passed": true,
+			"test": "ladder reaches raised treasure platform"
+		},
+		{
+			"passed": true,
+			"test": "S descends through ladder top ledge to solid floor"
+		},
+		{
+			"passed": true,
+			"test": "ladder can be climbed again after descent"
+		},
+		{
+			"passed": true,
+			"test": "approach BOOT chest"
+		},
+		{
+			"passed": true,
+			"test": "BOOT chest grants unique key and crystals"
+		},
+		{
+			"passed": true,
+			"test": "same chest cannot pay twice"
+		},
+		{
+			"passed": true,
+			"test": "pause freezes 2D control"
+		},
+		{
+			"passed": true,
+			"test": "array mode freezes internal physics"
+		},
+		{
+			"passed": true,
+			"test": "reach first port by normal movement"
+		},
+		{
+			"passed": true,
+			"test": "bad spawn safely refuses travel"
+		},
+		{
+			"passed": true,
+			"test": "mid-transition failure returns live original screen"
+		},
+		{
+			"passed": true,
+			"test": "failed transfer restores visible avatar and failure feedback"
+		},
+		{
+			"passed": true,
+			"test": "transition input is locked"
+		},
+		{
+			"passed": true,
+			"test": "BOOT to ARCHIVE via actual E interaction"
+		},
+		{
+			"passed": true,
+			"test": "unique player after transfer"
+		},
+		{
+			"passed": true,
+			"test": "player weight alone cannot activate heavy plate"
+		},
+		{
+			"passed": true,
+			"test": "two claw strikes defeat data bug"
+		},
+		{
+			"passed": true,
+			"test": "walk to archive box"
+		},
+		{
+			"passed": true,
+			"test": "reach archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "climb archive platform"
+		},
+		{
+			"passed": true,
+			"test": "approach marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "pinch breaks marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "reach heavy stone"
+		},
+		{
+			"passed": true,
+			"test": "push heavy stone off platform"
+		},
+		{
+			"passed": true,
+			"test": "gravity lands heavy stone on persistent plate"
+		},
+		{
+			"passed": true,
+			"test": "walk through heavy-signal gate"
+		},
+		{
+			"passed": true,
+			"test": "archive chest grants persistent key"
+		},
+		{
+			"passed": true,
+			"test": "walk to marked hidden wall"
+		},
+		{
+			"passed": true,
+			"test": "hidden wall can be broken"
+		},
+		{
+			"passed": true,
+			"test": "reach optional archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "reach hidden archive chest"
+		},
+		{
+			"passed": true,
+			"test": "optional archive treasure is collectible"
+		},
+		{
+			"passed": true,
+			"test": "reach archive exit without teleport"
+		},
+		{
+			"passed": true,
+			"test": "return route reaches BOOT"
+		},
+		{
+			"passed": true,
+			"test": "ARCHIVE pressure opens real BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "walk through BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "remote reward obtainable only after cross-screen signal"
+		},
+		{
+			"passed": true,
+			"test": "walk back to outgoing port"
+		},
+		{
+			"passed": true,
+			"test": "BOOT ARCHIVE BOOT ARCHIVE roundtrip"
+		},
+		{
+			"passed": true,
+			"test": "heavy stone and signal persist on revisit"
+		},
+		{
+			"passed": true,
+			"test": "treasure ledger survives revisit"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "R resets current stone and clears supported signal"
+		},
+		{
+			"passed": true,
+			"test": "R keeps unique treasure rewards"
+		},
+		{
+			"passed": true,
+			"test": "damage has invulnerable interval"
+		},
+		{
+			"passed": true,
+			"test": "no chain damage"
+		},
+		{
+			"passed": true,
+			"test": "death keeps collected chests"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "pause menu has focused resume"
+		},
+		{
+			"passed": true,
+			"test": "live A restored through the original heavy-stone route"
+		},
+		{
+			"passed": true,
+			"test": "ARCHIVE port enters continuous POP-UP"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_a"
+		},
+		{
+			"passed": true,
+			"test": "native ladder reaches optional loft without a room portal"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_b"
+		},
+		{
+			"passed": true,
+			"test": "two physical reflected fuses restore POP-UP power"
+		},
+		{
+			"passed": true,
+			"test": "powered window shortcut closes a continuous hall loop"
+		},
+		{
+			"passed": true,
+			"test": "powered CRT port reaches RECYCLE"
+		},
+		{
+			"passed": true,
+			"test": "upper observation route shows a visibly closed future loop"
+		},
+		{
+			"passed": true,
+			"test": "central controls reverse the conveyor and stop the crusher"
+		},
+		{
+			"passed": true,
+			"test": "underground fragment and vertical camera survive former Y limit"
+		},
+		{
+			"passed": true,
+			"test": "second fragment uses the raised magnetic-well platform"
+		},
+		{
+			"passed": true,
+			"test": "magnet transports actual steel at translated world coordinates"
+		},
+		{
+			"passed": true,
+			"test": "claw breaks marked suspended scrap in the lower layer"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises recycle_heavy_supported"
+		},
+		{
+			"passed": true,
+			"test": "maintenance shaft reaches the third fragment above the hall"
+		},
+		{
+			"passed": true,
+			"test": "three fixed fragments restore the original packet transaction"
+		},
+		{
+			"passed": true,
+			"test": "upper optional RECYCLE chest retains its ledger ID"
+		},
+		{
+			"passed": true,
+			"test": "lower-well-maintenance-upper route returns to the same hall instance"
+		},
+		{
+			"passed": true,
+			"test": "local R leaves the other area's metal and supported signal intact"
+		},
+		{
+			"passed": true,
+			"test": "post-repair underground return door is now physically open"
+		},
+		{
+			"passed": true,
+			"test": "optional return tunnel yields the ninth unique chest"
+		},
+		{
+			"passed": true,
+			"test": "restored packet reaches SIGNAL through its real CRT port"
+		},
+		{
+			"passed": true,
+			"test": "A branch calibrates without inventing upstream support"
+		},
+		{
+			"passed": true,
+			"test": "real relay bee plus repaired B saves a permanent bypass"
+		},
+		{
+			"passed": true,
+			"test": "C branch calibrates restored packet in its fiber socket"
+		},
+		{
+			"passed": true,
+			"test": "all local branches and live inputs make READY without delivery"
+		},
+		{
+			"passed": true,
+			"test": "SIGNAL cache stays an independent optional reward"
+		},
+		{
+			"passed": true,
+			"test": "three-branch return reconnects to the known diagnostic hub"
+		},
+		{
+			"passed": true,
+			"test": "READY unlocks the ERROR CRT"
+		},
+		{
+			"passed": true,
+			"test": "ERROR cache remains outside the core objective"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises error_foyer_open"
+		},
+		{
+			"passed": true,
+			"test": "outer-ring steel really supports the piston gate"
+		},
+		{
+			"passed": true,
+			"test": "live diagnostic authorizes the continuous core entrance"
+		},
+		{
+			"passed": true,
+			"test": "relocated core A requires its actual heavy block"
+		},
+		{
+			"passed": true,
+			"test": "relocated core B requires a reflected projectile"
+		},
+		{
+			"passed": true,
+			"test": "core C still uses live SIGNAL after A then B"
+		},
+		{
+			"passed": true,
+			"test": "only final core repair commits the delivered message"
+		},
+		{
+			"passed": true,
+			"test": "six repairs and all nine chests retain a single active crab"
+		},
+		{
+			"passed": true,
+			"test": "ending is durable and leaves play available"
+		},
+		{
+			"passed": true,
+			"test": "complete continuous campaign writes atomically"
+		},
+		{
+			"passed": true,
+			"test": "reload retains navigation puzzle records block positions and all chests"
+		}
+	]
+}

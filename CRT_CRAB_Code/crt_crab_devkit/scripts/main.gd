@@ -24,7 +24,13 @@ var surroundings: EnvironmentSurroundings
 var unlock_director: ScreenUnlockDirector
 var auxiliary_unlock: ScreenUnlockDirector
 var repaired_count := 0
-enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED, MAIN_MENU, WARDROBE, SETTINGS, TRANSITION_EXIT_2D, TRANSITION_ENTER_2D }
+var treasure_count := 4
+var story: StoryDirector
+var story_active := false
+var story_commit_dialog: AcceptDialog
+var delivery_pending := false
+var ending_tour_clock := 0.0
+enum InputMode { PLAY_2D, TRANSITION_3D, ARRAY_VIEW, PAUSED, MAIN_MENU, WARDROBE, SETTINGS, TRANSITION_EXIT_2D, TRANSITION_ENTER_2D, STORY }
 var input_mode := InputMode.PLAY_2D
 
 func _ready() -> void:
@@ -35,6 +41,7 @@ func _ready() -> void:
 	save.load_progress()
 	manifest = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_manifest.json"))
 	links = JSON.parse_string(FileAccess.get_file_as_string("res://data/screen_links.json"))
+	treasure_count = _treasure_total()
 	_input_map()
 	_build_shell()
 	director = ShellDirector.new()
@@ -57,6 +64,8 @@ func _ready() -> void:
 	auxiliary_unlock = ScreenUnlockDirector.new()
 	auxiliary_unlock.audio = audio
 	add_child(auxiliary_unlock)
+	story=StoryDirector.new();story.audio=audio;add_child(story)
+	story.finished.connect(_on_story_finished)
 	if test_mode and DisplayServer.get_name()=="headless": audio.enabled = false
 	hud = GameHUD.new()
 	add_child(hud)
@@ -96,6 +105,8 @@ func _ready() -> void:
 		var harness := Node.new()
 		var test_script := "res://tests/performance_probe.gd" if "--perf" in OS.get_cmdline_user_args() else "res://tests/sideview_qa.gd"
 		if "--unlock-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/unlock_qa.gd"
+		if "--chapter-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/chapter_qa.gd"
+		if "--ecology-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/ecology_qa.gd"
 		harness.set_script(load(test_script))
 		add_child(harness)
 	else:
@@ -106,7 +117,7 @@ func _ready() -> void:
 		director.frame_title()
 		if test_mode:
 			var harness := Node.new()
-			harness.set_script(load("res://tests/stage2_qa.gd"))
+			harness.set_script(load("res://tests/story_qa.gd" if "--story-qa" in OS.get_cmdline_user_args() else "res://tests/stage2_qa.gd"))
 			add_child(harness)
 
 func _prepare_ambience() -> void:
@@ -134,6 +145,7 @@ func apply_settings() -> void:
 	hud.music_slider.set_value_no_signal(audio.music_volume)
 
 func begin_adventure(reset: bool) -> void:
+	if transitioning or story_active or not in_menu: return
 	if _level_definition("BOOT" if reset else save.data.active).is_empty():
 		front_end.message = "关卡数据不可用，进度未覆盖。"
 		front_end.show_page("title")
@@ -156,9 +168,63 @@ func begin_adventure(reset: bool) -> void:
 	_control_state()
 	_checkpoint()
 	audio.play("start")
+	if save.data.flags.get("message_delivered",false):
+		if not save.data.story.outro_seen: _start_story("outro")
+	elif not save.data.story.intro_seen: _start_story("intro")
+
+func _start_story(kind: String) -> void:
+	if story_active: return
+	story_active=true;ending_tour_clock=0
+	if kind=="outro":
+		for device in devices: device.visible=true
+	hud.hide();director.busy=true
+	_control_state()
+	story.play(kind,str(save.data.wardrobe.equipped),audio.reduced_motion)
+
+func _on_story_finished(kind: String) -> void:
+	if not story_active: return
+	var candidate:=save.data.duplicate(true)
+	candidate.story["intro_seen" if kind=="intro" else "outro_seen"]=true
+	if kind=="intro": candidate.story.message_state="failed"
+	if not save.commit(candidate):
+		if not is_instance_valid(story_commit_dialog):
+			story_commit_dialog=AcceptDialog.new();story_commit_dialog.title="进度未能保存";story_commit_dialog.dialog_text="剧情已结束，但记录尚未写入。检查存储空间后按确认重试；原进度保持不变。";add_child(story_commit_dialog)
+			story_commit_dialog.confirmed.connect(func(): _on_story_finished(kind))
+			story_commit_dialog.canceled.connect(func(): story_commit_dialog.popup_centered())
+		story_commit_dialog.popup_centered()
+		return
+	world.flags=save.data.flags;world.session=save.data
+	if is_instance_valid(story_commit_dialog): story_commit_dialog.queue_free();story_commit_dialog=null
+	story_active=false
+	director.busy=false;director.focus(_device(active_id),true)
+	hud.show();_control_state();_progress()
+	hud.show_message(str(story.dialogue.mission) if kind=="intro" else "CONNECTION RESTORED · 已完整通关，可继续探索")
+	if kind=="outro": _show_ending_actions()
+
+func _show_ending_actions() -> void:
+	hud.set_paused(true)
+	var result:=ConfirmationDialog.new();result.title="CRT CRAB / CONNECTION RESTORED";result.dialog_text="User："+str(story.dialogue.user_message)+"\n已送达 [OK]\n\nClawd："+str(story.dialogue.clawd_reply).replace("🦀","");result.ok_button_text="继续探索";result.cancel_button_text="返回菜单";add_child(result)
+	result.add_button("回看结局",false,"replay")
+	result.confirmed.connect(func(): hud.set_paused(false);result.queue_free())
+	result.canceled.connect(func(): hud.set_paused(false);return_to_title();result.queue_free())
+	result.custom_action.connect(func(_action: String): result.queue_free();hud.set_paused(false);_start_story("outro"))
+	result.popup_centered()
+
+func _maybe_deliver() -> void:
+	if delivery_pending or story_active or transitioning or in_menu or save.data.flags.get("message_delivered",false) or not WorldProgress.delivery_ready(save.data.flags): return
+	delivery_pending=true
+	if not _checkpoint(): delivery_pending=false;return
+	var candidate:=save.data.duplicate(true)
+	candidate.flags.message_delivered=true;candidate.story.message_state="delivered";candidate.story.intro_seen=true
+	if save.commit(candidate):
+		world.flags=save.data.flags;world.session=save.data
+		_progress()
+		_start_story("outro")
+	else: hud.show_message("核心已修复，送达事务尚未保存；请检查存储空间，稍后重试。")
+	delivery_pending=false
 
 func return_to_title() -> void:
-	if transitioning or in_menu: return
+	if transitioning or in_menu or story_active: return
 	if not _checkpoint(): return
 	in_menu = true
 	hud.set_paused(false)
@@ -252,12 +318,23 @@ func _speaker(p: Vector3) -> void:
 		node.position = p+Vector3(0,0,(1-radius)*0.14)
 		shell.add_child(node)
 
-func _load_world(id: String, spawn_id: String = "") -> bool:
-	var config := _level_definition(id)
-	if config.is_empty(): return false
+func _load_world(id: String, spawn_id: String = "", requested_room: String = "") -> bool:
+	var root_definition := _level_definition(id)
+	if root_definition.is_empty(): return false
+	var saved = save.data.worlds.get(manifest[id].level_id,{})
+	if not saved is Dictionary: saved = {}
+	var room_id := ""
+	var config := root_definition
+	if root_definition.has("rooms"):
+		room_id = requested_room if not requested_room.is_empty() else (str(saved.get("room_id",root_definition.entry_room)) if spawn_id.is_empty() else str(root_definition.entry_room))
+		config = RoomCatalog.room(root_definition,room_id)
+		if config.is_empty() and requested_room.is_empty():
+			room_id=str(root_definition.entry_room);config=RoomCatalog.room(root_definition,room_id)
+		if config.is_empty(): return false
 	var entrance := SideWorld.point(config.spawns.get("entrance"),Vector2(-1,-1))
 	var requested := SideWorld.point(config.spawns.get(spawn_id,config.spawns.get("entrance")),Vector2(-1,-1))
-	if entrance.x<0 or requested.x<0: return false
+	var bounds:=Vector2(config.get("size",[768,240])[0],config.get("size",[768,240])[1])
+	if entrance.x<8 or requested.x<8 or entrance.x>bounds.x-8 or requested.x>bounds.x-8 or entrance.y<18 or requested.y<18 or entrance.y>bounds.y or requested.y>bounds.y: return false
 	var previous_id := active_id
 	var previous_flags: Dictionary = save.data.flags.duplicate(true)
 	active_id = id
@@ -268,13 +345,18 @@ func _load_world(id: String, spawn_id: String = "") -> bool:
 	world.definition = config
 	world.session = save.data
 	world.flags = save.data.flags
-	var saved = save.data.worlds.get(world.level_id,{})
-	world.state = saved.duplicate(true) if saved is Dictionary else {}
+	world.room_id = room_id
+	if not room_id.is_empty():
+		world.room_states = saved.get("rooms",{}).duplicate(true) if saved.get("rooms",{}) is Dictionary else {}
+		var room_state = world.room_states.get(room_id,{})
+		world.state = room_state.duplicate(true) if room_state is Dictionary else {}
+	else: world.state = saved.duplicate(true)
 	world.links = links
 	viewport.add_child(world)
 	var spawn_point := SideWorld.point(config.spawns.get(spawn_id,config.spawns.entrance))
 	world.player.spawn = spawn_point
 	world.player.position = spawn_point if spawn_id!="" else SideWorld.point(world.state.get("position"),spawn_point)
+	if world.player.position.x<8 or world.player.position.x>bounds.x-8 or world.player.position.y<18 or world.player.position.y>bounds.y: world.player.position=entrance
 	if world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
 		if spawn_id=="": world.player.position = entrance
 		if spawn_id!="" or world.player.test_move(world.player.transform,Vector2.ZERO,null,0.0,true):
@@ -291,6 +373,7 @@ func _load_world(id: String, spawn_id: String = "") -> bool:
 	world.message.connect(hud.show_message)
 	world.prompt_changed.connect(func(text: String): hud.prompt_label.text = text)
 	world.travel_requested.connect(_travel)
+	world.room_requested.connect(_change_room)
 	world.sound_requested.connect(audio.play)
 	world.progress_changed.connect(_progress)
 	world.player.health_changed.connect(hud.set_health)
@@ -302,12 +385,47 @@ func _load_world(id: String, spawn_id: String = "") -> bool:
 
 func _level_definition(id: String) -> Dictionary:
 	if not manifest.has(id): return {}
+	if not manifest[id].get("implemented",true): return {}
 	if not FileAccess.file_exists(manifest[id].definition): return {}
 	var config = JSON.parse_string(FileAccess.get_file_as_string(manifest[id].definition))
-	if not config is Dictionary or not config.get("spawns") is Dictionary: return {}
-	for field in ["platforms","ladders","blocks","plates","doors","chests","crystals","breakables","enemies","terminals"]:
-		if not config.get(field) is Array: return {}
-	return config
+	return config if config is Dictionary and RoomCatalog.valid(config) else {}
+
+func _treasure_total() -> int:
+	var total := 0
+	for id in manifest:
+		var definition := _level_definition(id)
+		if definition.has("rooms"):
+			for room in definition.rooms.values(): total+=room.chests.size()
+		else: total+=definition.get("chests",[]).size()
+	return total
+
+func _change_room(portal: Dictionary) -> void:
+	if transitioning or in_menu or hud.paused or not _checkpoint(): return
+	var config := _level_definition(active_id)
+	var target := RoomCatalog.room(config,str(portal.to))
+	if target.is_empty() or not target.spawns.has(portal.get("spawn","entrance")):
+		hud.show_message("房间入口不可用，已保留当前进度。")
+		return
+	transitioning = true
+	_control_state()
+	var fade := create_tween()
+	fade.tween_property(world,"modulate:a",0.0,0.08 if director.reduced_motion else 0.14)
+	await fade.finished
+	var previous := world
+	viewport.remove_child(previous)
+	if _load_world(active_id,str(portal.get("spawn","entrance")),str(portal.to)):
+		previous.free()
+	else:
+		world = previous
+		viewport.add_child(world)
+		hud.show_message("出生点被阻挡，已回退原房间。")
+	world.modulate.a = 0
+	fade = create_tween()
+	fade.tween_property(world,"modulate:a",1.0,0.08 if director.reduced_motion else 0.14)
+	await fade.finished
+	transitioning = false
+	_control_state()
+	_checkpoint()
 
 func _pixel_phase(entering: bool) -> void:
 	transfer_phase = "ENTER" if entering else "EXIT"
@@ -338,7 +456,8 @@ func _pixel_phase(entering: bool) -> void:
 func _travel(link: Dictionary) -> void:
 	if in_menu or transitioning or hud.paused or director.overview or link.from!=active_id: return
 	var destination := _level_definition(link.to)
-	if not manifest.has(link.to) or _device(link.to)==null or destination.is_empty() or not destination.spawns.has(link.spawn_id):
+	var arrival := RoomCatalog.room(destination,str(destination.get("entry_room",""))) if destination.has("rooms") else destination
+	if not manifest.has(link.to) or _device(link.to)==null or arrival.is_empty() or not arrival.spawns.has(link.spawn_id):
 		hud.show_message("NO SIGNAL / 连接失败，已返回原屏幕")
 		audio.play("error")
 		return
@@ -414,6 +533,14 @@ func _travel(link: Dictionary) -> void:
 	if not success[0]: audio.play("error")
 
 func _process(delta: float) -> void:
+	if story_active:
+		if story.kind=="outro" and story.playing and not story.suspended and story.clock<3.8:
+			ending_tour_clock=story.clock
+			if not audio.reduced_motion:
+				var angle: float=story.clock*.65
+				director.camera.position=Vector3(sin(angle)*28,lerpf(10,24,minf(story.clock/3.8,1)),cos(angle)*28)
+				director.camera.look_at(Vector3(0,7,0))
+		return
 	if is_instance_valid(gacha_panel): return
 	if in_menu:
 		if not director.reduced_motion: director.orbit += delta*0.025
@@ -422,6 +549,7 @@ func _process(delta: float) -> void:
 	if autosave > 8 and not transitioning:
 		autosave = 0
 		_checkpoint()
+		if save.data.flags.get("error_core_disabled",false): _maybe_deliver.call_deferred()
 	if hud.debug_label.visible:
 		hud.debug_label.text = "FPS %d   DRAW %d   VIEWPORT 1   PLAYER %d\n%s · %.1f MB"%[Engine.get_frames_per_second(),Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),get_tree().get_nodes_in_group("player").size(),active_id,Performance.get_monitor(Performance.MEMORY_STATIC)/1048576.0]
 	# Hide only a device that intersects the line from shell camera to active glass.
@@ -439,6 +567,7 @@ func _process(delta: float) -> void:
 		for device in devices: device.visible = true
 
 func _unhandled_input(event: InputEvent) -> void:
+	if story_active: return
 	if is_instance_valid(gacha_panel): return
 	if in_menu: return
 	if event.is_action_pressed("pause") and not transitioning:
@@ -466,7 +595,7 @@ func _toggle_overview() -> void:
 	_control_state()
 
 func open_gacha() -> void:
-	if transitioning or surroundings==null or is_instance_valid(gacha_panel): return
+	if transitioning or story_active or surroundings==null or is_instance_valid(gacha_panel): return
 	gacha_panel = PetGachaPanel.new()
 	gacha_panel.game = self
 	gacha_panel.machine = surroundings.zones[1].get_node("PetGashaponMachine")
@@ -477,6 +606,8 @@ func open_gacha() -> void:
 func _control_state() -> void:
 	if is_instance_valid(gacha_panel):
 		input_mode = InputMode.PAUSED
+	elif story_active:
+		input_mode=InputMode.STORY
 	elif in_menu:
 		input_mode = InputMode.WARDROBE if is_instance_valid(front_end) and front_end.page=="wardrobe" else (InputMode.SETTINGS if is_instance_valid(front_end) and front_end.page=="settings" else InputMode.MAIN_MENU)
 	elif transitioning:
@@ -484,7 +615,7 @@ func _control_state() -> void:
 	else:
 		input_mode = InputMode.PAUSED if hud.paused else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D)
 	if is_instance_valid(world):
-		var allowed := not in_menu and not transitioning and not hud.paused and not director.overview and not is_instance_valid(gacha_panel)
+		var allowed := not in_menu and not transitioning and not story_active and not hud.paused and not director.overview and not is_instance_valid(gacha_panel)
 		world.enabled = allowed
 		world.player.enabled = allowed
 		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED
@@ -499,17 +630,20 @@ func _progress() -> void:
 			device.set_status("ACTIVE")
 		elif manifest.has(device.screen_id):
 			var unlocked: bool = save.data.screen_unlocked.get(device.screen_id,false)
-			device.set_status("REPAIRED" if save.data.screen_repaired.get(device.screen_id,false) else ("READY" if unlocked else "LOCKED"))
+			device.set_status("REPAIRED" if save.data.screen_repaired.get(device.screen_id,false) else ("CORRUPTED" if unlocked and save.data.screen_unlock_seen.get(device.screen_id,false) else ("READY" if unlocked else "LOCKED")))
 			if unlocked and save.data.screen_unlock_seen.get(device.screen_id,false): device.set_texture(unlock_director.frame(device.device_index,36))
 		else:
-			device.set_status("SLEEP")
+			device.set_status("CONNECTED" if save.data.flags.get("message_delivered",false) else "SLEEP")
+			if save.data.flags.get("message_delivered",false): device.set_texture(unlock_director.frame(device.device_index,36))
 	var count: int = save.data.screen_repaired.size()
 	if count>repaired_count and not auxiliary_unlock.playing:
 		auxiliary_unlock.play(devices[1],audio.reduced_motion)
 	repaired_count = count
 	_checkpoint()
+	if save.data.flags.get("error_core_disabled",false): _maybe_deliver.call_deferred()
 
 func _checkpoint() -> bool:
+	if story_active: return true
 	if in_menu or not is_instance_valid(world): return true
 	save.data.started = true
 	save.data.active = active_id
@@ -529,7 +663,7 @@ func _device(id: String) -> MonitorDevice:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning and not in_menu:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning and not in_menu and not story_active:
 		hud.set_paused(true)
 
 func _quit() -> void:
@@ -550,6 +684,18 @@ func _input_map() -> void:
 	var mouse := InputEventMouseButton.new()
 	mouse.button_index = MOUSE_BUTTON_LEFT
 	InputMap.action_add_event("attack",mouse)
+	var buttons := {"jump":JOY_BUTTON_A,"attack":JOY_BUTTON_X,"interact":JOY_BUTTON_Y,"reset_puzzle":JOY_BUTTON_LEFT_STICK,"overview":JOY_BUTTON_BACK,"pause":JOY_BUTTON_START}
+	for action in buttons:
+		var event:=InputEventJoypadButton.new();event.button_index=buttons[action];InputMap.action_add_event(action,event)
+	for action in ["move_left","move_right","move_up","move_down"]:
+		InputMap.action_set_deadzone(action,.25)
+		var axis:=InputEventJoypadMotion.new()
+		axis.axis=JOY_AXIS_LEFT_X if action in ["move_left","move_right"] else JOY_AXIS_LEFT_Y
+		axis.axis_value=-1 if action in ["move_left","move_up"] else 1
+		InputMap.action_add_event(action,axis)
+		var dpad:=InputEventJoypadButton.new()
+		dpad.button_index={"move_left":JOY_BUTTON_DPAD_LEFT,"move_right":JOY_BUTTON_DPAD_RIGHT,"move_up":JOY_BUTTON_DPAD_UP,"move_down":JOY_BUTTON_DPAD_DOWN}[action]
+		InputMap.action_add_event(action,dpad)
 
 func _resize_ui() -> void:
 	var window := get_tree().root

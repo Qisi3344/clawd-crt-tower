@@ -103,18 +103,21 @@ func _ready() -> void:
 	bottom.add_child(map_button)
 	overview_panel = _panel(Color("192025ee"))
 	overview_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-	overview_panel.offset_left = -315
+	overview_panel.offset_left = -440
 	overview_panel.offset_right = -28
-	overview_panel.offset_top = -80
-	overview_panel.offset_bottom = 110
+	overview_panel.offset_top = -170
+	overview_panel.offset_bottom = 190
 	root.add_child(overview_panel)
 	var map_column := VBoxContainer.new()
 	map_column.add_theme_constant_override("separation",14)
 	overview_panel.add_child(map_column)
 	map_column.add_child(_label("  电脑阵列 / CONNECTIONS",20,Color("d4e852")))
 	route_label = _label("  ● BOOT  ⇄  ○ ARCHIVE\n  唤醒信号后开启连接",18)
+	route_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	map_column.add_child(route_label)
-	map_column.add_child(_label("  拖动环绕 · 滚轮调整高度\n  Tab 回到当前屏幕",17,Color("aab4b2")))
+	var map_help := _label("  拖动环绕 · 滚轮调整高度\n  Tab 回到当前屏幕",17,Color("aab4b2"))
+	map_help.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	map_column.add_child(map_help)
 	overview_panel.hide()
 	debug_label = _label("",15,Color("d4e852"))
 	debug_label.position = Vector2(28,148)
@@ -233,10 +236,12 @@ func set_paused(value: bool) -> void:
 
 func update_progress(id: String, session: Dictionary) -> void:
 	var flags: Dictionary = session.flags
+	var total: int = get_parent().treasure_count
 	if counters.size()==3:
-		counters[0].text = str(session.crystals); counters[1].text = "%d / 4"%session.collected.size(); counters[2].text = str(int(flags.get("boot_access",false))+int(flags.get("archive_key",false)))
-	title_label.text = "01 / BOOT  启动区" if id == "BOOT" else "02 / ARCHIVE  档案仓库"
-	collection_label.text = "◇ %d 晶体   ▣ 宝箱 %d / 4"%[session.crystals,session.collected.size()]
+		counters[0].text = str(session.crystals); counters[1].text = "%d / %d"%[session.collected.size(),total]; counters[2].text = str(session.screen_repaired.size())
+	var index: int = WorldProgress.ORDER.find(id)
+	title_label.text = "%02d / %s  %s"%[index+1,id,WorldProgress.NAMES[index]]
+	collection_label.text = "◇ %d 晶体   ▣ 宝箱 %d / %d"%[session.crystals,session.collected.size(),total]
 	if id=="ARCHIVE":
 		objective.text = "档案密钥已记录 · 可回访 BOOT 的远端门" if flags.get("archive_key",false) else ("重压板已接通 · 通过右侧机关门取得档案密钥" if flags.get("signal_archive_gate",false) else "爬上档案台 · 右推重石落到 WEIGHT 2 压板")
 	elif flags.get("slice_complete",false):
@@ -247,7 +252,18 @@ func update_progress(id: String, session: Dictionary) -> void:
 		objective.text = "启动密钥已记录 · 向右连接 ARCHIVE"
 	else:
 		objective.text = "按住 E 推箱压板 → 开门 → W 爬梯开箱"
-	route_label.text = "  %s BOOT  ⇄  %s ARCHIVE\n  远端重压板：%s"%["●" if id=="BOOT" else "○","●" if id=="ARCHIVE" else "○","接通" if flags.get("signal_archive_gate",false) else "未接通"]
+	if id=="ARCHIVE" and flags.get("archive_key",false): objective.text="档案密钥已记录 · 右侧 POP-UP 端口修复供电，仍可回 BOOT"
+	if id=="POP-UP": objective.text="两房导流片把飞蛾弹引向保险丝 → 竖井顶层恢复供电" if not flags.get("popup_power_restored",false) else "噪声已隔离 · RECYCLE 已供电，可继续回访"
+	if id=="RECYCLE": objective.text="输送、磁吸与压机 → 回收三片通信数据 → 重构台"
+	if id=="SIGNAL": objective.text="三路输入 + 继电蜜蜂接线 → 向上接通发送通道"
+	if id=="ERROR": objective.text="解除重力 / 反射 / 电路三个护罩节点，再关闭核心"
+	if flags.get("message_delivered",false): objective.text="通信已恢复 · User 的消息已送达，继续探索与收集"
+	var rows: Array[String]=[]
+	for screen in WorldProgress.ORDER:
+		rows.append(("▶ " if screen==id else "  ")+screen+" / "+("已修复" if session.screen_repaired.get(screen,false) else ("可进入" if session.screen_unlocked.get(screen,false) else "未连接")))
+	rows.append("ARCHIVE 重压板："+("接通" if flags.get("signal_archive_gate",false) else "未接通"))
+	rows.append("User 消息："+("已送达" if flags.get("message_delivered",false) else "发送失败"))
+	route_label.text="\n".join(rows)
 
 func _label(text: String, size: int, color := Color("f0f0df")) -> Label:
 	var label := Label.new()

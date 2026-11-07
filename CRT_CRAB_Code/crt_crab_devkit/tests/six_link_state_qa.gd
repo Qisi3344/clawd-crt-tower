@@ -25,6 +25,17 @@ func run() -> void:
 	check("v3 inventory worlds and wardrobe survive",disk.data.collected==roundtrip.collected and disk.data.worlds==roundtrip.worlds and disk.data.crystals==11 and disk.data.wardrobe.equipped=="silver_shell")
 	check("old adventure continues without forcing an intro",disk.data.story.intro_seen and disk.data.story.message_state=="failed" and disk.data.active=="ARCHIVE")
 	check("old entered ARCHIVE will not replay unlock",disk.data.screen_unlocked.get("ARCHIVE",false) and disk.data.screen_unlock_seen.get("ARCHIVE",false))
+	var reset_source:=disk.data.duplicate(true)
+	reset_source.worlds.archive_01.blocks.heavy_boulder=[344,136]
+	reset_source.screen_unlocked.ERROR=true
+	var reset_loaded:=SaveStore.migrate(reset_source)
+	check("inactive pressure is rebuilt from actual restored stone",not reset_loaded.flags.signal_archive_gate and reset_loaded.screen_unlocked.ERROR)
+	reset_source.worlds.archive_01.blocks.heavy_boulder=[392,200]
+	check("supported source survives disk reconstruction",SaveStore.migrate(reset_source).flags.signal_archive_gate)
+	var pending_flags:={"boot_access":true,"archive_key":true,"popup_power_restored":true,"message_packet_restored":true,"signal_core_ready":true,"error_core_disabled":true,"signal_archive_gate":false}
+	check("boss alone cannot deliver without current A input",not WorldProgress.delivery_ready(pending_flags))
+	pending_flags.signal_archive_gate=true
+	check("all necessary current inputs permit delivery",WorldProgress.delivery_ready(pending_flags))
 	for id in ["BOOT","ARCHIVE","POP-UP","RECYCLE","SIGNAL","ERROR"]:
 		var payload := SaveStore.fresh();payload.active=id
 		check("v4 keeps active screen "+id,SaveStore.migrate(payload).active==id)

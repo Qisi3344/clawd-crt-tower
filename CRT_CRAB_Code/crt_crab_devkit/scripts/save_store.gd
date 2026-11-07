@@ -59,8 +59,10 @@ static func migrate(parsed: Dictionary) -> Dictionary:
 		if result.active=="ARCHIVE" or result.worlds.has("archive_01"): result.screen_unlock_seen.ARCHIVE = true
 	for key in ["intro_seen","outro_seen"]: result.story[key] = result.story.get(key,false) is bool and result.story.get(key,false)
 	var delivered: bool = result.flags.get("message_delivered",false) and result.flags.get("error_core_disabled",false)
+	if delivered: result.story.intro_seen=true
 	result.story.message_state = "delivered" if delivered else ("ready" if result.flags.get("signal_core_ready",false) else ("failed" if result.story.intro_seen else "pending"))
 	if not delivered: result.story.outro_seen = false
+	WorldProgress.restore_supported_signals(result)
 	result.version = VERSION
 	return result
 

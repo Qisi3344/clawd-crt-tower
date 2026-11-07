@@ -73,7 +73,7 @@
   },
   {
     "index": 4,
-    "screen": "SLEEP_4",
+    "screen": "POP-UP",
     "model": 3,
     "position": [
       1.344,
@@ -109,7 +109,7 @@
   },
   {
     "index": 6,
-    "screen": "SLEEP_6",
+    "screen": "RECYCLE",
     "model": 0,
     "position": [
       -0.084,
@@ -163,7 +163,7 @@
   },
   {
     "index": 9,
-    "screen": "SLEEP_9",
+    "screen": "SIGNAL",
     "model": 0,
     "position": [
       4.62,
@@ -199,7 +199,7 @@
   },
   {
     "index": 11,
-    "screen": "SLEEP_11",
+    "screen": "ERROR",
     "model": 2,
     "position": [
       -4.284,

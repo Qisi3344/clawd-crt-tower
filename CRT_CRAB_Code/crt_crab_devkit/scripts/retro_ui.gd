@@ -27,6 +27,10 @@ func skin(bg: Color, border: Color, pressed := false) -> StyleBoxTexture:
 
 func polish(node) -> void:
     if not is_instance_valid(node): return
+    var ancestor: Node = node
+    while ancestor!=null:
+        if ancestor.get_meta("story_ui",false): return
+        ancestor=ancestor.get_parent()
     if node is Control:
         node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
         if node is Label or node is Button: node.add_theme_font_size_override("font_size",36 if node.get_theme_font_size("font_size")>=25 else 24)

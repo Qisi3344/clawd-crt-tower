@@ -6,6 +6,7 @@ signal prompt_changed(text: String)
 signal travel_requested(link: Dictionary)
 signal progress_changed
 signal sound_requested(kind: String)
+signal room_requested(portal: Dictionary)
 var screen_id := "BOOT"
 var level_id := "boot_01"
 var definition: Dictionary = {}
@@ -28,9 +29,14 @@ var nearest: Dictionary = {}
 var last_prompt := ""
 var elapsed := 0.0
 var plate_settle := 0.0
+var room_id := ""
+var room_states: Dictionary = {}
+var world_size := Vector2(768,240)
+var mechanisms: ChapterMechanics
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	world_size = Vector2(definition.get("size",[768,240])[0],definition.get("size",[768,240])[1])
 	for field in ["broken","defeated"]:
 		if not state.get(field) is Array: state[field] = []
 	if not state.get("blocks") is Dictionary: state.blocks = {}
@@ -40,8 +46,8 @@ func _ready() -> void:
 	bg.z_index = -10
 	add_child(bg)
 	for platform in definition.platforms: _solid(Rect2(platform[0],platform[1],platform[2],platform[3]))
-	_solid(Rect2(-16,0,16,256))
-	_solid(Rect2(768,0,16,256))
+	_solid(Rect2(-16,0,16,world_size.y+16))
+	_solid(Rect2(world_size.x,0,16,world_size.y+16))
 	for ladder in definition.ladders:
 		for y in range(int(ladder.top),int(ladder.bottom),32): PixelArt.sprite(self,14,Vector2(ladder.x,y+16))
 	for entry in definition.blocks:
@@ -101,7 +107,8 @@ func _ready() -> void:
 		crystals.append(crystal)
 	for entry in definition.terminals: PixelArt.sprite(self,13,point(entry.position)+Vector2(0,-16))
 	for link in links:
-		if link.from==screen_id: PixelArt.sprite(self,13,point(link.position)+Vector2(0,-16))
+		if link.from==screen_id and str(link.get("room",""))==room_id: PixelArt.sprite(self,13,point(link.position)+Vector2(0,-16))
+	for portal in definition.get("room_portals",[]): PixelArt.sprite(self,13,point(portal.position)+Vector2(0,-16))
 	player = SideCrab.new()
 	player.level = self
 	player.spawn = point(definition.spawns.entrance)
@@ -122,6 +129,8 @@ func _ready() -> void:
 	add_child(camera)
 	camera.enabled = true
 	_snap_camera()
+	if definition.has("mechanisms") or definition.has("animals"):
+		mechanisms=ChapterMechanics.new();mechanisms.world=self;add_child(mechanisms)
 	_update_plates()
 	queue_redraw()
 
@@ -169,6 +178,9 @@ func _update_plates() -> void:
 		for block in blocks:
 			if absf(block.position.x-p.x)<10 and absf(block.position.y+8-p.y)<3 and absf(block.velocity.y)<2: total += block.weight
 		if is_instance_valid(player) and absf(player.position.x-p.x)<11 and absf(player.position.y-p.y)<3: total += player.weight
+		if is_instance_valid(mechanisms):
+			for animal in mechanisms.animals:
+				if is_instance_valid(animal) and not animal.defeated and absf(animal.position.x-p.x)<11 and absf(animal.position.y-p.y)<4: total+=animal.weight
 		var active: bool = total>=int(plate.weight)
 		if plate.active!=active:
 			plate.active = active
@@ -210,7 +222,9 @@ func _update_prompt() -> void:
 		if not session.collected.has(chest.id): candidates.append({"type":"chest","position":chest.position,"object":chest,"prompt":"E  打开宝箱"})
 	for terminal in definition.terminals: candidates.append({"type":"heal","position":terminal.position,"prompt":"E  用 1 晶体恢复 1 点生命"})
 	for link in links:
-		if link.from==screen_id: candidates.append({"type":"portal","position":link.position,"object":link,"prompt":"E  "+str(link.label)})
+		if link.from==screen_id and str(link.get("room",""))==room_id: candidates.append({"type":"portal","position":link.position,"object":link,"prompt":"E  "+str(link.label)})
+	for portal in definition.get("room_portals",[]): candidates.append({"type":"room","position":portal.position,"object":portal,"prompt":"E  "+str(portal.label)})
+	if is_instance_valid(mechanisms): candidates.append_array(mechanisms.candidates())
 	for candidate in candidates:
 		var dist := player.position.distance_to(point(candidate.position))
 		if dist<distance:
@@ -227,6 +241,8 @@ func _update_prompt() -> void:
 func interact() -> void:
 	if not enabled or nearest.is_empty(): return
 	match nearest.type:
+		"mechanism":
+			mechanisms.interact(nearest.object)
 		"chest":
 			var chest: Dictionary = nearest.object
 			if session.collected.has(chest.id): return
@@ -236,9 +252,9 @@ func interact() -> void:
 			chest.sprite.texture = PixelArt.frame(7)
 			pickup_burst(chest.sprite.position)
 			message.emit("宝箱已记录 · +%d 晶体"%int(chest.crystals))
-			if session.collected.size()==4:
+			if ["boot_access","boot_remote","archive_key","archive_hidden"].all(func(id): return session.collected.has(id)) and not flags.get("slice_complete",false):
 				flags.slice_complete = true
-				message.emit("两屏切片完成 · 四个宝箱与跨屏信号已记录。")
+				message.emit("旧区四个宝箱已记录 · 带着档案密钥前往 POP-UP。")
 			sound_requested.emit("unlock")
 			progress_changed.emit()
 		"heal":
@@ -255,16 +271,23 @@ func interact() -> void:
 				message.emit(str(link.locked_hint))
 				return
 			travel_requested.emit(link)
+		"room":
+			var portal: Dictionary = nearest.object
+			if not str(portal.get("requires","")).is_empty() and not flags.get(portal.requires,false):
+				message.emit(str(portal.get("locked_hint","先完成当前房间的机关。")))
+				return
+			room_requested.emit(portal)
 
 func _attack() -> void:
 	sound_requested.emit("attack")
+	if is_instance_valid(mechanisms): mechanisms.attack()
 	for bug in enemies.duplicate():
 		var offset: Vector2 = bug.position-player.position
 		if absf(offset.x)<31 and absf(offset.y)<23 and offset.x*player.facing>-5: bug.hit()
 	for i in range(breakables.size()-1,-1,-1):
 		var block: Dictionary = breakables[i]
 		var offset: Vector2 = block.body.position-(player.position-Vector2(0,8))
-		if absf(offset.x)<28 and absf(offset.y)<18 and offset.x*player.facing>-4:
+		if absf(offset.x)<28 and absf(offset.y)<24 and offset.x*player.facing>-4:
 			state.broken.append(block.id)
 			block.body.queue_free()
 			breakables.remove_at(i)
@@ -274,6 +297,7 @@ func _attack() -> void:
 func reset_puzzle() -> void:
 	if not enabled: return
 	for block in blocks: block.reset()
+	if is_instance_valid(mechanisms): mechanisms.reset_local()
 	player.position = player.spawn
 	player.velocity = Vector2.ZERO
 	player.climbing = false
@@ -288,13 +312,16 @@ func _on_death() -> void:
 	message.emit("已在当前屏幕检查点重连，机关与宝箱进度保留。")
 
 func _snap_camera() -> void:
-	camera.position = Vector2(clampf(roundf(player.position.x+56),160,608),120)
+	camera.position = Vector2(clampf(roundf(player.position.x+56),160,world_size.x-160),120)
 	camera.reset_smoothing()
 
 func snapshot() -> Dictionary:
 	state.position = [player.position.x,player.position.y]
 	state.blocks = {}
 	for block in blocks: state.blocks[block.block_id] = block.snapshot()
+	if not room_id.is_empty():
+		room_states[room_id] = state.duplicate(true)
+		return {"room_id":room_id,"rooms":room_states.duplicate(true)}
 	return state.duplicate(true)
 
 func _draw() -> void:

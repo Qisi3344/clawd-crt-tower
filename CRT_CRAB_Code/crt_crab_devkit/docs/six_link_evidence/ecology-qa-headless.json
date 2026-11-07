@@ -1,0 +1,91 @@
+{
+	"clips": {},
+	"passed": true,
+	"scope": "isolated enemy fixtures; controller hardware was not tested",
+	"tests": [
+		{
+			"passed": true,
+			"test": "isolated room fixture loads POP-UP / hall"
+		},
+		{
+			"passed": true,
+			"test": "timed popup warns before enabling its collider"
+		},
+		{
+			"passed": true,
+			"test": "timed popup is a real world obstacle during its down phase"
+		},
+		{
+			"passed": true,
+			"test": "180-degree reflected enemy shot defeats its own moth"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_a"
+		},
+		{
+			"passed": true,
+			"test": "fixed test emitter prevents dead-moth softlock"
+		},
+		{
+			"passed": true,
+			"test": "R restores puzzle species but keeps unique progress"
+		},
+		{
+			"passed": true,
+			"test": "capacitor flea performs a telegraphed physical jump"
+		},
+		{
+			"passed": true,
+			"test": "isolated room fixture loads POP-UP / loft"
+		},
+		{
+			"passed": true,
+			"test": "heavy tape snail physically supports weight-two plate"
+		},
+		{
+			"passed": true,
+			"test": "spider wire enables an actual one-way bridge"
+		},
+		{
+			"passed": true,
+			"test": "claw cuts cable spider wire without hitting ceiling body"
+		},
+		{
+			"passed": true,
+			"test": "isolated room fixture loads RECYCLE / sorter"
+		},
+		{
+			"passed": true,
+			"test": "crusher really defeats rolling hamster"
+		},
+		{
+			"passed": true,
+			"test": "isolated room fixture loads RECYCLE / tunnel"
+		},
+		{
+			"passed": true,
+			"test": "beaver gnaws only its named marked scrap"
+		},
+		{
+			"passed": true,
+			"test": "isolated room fixture loads SIGNAL / relay"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises signal_eel_coil"
+		},
+		{
+			"passed": true,
+			"test": "insulated eel pulse charges remote coil"
+		},
+		{
+			"passed": true,
+			"test": "controller mappings include physical face button and stick movement"
+		},
+		{
+			"passed": true,
+			"test": "synthetic gamepad input moves the actual crab"
+		}
+	]
+}

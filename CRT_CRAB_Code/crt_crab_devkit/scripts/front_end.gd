@@ -88,7 +88,7 @@ func show_page(value: String) -> void:
 	_label("CRT小蟹闯塔记",32,Color("ffc09e"))
 	_label("CRT CRAB // SCREEN ADVENTURE",15,Color("86bdb4"))
 	if value=="title":
-		_label("SYSTEM ONLINE · 两屏冒险试玩",18)
+		_label("SYSTEM ONLINE · 修复通信，回到 User 身边",18)
 		_inventory()
 		if game.save.data.started:
 			_button("继续冒险",func(): game.begin_adventure(false))
@@ -171,6 +171,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _inventory() -> void:
 	var row := HBoxContainer.new(); row.add_theme_constant_override("separation",12); column.add_child(row)
-	for entry in [[15,str(game.save.data.crystals)],[6,"%d / 4"%game.save.data.collected.size()],[8,str(int(game.save.data.flags.get("boot_access",false))+int(game.save.data.flags.get("archive_key",false)))]]:
+	for entry in [[15,str(game.save.data.crystals)],[6,"%d / %d"%[game.save.data.collected.size(),game.treasure_count]],[8,str(game.save.data.screen_repaired.size())]]:
 		var icon := TextureRect.new(); icon.texture = PixelArt.icon(entry[0]); icon.custom_minimum_size = Vector2(32,32); icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE; icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST; row.add_child(icon)
 		var count := Label.new(); count.text = entry[1]; row.add_child(count)

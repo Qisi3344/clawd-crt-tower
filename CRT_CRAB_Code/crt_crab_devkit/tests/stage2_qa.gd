@@ -120,6 +120,7 @@ func _run() -> void:
 	check("continue restores a safe saved horizontal position",absf(game.world.player.position.x-resume_x)<1)
 	game.return_to_title()
 	game.begin_adventure(true);await frames(5)
+	if game.story.playing: game.story.skip();await frames(2)
 	check("new game resets adventure but keeps outfits",game.active_id=="BOOT" and game.save.data.crystals==0 and game.save.data.collected.is_empty() and game.save.data.wardrobe.owned.has("silver_shell"))
 	for reduced in [false,true]:
 		game.director.reduced_motion = reduced

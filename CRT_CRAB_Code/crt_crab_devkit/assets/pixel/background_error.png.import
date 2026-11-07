@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjf7bgvtwcp6g"
-path="res://.godot/imported/m3-front.png-f6bc80ff45b3c83fda626b27d5ea2fb6.ctex"
+uid="uid://dmb0ggctt1tus"
+path="res://.godot/imported/background_error.png-230e7741938a9e9e0350fa3e72fda9ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://docs/six_link_evidence/baseline/m3-front.png"
-dest_files=["res://.godot/imported/m3-front.png-f6bc80ff45b3c83fda626b27d5ea2fb6.ctex"]
+source_file="res://assets/pixel/background_error.png"
+dest_files=["res://.godot/imported/background_error.png-230e7741938a9e9e0350fa3e72fda9ce.ctex"]
 
 [params]
 

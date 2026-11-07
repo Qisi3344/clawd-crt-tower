@@ -1,0 +1,522 @@
+{
+  "entry_room": "hall",
+  "rooms": {
+    "hall": {
+      "name": "故障广告回廊",
+      "size": [
+        480,
+        240
+      ],
+      "background": "popup",
+      "spawns": {
+        "entrance": [
+          32,
+          208
+        ],
+        "return": [
+          448,
+          208
+        ],
+        "loft_return": [
+          112,
+          160
+        ]
+      },
+      "platforms": [
+        [
+          0,
+          208,
+          480,
+          32
+        ],
+        [
+          80,
+          160,
+          64,
+          16
+        ],
+        [
+          336,
+          160,
+          64,
+          16
+        ]
+      ],
+      "ladders": [
+        {
+          "x": 112,
+          "top": 160,
+          "bottom": 208
+        }
+      ],
+      "blocks": [],
+      "plates": [],
+      "doors": [
+        {
+          "id": "popup_gate_a",
+          "position": [
+            304,
+            208
+          ],
+          "height": 56,
+          "requires": "popup_fuse_a"
+        }
+      ],
+      "chests": [],
+      "crystals": [],
+      "breakables": [],
+      "enemies": [],
+      "terminals": [],
+      "signs": [
+        [
+          32,
+          44,
+          "POP-UP / ERROR SHOTS CAN REPAIR"
+        ],
+        [
+          136,
+          80,
+          "TURN MIRROR"
+        ],
+        [
+          214,
+          170,
+          "FUSE -> POWER"
+        ],
+        [
+          330,
+          128,
+          "NEXT ROOM ->"
+        ]
+      ],
+      "room_portals": [
+        {
+          "to": "shaft",
+          "position": [
+            432,
+            208
+          ],
+          "label": "进入重叠窗口竖井",
+          "spawn": "entrance",
+          "requires": "popup_fuse_a",
+          "locked_hint": "先完成当前房间的机关。"
+        },
+        {
+          "to": "loft",
+          "position": [
+            112,
+            160
+          ],
+          "label": "查看缓存夹层",
+          "spawn": "entrance",
+          "requires": "",
+          "locked_hint": "先完成当前房间的机关。"
+        }
+      ],
+      "mechanisms": [
+        {
+          "id": "reflect_a",
+          "type": "reflector",
+          "position": [
+            176,
+            120
+          ],
+          "control": [
+            176,
+            208
+          ],
+          "label": "旋转导流片 ↑ / ↓"
+        },
+        {
+          "id": "fuse_a",
+          "type": "receiver",
+          "position": [
+            176,
+            184
+          ],
+          "flag": "popup_fuse_a"
+        },
+        {
+          "id": "current_a",
+          "type": "hazard",
+          "position": [
+            240,
+            208
+          ],
+          "disabled_by": "popup_fuse_a"
+        },
+        {
+          "id": "fallback_a",
+          "type": "pulse",
+          "position": [
+            80,
+            208
+          ],
+          "emitter": [
+            64,
+            120
+          ],
+          "direction": [
+            1,
+            0
+          ],
+          "label": "备用测试脉冲 · 飞蛾被击败也能重试"
+        },
+        {
+          "id": "timed_popup",
+          "type": "popup_panel",
+          "position": [
+            224,
+            208
+          ],
+          "disabled_by": "popup_fuse_a"
+        }
+      ],
+      "animals": [
+        {
+          "id": "popup_moth_a",
+          "species": "moth",
+          "position": [
+            64,
+            120
+          ]
+        },
+        {
+          "id": "popup_flea",
+          "species": "flea",
+          "position": [
+            368,
+            160
+          ],
+          "health": 1
+        }
+      ]
+    },
+    "shaft": {
+      "name": "重叠窗口竖井",
+      "size": [
+        320,
+        240
+      ],
+      "background": "popup",
+      "spawns": {
+        "entrance": [
+          32,
+          208
+        ],
+        "return": [
+          288,
+          208
+        ]
+      },
+      "platforms": [
+        [
+          0,
+          208,
+          320,
+          32
+        ],
+        [
+          32,
+          160,
+          80,
+          16
+        ],
+        [
+          128,
+          120,
+          64,
+          16
+        ],
+        [
+          224,
+          80,
+          80,
+          16
+        ]
+      ],
+      "ladders": [
+        {
+          "x": 64,
+          "top": 160,
+          "bottom": 208
+        },
+        {
+          "x": 160,
+          "top": 120,
+          "bottom": 208
+        },
+        {
+          "x": 256,
+          "top": 80,
+          "bottom": 208
+        }
+      ],
+      "blocks": [],
+      "plates": [],
+      "doors": [],
+      "chests": [],
+      "crystals": [],
+      "breakables": [],
+      "enemies": [],
+      "terminals": [],
+      "signs": [
+        [
+          24,
+          35,
+          "POP-UP / 02 WINDOW SHAFT"
+        ],
+        [
+          226,
+          60,
+          "REPAIR"
+        ],
+        [
+          128,
+          150,
+          "REFLECT -> FUSE"
+        ]
+      ],
+      "room_portals": [
+        {
+          "to": "hall",
+          "position": [
+            32,
+            208
+          ],
+          "label": "回到广告回廊",
+          "spawn": "return",
+          "requires": "",
+          "locked_hint": "先完成当前房间的机关。"
+        }
+      ],
+      "mechanisms": [
+        {
+          "id": "reflect_b",
+          "type": "reflector",
+          "position": [
+            160,
+            104
+          ],
+          "control": [
+            160,
+            208
+          ],
+          "label": "旋转第二片导流镜"
+        },
+        {
+          "id": "fuse_b",
+          "type": "receiver",
+          "position": [
+            160,
+            176
+          ],
+          "flag": "popup_fuse_b"
+        },
+        {
+          "id": "current_b",
+          "type": "hazard",
+          "position": [
+            224,
+            208
+          ],
+          "disabled_by": "popup_fuse_b"
+        },
+        {
+          "id": "fallback_b",
+          "type": "pulse",
+          "position": [
+            80,
+            208
+          ],
+          "emitter": [
+            48,
+            104
+          ],
+          "direction": [
+            1,
+            0
+          ],
+          "label": "备用测试脉冲"
+        },
+        {
+          "id": "popup_repair",
+          "type": "repair",
+          "position": [
+            256,
+            80
+          ],
+          "label": "隔离噪声并恢复供电",
+          "requires_all": [
+            "popup_fuse_a",
+            "popup_fuse_b"
+          ],
+          "outputs": [
+            "popup_noise_clean",
+            "popup_power_restored"
+          ],
+          "locked_hint": "先让两间房的飞蛾弹经导流镜打中保险丝。",
+          "success": "弹窗噪声已清除 · RECYCLE 供电恢复，消息仍待发送"
+        }
+      ],
+      "animals": [
+        {
+          "id": "popup_moth_b",
+          "species": "moth",
+          "position": [
+            48,
+            104
+          ]
+        }
+      ]
+    },
+    "loft": {
+      "name": "缓存夹层",
+      "size": [
+        320,
+        240
+      ],
+      "background": "popup",
+      "spawns": {
+        "entrance": [
+          32,
+          208
+        ],
+        "return": [
+          288,
+          208
+        ]
+      },
+      "platforms": [
+        [
+          0,
+          208,
+          320,
+          32
+        ],
+        [
+          96,
+          160,
+          208,
+          16
+        ]
+      ],
+      "ladders": [
+        {
+          "x": 112,
+          "top": 160,
+          "bottom": 208
+        }
+      ],
+      "blocks": [],
+      "plates": [
+        {
+          "id": "snail_weight",
+          "position": [
+            240,
+            208
+          ],
+          "weight": 2,
+          "flag": "popup_loft_supported"
+        }
+      ],
+      "doors": [
+        {
+          "id": "snail_bonus_gate",
+          "position": [
+            288,
+            208
+          ],
+          "height": 40,
+          "requires": "popup_loft_supported"
+        }
+      ],
+      "chests": [
+        {
+          "id": "popup_hidden",
+          "position": [
+            272,
+            160
+          ],
+          "crystals": 3,
+          "flag": "popup_hidden"
+        }
+      ],
+      "crystals": [
+        {
+          "id": "popup_snail_bonus",
+          "position": [
+            304,
+            192
+          ]
+        },
+        {
+          "id": "popup_wire_bonus",
+          "position": [
+            176,
+            112
+          ]
+        }
+      ],
+      "breakables": [],
+      "enemies": [],
+      "terminals": [],
+      "signs": [
+        [
+          32,
+          80,
+          "CACHE LOFT / OPTIONAL"
+        ],
+        [
+          144,
+          128,
+          "USER MESSAGE / STILL PENDING"
+        ]
+      ],
+      "room_portals": [
+        {
+          "to": "hall",
+          "position": [
+            32,
+            208
+          ],
+          "label": "返回回廊上层",
+          "spawn": "loft_return",
+          "requires": "",
+          "locked_hint": "先完成当前房间的机关。"
+        }
+      ],
+      "mechanisms": [
+        {
+          "id": "spider_bridge",
+          "type": "web_bridge",
+          "position": [
+            176,
+            128
+          ],
+          "flag": "popup_wire_live"
+        }
+      ],
+      "animals": [
+        {
+          "id": "cache_tape_snail",
+          "species": "snail",
+          "position": [
+            256,
+            208
+          ],
+          "health": 3,
+          "range": 32
+        },
+        {
+          "id": "cache_cable_spider",
+          "species": "spider",
+          "position": [
+            176,
+            64
+          ]
+        }
+      ]
+    }
+  }
+}

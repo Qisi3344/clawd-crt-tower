@@ -1,0 +1,547 @@
+{
+	"captures": [],
+	"clips": {},
+	"passed": true,
+	"tests": [
+		{
+			"passed": true,
+			"test": "single bundled pixel font"
+		},
+		{
+			"passed": true,
+			"test": "pause removes marked actions and debug copy"
+		},
+		{
+			"passed": true,
+			"test": "pixel depth styles and shared icons"
+		},
+		{
+			"passed": true,
+			"test": "M0 exterior twelve devices retained"
+		},
+		{
+			"passed": true,
+			"test": "upper keyboards absent and base configuration retained"
+		},
+		{
+			"passed": true,
+			"test": "real isolated 320x240 2D screen"
+		},
+		{
+			"passed": true,
+			"test": "only player belongs to internal screen"
+		},
+		{
+			"passed": true,
+			"test": "QA disables user save access"
+		},
+		{
+			"passed": true,
+			"test": "W away from a ladder never creates flying movement"
+		},
+		{
+			"passed": true,
+			"test": "walk toward gap"
+		},
+		{
+			"passed": true,
+			"test": "jump crosses gap and lands"
+		},
+		{
+			"passed": true,
+			"test": "walk to crate"
+		},
+		{
+			"passed": true,
+			"test": "push crate using held E"
+		},
+		{
+			"passed": true,
+			"test": "pull crate without changing facing"
+		},
+		{
+			"passed": true,
+			"test": "push to normal pressure plate"
+		},
+		{
+			"passed": true,
+			"test": "weight opens actual collision door"
+		},
+		{
+			"passed": true,
+			"test": "pass opened gate"
+		},
+		{
+			"passed": true,
+			"test": "ladder reaches raised treasure platform"
+		},
+		{
+			"passed": true,
+			"test": "S descends through ladder top ledge to solid floor"
+		},
+		{
+			"passed": true,
+			"test": "ladder can be climbed again after descent"
+		},
+		{
+			"passed": true,
+			"test": "approach BOOT chest"
+		},
+		{
+			"passed": true,
+			"test": "BOOT chest grants unique key and crystals"
+		},
+		{
+			"passed": true,
+			"test": "same chest cannot pay twice"
+		},
+		{
+			"passed": true,
+			"test": "pause freezes 2D control"
+		},
+		{
+			"passed": true,
+			"test": "array mode freezes internal physics"
+		},
+		{
+			"passed": true,
+			"test": "reach first port by normal movement"
+		},
+		{
+			"passed": true,
+			"test": "bad spawn safely refuses travel"
+		},
+		{
+			"passed": true,
+			"test": "mid-transition failure returns live original screen"
+		},
+		{
+			"passed": true,
+			"test": "failed transfer restores visible avatar and failure feedback"
+		},
+		{
+			"passed": true,
+			"test": "transition input is locked"
+		},
+		{
+			"passed": true,
+			"test": "BOOT to ARCHIVE via actual E interaction"
+		},
+		{
+			"passed": true,
+			"test": "unique player after transfer"
+		},
+		{
+			"passed": true,
+			"test": "player weight alone cannot activate heavy plate"
+		},
+		{
+			"passed": true,
+			"test": "two claw strikes defeat data bug"
+		},
+		{
+			"passed": true,
+			"test": "walk to archive box"
+		},
+		{
+			"passed": true,
+			"test": "reach archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "climb archive platform"
+		},
+		{
+			"passed": true,
+			"test": "approach marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "pinch breaks marked obstacle"
+		},
+		{
+			"passed": true,
+			"test": "reach heavy stone"
+		},
+		{
+			"passed": true,
+			"test": "push heavy stone off platform"
+		},
+		{
+			"passed": true,
+			"test": "gravity lands heavy stone on persistent plate"
+		},
+		{
+			"passed": true,
+			"test": "walk through heavy-signal gate"
+		},
+		{
+			"passed": true,
+			"test": "archive chest grants persistent key"
+		},
+		{
+			"passed": true,
+			"test": "walk to marked hidden wall"
+		},
+		{
+			"passed": true,
+			"test": "hidden wall can be broken"
+		},
+		{
+			"passed": true,
+			"test": "reach optional archive ladder"
+		},
+		{
+			"passed": true,
+			"test": "reach hidden archive chest"
+		},
+		{
+			"passed": true,
+			"test": "optional archive treasure is collectible"
+		},
+		{
+			"passed": true,
+			"test": "reach archive exit without teleport"
+		},
+		{
+			"passed": true,
+			"test": "return route reaches BOOT"
+		},
+		{
+			"passed": true,
+			"test": "ARCHIVE pressure opens real BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "walk through BOOT remote gate"
+		},
+		{
+			"passed": true,
+			"test": "remote reward obtainable only after cross-screen signal"
+		},
+		{
+			"passed": true,
+			"test": "walk back to outgoing port"
+		},
+		{
+			"passed": true,
+			"test": "BOOT ARCHIVE BOOT ARCHIVE roundtrip"
+		},
+		{
+			"passed": true,
+			"test": "heavy stone and signal persist on revisit"
+		},
+		{
+			"passed": true,
+			"test": "treasure ledger survives revisit"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "R resets current stone and clears supported signal"
+		},
+		{
+			"passed": true,
+			"test": "R keeps unique treasure rewards"
+		},
+		{
+			"passed": true,
+			"test": "damage has invulnerable interval"
+		},
+		{
+			"passed": true,
+			"test": "no chain damage"
+		},
+		{
+			"passed": true,
+			"test": "death keeps collected chests"
+		},
+		{
+			"passed": true,
+			"test": "atomic version two save"
+		},
+		{
+			"passed": true,
+			"test": "reload restores treasure ledger"
+		},
+		{
+			"passed": true,
+			"test": "disk world reload reproduces stone and pressure signal"
+		},
+		{
+			"passed": true,
+			"test": "legacy 3D save preserved with safe 2D spawn"
+		},
+		{
+			"passed": true,
+			"test": "corrupt JSON recovers safely"
+		},
+		{
+			"passed": true,
+			"test": "real legacy file gets independent rollback backup"
+		},
+		{
+			"passed": true,
+			"test": "old route still starts at ARCHIVE"
+		},
+		{
+			"passed": true,
+			"test": "supported A input restored by physically repushing stone"
+		},
+		{
+			"passed": true,
+			"test": "normal ARCHIVE port enters POP-UP"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_a"
+		},
+		{
+			"passed": true,
+			"test": "enemy projectile really opens room-one gate"
+		},
+		{
+			"passed": true,
+			"test": "local room portal enters optional loft"
+		},
+		{
+			"passed": true,
+			"test": "fifth chest is a real optional pickup"
+		},
+		{
+			"passed": true,
+			"test": "loft returns to the recorded upper spawn"
+		},
+		{
+			"passed": true,
+			"test": "local door reaches vertical shaft"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_b"
+		},
+		{
+			"passed": true,
+			"test": "repair needs two actual reflected fuses"
+		},
+		{
+			"passed": true,
+			"test": "POP-UP repair does not deliver the message"
+		},
+		{
+			"passed": true,
+			"test": "per-room persistence records both active and inactive rooms"
+		},
+		{
+			"passed": true,
+			"test": "local reset preserves other rooms and permanent repair"
+		},
+		{
+			"passed": true,
+			"test": "one crab and one active gameplay viewport"
+		},
+		{
+			"passed": true,
+			"test": "powered POP-UP port reaches RECYCLE"
+		},
+		{
+			"passed": true,
+			"test": "REVERSE changes the real conveyor"
+		},
+		{
+			"passed": true,
+			"test": "safe stop disables the real crusher"
+		},
+		{
+			"passed": true,
+			"test": "first communication fragment is fixed pickup"
+		},
+		{
+			"passed": true,
+			"test": "room portal enters magnetic well"
+		},
+		{
+			"passed": true,
+			"test": "vertical ladder reaches second fixed fragment"
+		},
+		{
+			"passed": true,
+			"test": "magnet physically transports metal to target"
+		},
+		{
+			"passed": true,
+			"test": "claw breaks only marked scrap bridge"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises recycle_heavy_supported"
+		},
+		{
+			"passed": true,
+			"test": "real dropped metal opens cache room"
+		},
+		{
+			"passed": true,
+			"test": "three physical fragments reconstruct communication packet"
+		},
+		{
+			"passed": true,
+			"test": "RECYCLE cache chest uses existing unique ledger"
+		},
+		{
+			"passed": true,
+			"test": "repair is persistent without delivering early"
+		},
+		{
+			"passed": true,
+			"test": "restored packet powers the real SIGNAL CRT"
+		},
+		{
+			"passed": true,
+			"test": "diagnostic panel reads three true upstream inputs"
+		},
+		{
+			"passed": true,
+			"test": "insulator controls the water hazard"
+		},
+		{
+			"passed": true,
+			"test": "bee actually conducts and player saves the bypass"
+		},
+		{
+			"passed": true,
+			"test": "local room system enters the three-storey fiber well"
+		},
+		{
+			"passed": true,
+			"test": "middle fiber socket is connected by interaction"
+		},
+		{
+			"passed": true,
+			"test": "live A plus repaired B C unlock sending channel"
+		},
+		{
+			"passed": true,
+			"test": "SIGNAL READY never means message delivered"
+		},
+		{
+			"passed": true,
+			"test": "SIGNAL optional cache recorded"
+		},
+		{
+			"passed": true,
+			"test": "SIGNAL unlocks the real ERROR CRT"
+		},
+		{
+			"passed": true,
+			"test": "ERROR optional chest is independent of the boss"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises error_foyer_open"
+		},
+		{
+			"passed": true,
+			"test": "owl's actual dive clears marked panel"
+		},
+		{
+			"passed": true,
+			"test": "owl room connects to piston room"
+		},
+		{
+			"passed": true,
+			"test": "real steel holds piston pressure plate"
+		},
+		{
+			"passed": true,
+			"test": "live diagnostic authorizes boss room"
+		},
+		{
+			"passed": true,
+			"test": "boss node A requires an actual heavy block"
+		},
+		{
+			"passed": true,
+			"test": "boss node B requires reflected core projectile"
+		},
+		{
+			"passed": true,
+			"test": "boss node C uses live SIGNAL and reversed pulse"
+		},
+		{
+			"passed": true,
+			"test": "only final core repair commits delivery"
+		},
+		{
+			"passed": true,
+			"test": "six repaired screens with one single player"
+		},
+		{
+			"passed": true,
+			"test": "ending viewed state is durable"
+		},
+		{
+			"passed": true,
+			"test": "completed six-room campaign writes atomically"
+		},
+		{
+			"passed": true,
+			"test": "restart resumes repaired boss room without replaying ending"
+		},
+		{
+			"passed": true,
+			"test": "R never resurrects a repaired boss or repeats delivery"
+		},
+		{
+			"passed": true,
+			"test": "safe return route from ERROR reaches ARCHIVE"
+		},
+		{
+			"passed": true,
+			"test": "live A can turn off without revoking ERROR access"
+		},
+		{
+			"passed": true,
+			"test": "A is physically repairable after completion"
+		},
+		{
+			"passed": true,
+			"test": "revisit reaches repaired RECYCLE well"
+		},
+		{
+			"passed": true,
+			"test": "post-repair side route opens hidden magnetic tunnel"
+		},
+		{
+			"passed": true,
+			"test": "ninth unique chest is obtainable on revisit"
+		},
+		{
+			"passed": true,
+			"test": "exploration never repeats the completed ending"
+		}
+	]
+}

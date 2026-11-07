@@ -73,6 +73,8 @@ def frame(index, t):
         d.rectangle((224,130,233,138),fill=GREEN if q > .85 else color)
     if t >= .85:
         labels = ['LINK OK','NODES ONLINE','DATA VERIFIED','SIGNAL STABLE','WAKE UP / READY','PORT UNLOCKED']
+        d.rectangle((20,19,235,34),fill=BG)
+        d.text((20,20),labels[kind],fill=GREEN)
         d.rectangle((20,141,235,154),fill=BG)
         d.text((24,143),labels[kind],fill=GREEN)
     return im

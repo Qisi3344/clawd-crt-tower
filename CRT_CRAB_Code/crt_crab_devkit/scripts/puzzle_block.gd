@@ -34,6 +34,16 @@ func _physics_process(delta: float) -> void:
 	if not level.enabled: return
 	var dx := target_x-position.x
 	velocity.x = clampf(dx/delta,-48,48) if absf(dx)>0.05 else 0
+	if is_instance_valid(level.mechanisms):
+		var belt := level.mechanisms.conveyor_velocity(position)
+		velocity.x+=belt
+		target_x+=belt*delta
+		var magnetic_target := level.mechanisms.magnet_target(position)
+		if magnetic_target.x>=0:
+			position=position.move_toward(magnetic_target,48*delta)
+			target_x=position.x
+			velocity=Vector2.ZERO
+			return
 	velocity.y = minf(320,velocity.y+580*delta) if gravity_enabled else 0
 	var fall_speed := velocity.y
 	move_and_slide()
@@ -41,6 +51,11 @@ func _physics_process(delta: float) -> void:
 	if was_falling and is_on_floor(): level.sound_requested.emit("hit")
 	was_falling = not is_on_floor() and fall_speed>40
 	if fall_speed>80 and is_instance_valid(level.player):
+		for bug in level.enemies.duplicate():
+			if absf(bug.position.x-position.x)<16 and bug.position.y-position.y>0 and bug.position.y-position.y<25: bug.crushed()
+		if is_instance_valid(level.mechanisms):
+			for animal in level.mechanisms.animals:
+				if is_instance_valid(animal) and not animal.defeated and absf(animal.position.x-position.x)<16 and animal.position.y-position.y>0 and animal.position.y-position.y<25: animal.hit(true)
 		var p := level.player
 		if absf(p.position.x-position.x)<13 and p.position.y-position.y>0 and p.position.y-position.y<26:
 			p.take_damage(3)

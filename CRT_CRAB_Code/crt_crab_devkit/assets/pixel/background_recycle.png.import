@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bod06hbtyuu3s"
-path="res://.godot/imported/m3-left.png-7a0e02274c2ccb855d3f8649768668ad.ctex"
+uid="uid://drbhipig6la2e"
+path="res://.godot/imported/background_recycle.png-a011993ce43b7385e53ea6be7b2820c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://docs/six_link_evidence/baseline/m3-left.png"
-dest_files=["res://.godot/imported/m3-left.png-7a0e02274c2ccb855d3f8649768668ad.ctex"]
+source_file="res://assets/pixel/background_recycle.png"
+dest_files=["res://.godot/imported/background_recycle.png-a011993ce43b7385e53ea6be7b2820c7.ctex"]
 
 [params]
 

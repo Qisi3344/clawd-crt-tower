@@ -151,7 +151,9 @@ func run() -> void:
 
     game.gacha_panel.close(); await frames(2)
     check("return restores main menu",game.in_menu and game.front_end.visible and not is_instance_valid(game.gacha_panel))
-    game.begin_adventure(false); game.hud.set_paused(true)
+    game.begin_adventure(false)
+    if game.story.playing: game.story.skip(); await frames(2)
+    game.hud.set_paused(true)
     game.hud.gacha_requested.emit(); await frames(2)
     check("pause entry freezes player",is_instance_valid(game.gacha_panel) and not game.world.enabled and game.hud.paused)
     game.gacha_panel.close(); await frames(2)

@@ -12,5 +12,37 @@
     "level_id": "archive_01",
     "definition": "res://data/levels/archive_01.json",
     "color": "b09af1"
+  },
+  "POP-UP": {
+    "name": "弹窗区",
+    "computer_id": "crt_sleep_04",
+    "level_id": "popup_01",
+    "definition": "res://data/levels/popup_01.json",
+    "color": "e7a0c0",
+    "implemented": true
+  },
+  "RECYCLE": {
+    "name": "回收站",
+    "computer_id": "crt_sleep_06",
+    "level_id": "recycle_01",
+    "definition": "res://data/levels/recycle_01.json",
+    "color": "b4cc8c",
+    "implemented": true
+  },
+  "SIGNAL": {
+    "name": "信号中心",
+    "computer_id": "crt_sleep_09",
+    "level_id": "signal_01",
+    "definition": "res://data/levels/signal_01.json",
+    "color": "74cbd0",
+    "implemented": true
+  },
+  "ERROR": {
+    "name": "错误核心",
+    "computer_id": "crt_sleep_11",
+    "level_id": "error_01",
+    "definition": "res://data/levels/error_01.json",
+    "color": "aaa2e0",
+    "implemented": true
   }
 }

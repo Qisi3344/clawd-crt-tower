@@ -20,6 +20,7 @@ func _ready() -> void:
 	shape.shape = rect
 	add_child(shape)
 	sprite = PixelArt.sprite(self,8,Vector2(0,-10))
+	sprite.hide()
 	z_index = 6
 
 func _physics_process(delta: float) -> void:
@@ -37,6 +38,22 @@ func _physics_process(delta: float) -> void:
 	sprite.modulate = Color("ffffff") if stun<=0 else Color("f8d879")
 	if absf(level.player.position.x-position.x)<14 and absf(level.player.position.y-position.y)<15 and stun<=0:
 		level.player.take_damage()
+	queue_redraw()
+
+func _draw() -> void:
+	var ink:=Color("192331");var metal:=Color("a3b0a4")
+	for side in [-1,1]:
+		for i in range(3):
+			var y:float=-9+i*4
+			draw_line(Vector2(side*5,y),Vector2(side*12,y+sin(anim*9+i)*2),metal,1)
+	draw_circle(Vector2(0,-9),9,ink)
+	draw_arc(Vector2(0,-9),7,PI,TAU,12,Color("5a917c"),6)
+	draw_line(Vector2(0,-15),Vector2(0,-6),ink,1)
+	draw_rect(Rect2(-2,-13,4,3),Color("54cfc3") if stun<=0 else Color("efcd79"))
+	for x in [-4,4]: draw_line(Vector2(x,-14),Vector2(x*2,-20),metal,1)
+
+func crushed() -> void:
+	health=1;stun=0;hit()
 
 func hit() -> void:
 	if stun>0: return

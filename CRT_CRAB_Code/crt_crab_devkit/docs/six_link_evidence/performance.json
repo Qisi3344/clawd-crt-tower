@@ -1,0 +1,61 @@
+{
+	"engine": "4.7.2-stable (official)",
+	"gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+	"method": "wall clock, no fixed-fps; hidden-window forced OpenGL render and GPU image readback, 2.5 seconds per view; readback adds overhead, not an interactive gameplay FPS benchmark",
+	"samples": [
+		{
+			"draw_calls": 382.0,
+			"elapsed_ms": 2515.0,
+			"measured_cycles_per_second": 51.2922465208747,
+			"render_cycles": 129,
+			"render_readback_ms_median": 6.994,
+			"render_readback_ms_p95": 10.422,
+			"static_memory_mb": 71.1615238189697,
+			"view": "active"
+		},
+		{
+			"draw_calls": 1292.0,
+			"elapsed_ms": 2574.0,
+			"measured_cycles_per_second": 26.8065268065268,
+			"render_cycles": 69,
+			"render_readback_ms_median": 12.415,
+			"render_readback_ms_p95": 15.21,
+			"static_memory_mb": 71.702299118042,
+			"view": "front"
+		},
+		{
+			"draw_calls": 1277.0,
+			"elapsed_ms": 2511.0,
+			"measured_cycles_per_second": 28.673835125448,
+			"render_cycles": 72,
+			"render_readback_ms_median": 11.865,
+			"render_readback_ms_p95": 14.802,
+			"static_memory_mb": 71.7159099578857,
+			"view": "back"
+		}
+	],
+	"size": [
+		1280,
+		800
+	],
+	"transfer_render_readback": [
+		{
+			"median_ms": 14.617,
+			"p95_ms": 24.334,
+			"phase": "EXIT",
+			"samples": 4
+		},
+		{
+			"median_ms": 14.106,
+			"p95_ms": 19.332,
+			"phase": "LINK",
+			"samples": 23
+		},
+		{
+			"median_ms": 11.479,
+			"p95_ms": 16.699,
+			"phase": "ENTER",
+			"samples": 10
+		}
+	]
+}

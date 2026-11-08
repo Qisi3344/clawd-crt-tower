@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "test": "all twelve prop identities retained once",
+      "passed": true
+    },
+    {
+      "test": "fixed props cover all five actual areas",
+      "passed": true
+    },
+    {
+      "test": "standing props contact actual collision floors",
+      "passed": true
+    },
+    {
+      "test": "all atlas regions fit padded 512x128 texture",
+      "passed": true
+    },
+    {
+      "test": "prop silhouettes have binary alpha",
+      "passed": true
+    },
+    {
+      "test": "one continuous 1024x768 midground",
+      "passed": true
+    },
+    {
+      "test": "open skyline exposes distant city",
+      "passed": true
+    },
+    {
+      "test": "painted buildings and repair bays remain opaque",
+      "passed": true
+    },
+    {
+      "test": "sealed capsule is a readable separate device",
+      "passed": true
+    },
+    {
+      "test": "framed far image covers the complete sampling domain",
+      "passed": true
+    },
+    {
+      "test": "dedicated materials match collision heights",
+      "passed": true
+    }
+  ]
+}

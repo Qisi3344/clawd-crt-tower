@@ -31,7 +31,10 @@ func _draw() -> void:
 	var colors:Array=palettes.get(world.screen_id,palettes.BOOT)
 	draw_rect(view,Color(colors[0]))
 	if world.screen_id=="POP-UP":
-		draw_texture_rect_region(popup_far,view,Rect2(view.position*.15,view.size),Color(.46,.39,.58))
+		# Frame the central CRT landmark instead of sampling only the far image's left side.
+		var far_origin:=Vector2(160+view.position.x*.5,view.position.y*.15)
+		far_origin=far_origin.clamp(Vector2.ZERO,popup_far.get_size()-view.size)
+		draw_texture_rect_region(popup_far,view,Rect2(far_origin,view.size),Color(.78,.70,.84))
 		draw_texture_rect_region(popup_mid,view,view)
 		return
 	if world.screen_id=="BOOT":

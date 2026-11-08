@@ -4,24 +4,40 @@ const SOURCE=ROOT+"source/"
 func _initialize() -> void:
 	DirAccess.make_dir_recursive_absolute(ROOT+"game")
 	# One authored canvas. No cabinet extraction or panel repetition.
-	var mid:=Image.load_from_file(SOURCE+"mid-authored.png")
+	var mid:=Image.load_from_file(SOURCE+"mid-scene-v2.png")
 	mid.convert(Image.FORMAT_RGBA8)
-	# White observation interiors are keyed as explicit alpha windows.
-	# Flood-key only the five enclosed white interiors, never the architecture.
+	# The open skyline is keyed explicitly; buildings stay fully opaque.
+	# Flood-key the connected white sky opening, never colored scene details.
 	var holes:Dictionary={}
-	for seed in [Vector2(.205,.13),Vector2(.78,.13),Vector2(.235,.47),Vector2(.755,.46),Vector2(.50,.81)]:
-		var pending:Array[Vector2i]=[Vector2i(seed*Vector2(mid.get_size()))]
-		while not pending.is_empty():
-			var pixel:Vector2i=pending.pop_back()
-			if holes.has(pixel) or pixel.x<0 or pixel.y<0 or pixel.x>=mid.get_width() or pixel.y>=mid.get_height(): continue
-			var color:=mid.get_pixelv(pixel)
-			if minf(color.r,minf(color.g,color.b))<.65 or maxf(color.r,maxf(color.g,color.b))-minf(color.r,minf(color.g,color.b))>.10: continue
-			holes[pixel]=true
-			for direction in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]: pending.append(pixel+direction)
+	var pending:Array[Vector2i]=[]
+	# All upper-sky components, including gaps separated by hanging cable bundles.
+	for y in range(int(mid.get_height()*.30)):
+		for x in range(mid.get_width()):
+			var c:=mid.get_pixel(x,y)
+			if minf(c.r,minf(c.g,c.b))>.85 and maxf(c.r,maxf(c.g,c.b))-minf(c.r,minf(c.g,c.b))<.05: pending.append(Vector2i(x,y))
+	while not pending.is_empty():
+		var pixel:Vector2i=pending.pop_back()
+		if holes.has(pixel) or pixel.x<0 or pixel.y<0 or pixel.x>=mid.get_width() or pixel.y>=mid.get_height(): continue
+		var color:=mid.get_pixelv(pixel)
+		if minf(color.r,minf(color.g,color.b))<.65 or maxf(color.r,maxf(color.g,color.b))-minf(color.r,minf(color.g,color.b))>.10: continue
+		holes[pixel]=true
+		for direction in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]: pending.append(pixel+direction)
 	for y in range(mid.get_height()):
 		for x in range(mid.get_width()):
 			var c:=mid.get_pixel(x,y);c.a=0 if holes.has(Vector2i(x,y)) else 1;mid.set_pixel(x,y,c)
-	mid.resize(1024,768,Image.INTERPOLATE_LANCZOS)
+	# Fit the ONE elevation to actual floor anchors; never crop/repeat scene patches.
+	# Source normalized anchors: upper mount294, repair-bay feet700, cache feet966.
+	var fitted:=Image.create(1024,768,false,Image.FORMAT_RGBA8)
+	var target_y:Array=[0,208,448,688,768]
+	var source_y:Array=[0.0,294.0/1086,700.0/1086,966.0/1086,1.0]
+	for y in range(768):
+		var section:=0
+		while section<3 and y>=target_y[section+1]: section+=1
+		var fraction:float=float(y-target_y[section])/(target_y[section+1]-target_y[section])
+		var sy:=clampi(roundi(lerpf(source_y[section],source_y[section+1],fraction)*mid.get_height()),0,mid.get_height()-1)
+		var row:=mid.get_region(Rect2i(0,sy,mid.get_width(),1));row.resize(1024,1,Image.INTERPOLATE_LANCZOS)
+		fitted.blit_rect(row,Rect2i(0,0,1024,1),Vector2i(0,y))
+	mid=fitted
 	mid.save_png(ROOT+"game/mid-continuous.png")
 	var sheet:=Image.load_from_file(SOURCE+"terrain-material.png");sheet.convert(Image.FORMAT_RGBA8)
 	var bands:Array[Rect2i]=[]
@@ -58,6 +74,17 @@ func _initialize() -> void:
 		prop=prop.get_region(prop.get_used_rect())
 		var pos:=Vector2i((i%8)*64+8,(i/8)*64+8);atlas.blit_rect(prop,Rect2i(Vector2i.ZERO,prop.get_size()),pos)
 		entries.append({"id":i+1,"label":item.label,"rect":[pos.x,pos.y,prop.get_width(),prop.get_height()]})
+	var capsule:=Image.load_from_file(SOURCE+"capsule-v2.png");capsule.convert(Image.FORMAT_RGBA8);
+	for y in range(capsule.get_height()):
+		for x in range(capsule.get_width()):
+			var c:=capsule.get_pixel(x,y);c.a=0 if c.a<.25 else 1;capsule.set_pixel(x,y,c)
+	capsule=capsule.get_region(capsule.get_used_rect())
+	var scale:=minf(56.0/capsule.get_width(),108.0/capsule.get_height())
+	capsule.resize(roundi(capsule.get_width()*scale),roundi(capsule.get_height()*scale),Image.INTERPOLATE_LANCZOS)
+	for y in range(capsule.get_height()):
+		for x in range(capsule.get_width()):
+			var c:=capsule.get_pixel(x,y);c.a=0 if c.a<.25 else 1;capsule.set_pixel(x,y,c)
+	capsule=capsule.get_region(capsule.get_used_rect());capsule.save_png(ROOT+"game/capsule.png")
 	atlas.save_png(ROOT+"game/props.png")
-	var file:=FileAccess.open(ROOT+"game/manifest.json",FileAccess.WRITE);file.store_string(JSON.stringify({"props":entries,"window_key_pixels":holes.size()},"\t"));file.close()
+	var file:=FileAccess.open(ROOT+"game/manifest.json",FileAccess.WRITE);file.store_string(JSON.stringify({"props":entries,"composition":"open-city-v2","sky_key_pixels":holes.size()},"\t"));file.close()
 	print("POP-UP continuous 1024x768 mid, nonrepeating far, terrain materials and12 props compiled; window pixels=",holes.size());quit()

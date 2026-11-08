@@ -38,5 +38,8 @@ func _run() -> void:
 				var frame:Image=game.viewport.get_texture().get_image();frame.save_png("res://artifacts/popup-art-%s-x%d.png"%[layer.name,x])
 				panorama.blit_rect(frame,Rect2i(0 if x<704 else 256,0,320 if x<704 else 64,240),Vector2i(x if x<704 else 960,0))
 			panorama.save_png("res://artifacts/popup-art-%s-full.png"%layer.name)
+		for landmark in [{"name":"skyline","position":Vector2(512,120)},{"name":"capsule","position":Vector2(864,120)},{"name":"cache-water","position":Vector2(560,648)}]:
+			game.world.camera.position=landmark.position;await frames(3);await get_tree().process_frame;RenderingServer.force_draw()
+			game.viewport.get_texture().get_image().save_png("res://artifacts/popup-art-landmark-%s.png"%landmark.name)
 	var file:=FileAccess.open("res://artifacts/popup-art-qa-"+("visual" if visual else "headless")+".json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"passed":not failed,"tests":results,"captures":captures,"clips":record_counts,"scope":"Fixture load at POP-UP entrance, then actual input through all five areas; panoramas are separate camera fixtures"},"\t"));file.close();get_tree().quit(1 if failed else 0)

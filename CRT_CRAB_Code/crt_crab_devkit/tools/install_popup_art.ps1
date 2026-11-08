@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 $projectPath=Split-Path -Parent $PSScriptRoot
 if (-not $GodotPath) { $GodotPath=Join-Path $projectPath '.tools\godot\Godot_v4.7.2-stable_win64_console.exe' }
 if (-not (Test-Path -LiteralPath $GodotPath)) { throw 'Run tools/setup.ps1 or supply -GodotPath.' }
-foreach ($source in @('background/POPUP_far_source.png','mid-authored.png','terrain-material.png')) {
+foreach ($source in @('background/POPUP_far_source.png','mid-scene-v2.png','capsule-v2.png','terrain-material.png')) {
     if (-not (Test-Path -LiteralPath (Join-Path $projectPath "assets\pixel\popup\source\$source"))) { throw "Committed production source missing: $source" }
 }
 New-Item -ItemType Directory -Force -Path (Join-Path $projectPath 'artifacts') | Out-Null

@@ -11,7 +11,9 @@ func _ready() -> void:
 		var r:Array=catalog.props[int(entry.id)-1].rect
 		var part:=AtlasTexture.new();part.atlas=atlas;part.region=Rect2(r[0],r[1],r[2],r[3])
 		var sprite:=Sprite2D.new();sprite.texture=part;sprite.position=Vector2(entry.x,entry.y)
-		sprite.offset=Vector2(0,r[3]/2.0 if entry.get("hang",false) else -r[3]/2.0)
+		if int(entry.id)==11: sprite.texture=load("res://assets/pixel/popup/game/capsule.png")
+		var height:float=sprite.texture.get_height()
+		sprite.offset=Vector2(0,height/2.0 if entry.get("hang",false) else -height/2.0)
 		if entry.get("rotate",false): sprite.offset=Vector2.ZERO;sprite.rotation=PI/2
 		if int(entry.id) in [5,10]:
 			var mount:=Node2D.new();mount.position=sprite.position

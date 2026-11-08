@@ -1,4 +1,5 @@
 {
+	"composition": "open-city-v2",
 	"props": [
 		{
 			"id": 1,
@@ -121,5 +122,5 @@
 			]
 		}
 	],
-	"window_key_pixels": 94791
+	"sky_key_pixels": 226260
 }

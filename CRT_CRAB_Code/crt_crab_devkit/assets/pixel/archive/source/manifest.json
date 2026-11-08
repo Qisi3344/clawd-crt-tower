@@ -1,0 +1,195 @@
+{
+  "package": "ARCHIVE_Asset_Pack_v1",
+  "target_repo": "Qisi3344/clawd-crt-tower",
+  "project_path": "CRT_CRAB_Code/crt_crab_devkit",
+  "level": "ARCHIVE",
+  "level_world_size": [
+    1024,
+    640
+  ],
+  "viewport_size": [
+    320,
+    240
+  ],
+  "source_assets": [
+    {
+      "path": "00_reference/ARCHIVE_完整场景概念图_参考勿直接入游戏.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "01_backgrounds/ARCHIVE_far_source_远景.png",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "01_backgrounds/ARCHIVE_mid_source_中景.png",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "02_props/source_sheet/ARCHIVE_12道具原始图集.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "mode": "RGBA"
+    }
+  ],
+  "props": [
+    {
+      "id": 1,
+      "file": "02_props/split_png/01_archive_cart_档案推车.png",
+      "display_name": "archive_cart_档案推车",
+      "region": "下层/中层",
+      "purpose": "归档大厅中层地面的静态摆件，避开可推拉方块运动线",
+      "pixel_size": [
+        321,
+        260
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 2,
+      "file": "02_props/split_png/02_archive_boxes_档案纸箱.png",
+      "display_name": "archive_boxes_档案纸箱",
+      "region": "中层/下层",
+      "purpose": "柜体旁、墙角、检索台下的静态杂物",
+      "pixel_size": [
+        299,
+        252
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 3,
+      "file": "02_props/split_png/03_open_drawer_开启的档案抽屉柜.png",
+      "display_name": "open_drawer_开启的档案抽屉柜",
+      "region": "中层",
+      "purpose": "重压归档大厅背墙与靠边柜群，避免遮挡压力板",
+      "pixel_size": [
+        284,
+        324
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 4,
+      "file": "02_props/split_png/04_closed_cabinet_封闭抽屉柜.png",
+      "display_name": "closed_cabinet_封闭抽屉柜",
+      "region": "上层/中层",
+      "purpose": "大柜体群、检索桥后方、墙边",
+      "pixel_size": [
+        238,
+        332
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 5,
+      "file": "02_props/split_png/05_rolling_ladder_带轮检索梯.png",
+      "display_name": "rolling_ladder_带轮检索梯",
+      "region": "上层/中层",
+      "purpose": "高柜旁视觉标识；不是可攀爬梯，不加假碰撞",
+      "pixel_size": [
+        209,
+        337
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 6,
+      "file": "02_props/split_png/06_bridge_support_桥梁支撑柱.png",
+      "display_name": "bridge_support_桥梁支撑柱",
+      "region": "上层",
+      "purpose": "上层检索桥及固定梁下方；不构成新平台",
+      "pixel_size": [
+        323,
+        323
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 7,
+      "file": "02_props/split_png/07_hanging_folders_吊挂档案组.png",
+      "display_name": "hanging_folders_吊挂档案组",
+      "region": "上层",
+      "purpose": "检索桥上方、档案库吊轨处",
+      "pixel_size": [
+        318,
+        236
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 8,
+      "file": "02_props/split_png/08_paper_tape_reel_打孔纸带卷轴.png",
+      "display_name": "paper_tape_reel_打孔纸带卷轴",
+      "region": "中层/下层",
+      "purpose": "破损记录区的数据备份设备/机台边",
+      "pixel_size": [
+        304,
+        317
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 9,
+      "file": "02_props/split_png/09_broken_terminal_破损CRT检索终端.png",
+      "display_name": "broken_terminal_破损CRT检索终端",
+      "region": "下层",
+      "purpose": "破损记录仓墙边，与真实可交互终端保持距离",
+      "pixel_size": [
+        314,
+        301
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 10,
+      "file": "02_props/split_png/10_spilled_records_倾倒记录箱.png",
+      "display_name": "spilled_records_倾倒记录箱",
+      "region": "下层",
+      "purpose": "破损记录仓散落点，远离出口和可推动箱石",
+      "pixel_size": [
+        333,
+        252
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 11,
+      "file": "02_props/split_png/11_hanging_lamp_吊灯.png",
+      "display_name": "hanging_lamp_吊灯",
+      "region": "上层/中层",
+      "purpose": "贴近顶部梁架；单独受脚本控制微光，不要高频闪烁",
+      "pixel_size": [
+        223,
+        272
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    },
+    {
+      "id": 12,
+      "file": "02_props/split_png/12_sealed_case_封存保管箱.png",
+      "display_name": "sealed_case_封存保管箱",
+      "region": "下层",
+      "purpose": "仓库暗处的非交互环境装饰，不替换真实宝箱",
+      "pixel_size": [
+        321,
+        238
+      ],
+      "pivot": "bottom_center (when floor-standing) or top_center (when hanging)"
+    }
+  ],
+  "disclaimer": "AI-generated first-pass art; split props, not seam-tested, not Godot-runtime verified."
+}

@@ -1,0 +1,37 @@
+{
+	"captures": [],
+	"clips": {},
+	"passed": true,
+	"render_readback_ms": [],
+	"scope": "Native art and traversal check; camera edge samples are fixtures, not campaign progression",
+	"tests": [
+		{
+			"passed": true,
+			"test": "ARCHIVE loads its dedicated art layer"
+		},
+		{
+			"passed": true,
+			"test": "18 deterministic props and no decoration collision bodies"
+		},
+		{
+			"passed": true,
+			"test": "pixel output stays one 320x240 gameplay viewport"
+		},
+		{
+			"passed": true,
+			"test": "actual stone still supports the live A signal through the new art"
+		},
+		{
+			"passed": true,
+			"test": "upper retrieval bridge is reached by normal ladder input"
+		},
+		{
+			"passed": true,
+			"test": "lower broken records area is reached continuously"
+		},
+		{
+			"passed": true,
+			"test": "far image covers every camera bound without repeating"
+		}
+	]
+}

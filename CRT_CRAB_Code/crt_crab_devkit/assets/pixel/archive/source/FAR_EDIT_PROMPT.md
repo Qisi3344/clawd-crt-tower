@@ -1,0 +1,7 @@
+# Far-background cleanup provenance
+
+Built-in `image_gen` edit mode. Input: `ARCHIVE_far_source_远景.png`. Output copied into this project as `far-clean.png`; compiled with preserved aspect ratio into `../game/far.png` (768×512). Original input retained unchanged.
+
+Final prompt:
+
+Edit this provided purple archive warehouse background into a usable FAR BACKGROUND ONLY for the existing pixel platform game. Preserve the source's desaturated violet drawer-cabinet walls, deep warehouse depth, sparse tiny warm lamps, pipes and painterly pixel aesthetic. Remove ALL bridges, railings, ladders, stairs, platforms, ground/floor stripes, ledges, terminals, boxes, chests, carts, characters, lettering and CRT frame. Fill those former elements with continuous vertical drawer cabinet faces and distant cabinet silhouettes. There must be NO horizontal traversable-looking surface at any height. Cabinets fade into darkness at their bases rather than standing on a painted floor. Composition: a single broad wall backdrop, landscape 3:2 ratio, edge to edge cabinet architecture, gentle depth and atmospheric purple shadow. Low contrast background supports bright foreground character. No borders, no text, no gameplay objects. Use original art's recognizable drawer handles and cabinet forms rather than generic rectangles. Do not add any new subject. This will be sampled in a 320x240 viewport with very slow parallax, not used as level geometry.

@@ -1,0 +1,141 @@
+{
+	"captures": [
+		{
+			"draw_calls": 487.0,
+			"fps": 9.0,
+			"memory_mb": 83.4146413803101,
+			"name": "archive-before-main-entry",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 422.0,
+			"fps": 9.0,
+			"memory_mb": 83.412989616394,
+			"name": "archive-art-main-entry",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 473.0,
+			"fps": 94.0,
+			"memory_mb": 83.4557180404663,
+			"name": "archive-before-main-puzzle",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 411.0,
+			"fps": 94.0,
+			"memory_mb": 83.4531469345093,
+			"name": "archive-art-main-puzzle",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 465.0,
+			"fps": 118.0,
+			"memory_mb": 83.580454826355,
+			"name": "archive-before-upper",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 411.0,
+			"fps": 118.0,
+			"memory_mb": 83.5781621932983,
+			"name": "archive-art-upper",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 457.0,
+			"fps": 108.0,
+			"memory_mb": 83.5762434005737,
+			"name": "archive-before-lower",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 396.0,
+			"fps": 108.0,
+			"memory_mb": 83.5742025375366,
+			"name": "archive-art-lower",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"clips": {
+		"archive-art": 338
+	},
+	"passed": true,
+	"render_readback_ms": [
+		3.46,
+		3.023,
+		3.157,
+		3.519,
+		7.111,
+		6.468,
+		6.9,
+		7.095,
+		6.971,
+		6.607,
+		7.036,
+		7.034,
+		7.004,
+		7.178,
+		7.03,
+		6.929,
+		6.87,
+		7.167,
+		6.981,
+		6.956
+	],
+	"scope": "Native art and traversal check; camera edge samples are fixtures, not campaign progression",
+	"tests": [
+		{
+			"passed": true,
+			"test": "ARCHIVE loads its dedicated art layer"
+		},
+		{
+			"passed": true,
+			"test": "18 deterministic props and no decoration collision bodies"
+		},
+		{
+			"passed": true,
+			"test": "pixel output stays one 320x240 gameplay viewport"
+		},
+		{
+			"passed": true,
+			"test": "actual stone still supports the live A signal through the new art"
+		},
+		{
+			"passed": true,
+			"test": "upper retrieval bridge is reached by normal ladder input"
+		},
+		{
+			"passed": true,
+			"test": "lower broken records area is reached continuously"
+		},
+		{
+			"passed": true,
+			"test": "far image covers every camera bound without repeating"
+		}
+	]
+}

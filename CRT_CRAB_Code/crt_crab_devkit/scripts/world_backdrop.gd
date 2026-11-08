@@ -3,6 +3,13 @@ extends Node2D
 # One culled background for the whole continuous world, never another viewport.
 var world: SideWorld
 var last_view := Vector2(-999,-999)
+var archive_far:Texture2D
+var archive_panels:Array[Texture2D]=[]
+var archive_art_enabled:=true # QA before/after comparison; no player-facing setting.
+func _ready() -> void:
+	if world.screen_id=="ARCHIVE":
+		archive_far=load("res://assets/pixel/archive/game/far.png")
+		for i in range(3): archive_panels.append(load("res://assets/pixel/archive/game/cabinet_%d.png"%i))
 func _process(_delta: float) -> void:
 	if not is_instance_valid(world.camera): return
 	if world.camera.position!=last_view:
@@ -14,6 +21,9 @@ func _draw() -> void:
 	var palettes={"BOOT":["222c32","536e66"],"ARCHIVE":["282936","756985"],"POP-UP":["282338","69516d"],"RECYCLE":["242d32","6a7d6c"],"SIGNAL":["192e38","527d85"],"ERROR":["242337","655c8a"]}
 	var colors:Array=palettes.get(world.screen_id,palettes.BOOT)
 	draw_rect(view,Color(colors[0]))
+	if world.screen_id=="ARCHIVE" and archive_art_enabled:
+		_draw_archive(view)
+		return
 	for x in range(int(view.position.x/64)*64,int(view.end.x)+64,64):
 		for y in range(int(view.position.y/96)*96,int(view.end.y)+96,96):
 			draw_rect(Rect2(x+12,y+12,42,72),Color(colors[1]).darkened(.48),false,1)
@@ -50,3 +60,18 @@ func _draw() -> void:
 					var angle:=i*TAU/6;var p:=centre+Vector2.from_angle(angle)*46
 					draw_line(centre,p,accent,4);draw_rect(Rect2(p-Vector2(9,9),Vector2(18,18)),accent,false,2)
 				draw_circle(centre,25,accent,false,4)
+
+func _draw_archive(view: Rect2) -> void:
+	if archive_far!=null:
+		var source:=Rect2(view.position*.15,view.size)
+		draw_texture_rect_region(archive_far,view,source,Color(.6,.56,.74))
+	for floor_index in range(3):
+		var baseline:float=[64,208,448][floor_index]
+		for column in range(18):
+			var p:=Vector2(12+column*60,baseline)
+			var texture:=archive_panels[(column+floor_index)%3]
+			var height:float=texture.get_height()
+			var rect:=Rect2(p-Vector2(0,height),Vector2(48,height))
+			if not view.intersects(rect): continue
+			var tint:Color=[Color("666078"),Color("9d8cab"),Color("655b78")][floor_index]
+			draw_texture_rect(texture,rect,false,tint)

@@ -1,0 +1,84 @@
+{
+  "checks": [
+    {
+      "test": "all supplied production sources are retained byte for byte",
+      "passed": true
+    },
+    {
+      "test": "12 props fit a padded 512x128 atlas",
+      "passed": true
+    },
+    {
+      "test": "game prop silhouettes have clean binary alpha",
+      "passed": true
+    },
+    {
+      "test": "all 12 prop identities are represented",
+      "passed": true
+    },
+    {
+      "test": "every standing prop uses an existing actual floor",
+      "passed": true
+    },
+    {
+      "test": "all placements are fixed integer world positions",
+      "passed": true
+    },
+    {
+      "test": "all three archive regions receive decorations",
+      "passed": true
+    },
+    {
+      "test": "original sources are excluded from runtime imports",
+      "passed": true
+    },
+    {
+      "test": "single nonrepeating far image covers the full parallax domain",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "source_far_edge_rgb_mean": 0.00441808386621774,
+  "runtime_images": [
+    {
+      "file": "cabinet_0.png",
+      "size": [
+        48,
+        73
+      ],
+      "sha256": "763d9e779fd792256c09ed2a2fe0f1e430bb0b0f8b2de4cb8efbd7374f15a27a"
+    },
+    {
+      "file": "cabinet_1.png",
+      "size": [
+        48,
+        67
+      ],
+      "sha256": "4f472bff3067f0f997338ecab48fb61cae5f76f29769f40982fcb7b970fa3dc8"
+    },
+    {
+      "file": "cabinet_2.png",
+      "size": [
+        48,
+        71
+      ],
+      "sha256": "cde831f17c5b21cd3c8585477c899fd3586a7e6c67b22ed71863b400444c602f"
+    },
+    {
+      "file": "far.png",
+      "size": [
+        768,
+        512
+      ],
+      "sha256": "871cfa893295e6d1b81bf9ff9d1ab692bdda3f786d4c8a7beed3ba02085d42ba"
+    },
+    {
+      "file": "props.png",
+      "size": [
+        512,
+        128
+      ],
+      "sha256": "b5758db657313f492dc213e0a6a7dd94a69e235771655247059370076634a70a"
+    }
+  ]
+}

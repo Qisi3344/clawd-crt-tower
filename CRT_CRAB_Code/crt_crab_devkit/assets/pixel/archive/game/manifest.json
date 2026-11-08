@@ -1,0 +1,146 @@
+{
+	"far_repeat": false,
+	"panel_source_rects": [
+		[
+			365,
+			270,
+			185,
+			280
+		],
+		[
+			600,
+			275,
+			180,
+			250
+		],
+		[
+			1515,
+			270,
+			190,
+			280
+		]
+	],
+	"props": [
+		{
+			"id": 1,
+			"rect": [
+				8,
+				8,
+				40,
+				32
+			],
+			"source": "01_archive_cart_档案推车.png"
+		},
+		{
+			"id": 2,
+			"rect": [
+				72,
+				8,
+				24,
+				20
+			],
+			"source": "02_archive_boxes_档案纸箱.png"
+		},
+		{
+			"id": 3,
+			"rect": [
+				136,
+				8,
+				32,
+				36
+			],
+			"source": "03_open_drawer_开启的档案抽屉柜.png"
+		},
+		{
+			"id": 4,
+			"rect": [
+				200,
+				8,
+				32,
+				45
+			],
+			"source": "04_closed_cabinet_封闭抽屉柜.png"
+		},
+		{
+			"id": 5,
+			"rect": [
+				264,
+				8,
+				24,
+				40
+			],
+			"source": "05_rolling_ladder_带轮检索梯.png"
+		},
+		{
+			"id": 6,
+			"rect": [
+				328,
+				8,
+				12,
+				30
+			],
+			"source": "06_bridge_support_桥梁支撑柱.png"
+		},
+		{
+			"id": 7,
+			"rect": [
+				392,
+				8,
+				32,
+				23
+			],
+			"source": "07_hanging_folders_吊挂档案组.png"
+		},
+		{
+			"id": 8,
+			"rect": [
+				456,
+				8,
+				32,
+				34
+			],
+			"source": "08_paper_tape_reel_打孔纸带卷轴.png"
+		},
+		{
+			"id": 9,
+			"rect": [
+				8,
+				72,
+				40,
+				38
+			],
+			"source": "09_broken_terminal_破损CRT检索终端.png"
+		},
+		{
+			"id": 10,
+			"rect": [
+				72,
+				72,
+				32,
+				24
+			],
+			"source": "10_spilled_records_倾倒记录箱.png"
+		},
+		{
+			"id": 11,
+			"rect": [
+				136,
+				72,
+				20,
+				25
+			],
+			"source": "11_hanging_lamp_吊灯.png"
+		},
+		{
+			"id": 12,
+			"rect": [
+				200,
+				72,
+				32,
+				24
+			],
+			"source": "12_sealed_case_封存保管箱.png"
+		}
+	],
+	"source_far_edge_rgb_mean": 0.00441808386621774
+}

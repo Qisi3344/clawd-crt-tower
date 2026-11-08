@@ -49,6 +49,8 @@ func _ready() -> void:
 	bg.world = self
 	bg.z_index = -10
 	add_child(bg)
+	if screen_id=="ARCHIVE":
+		var dressing:=ArchiveDressing.new();dressing.world=self;add_child(dressing)
 	for platform in definition.platforms: _solid(Rect2(platform[0],platform[1],platform[2],platform[3]),bool(platform[4]) if platform.size()>4 else platform[1]<208)
 	_solid(Rect2(-16,0,16,world_size.y+16))
 	_solid(Rect2(world_size.x,0,16,world_size.y+16))

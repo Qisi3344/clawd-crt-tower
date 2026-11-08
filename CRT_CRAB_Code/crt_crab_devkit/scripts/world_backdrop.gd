@@ -7,6 +7,8 @@ var archive_far:Texture2D
 var archive_mid:Texture2D
 var boot_far:Texture2D
 var boot_mid:Texture2D
+var popup_far:Texture2D
+var popup_mid:Texture2D
 func _ready() -> void:
 	if world.screen_id=="ARCHIVE":
 		archive_far=load("res://assets/pixel/archive/game/far.png")
@@ -14,6 +16,9 @@ func _ready() -> void:
 	if world.screen_id=="BOOT":
 		boot_far=load("res://assets/pixel/boot/game/far.png")
 		boot_mid=load("res://assets/pixel/boot/game/mid-continuous.png")
+	if world.screen_id=="POP-UP":
+		popup_far=load("res://assets/pixel/popup/game/far.png")
+		popup_mid=load("res://assets/pixel/popup/game/mid-continuous.png")
 func _process(_delta: float) -> void:
 	if not is_instance_valid(world.camera): return
 	if world.camera.position!=last_view:
@@ -25,6 +30,10 @@ func _draw() -> void:
 	var palettes={"BOOT":["222c32","536e66"],"ARCHIVE":["282936","756985"],"POP-UP":["282338","69516d"],"RECYCLE":["242d32","6a7d6c"],"SIGNAL":["192e38","527d85"],"ERROR":["242337","655c8a"]}
 	var colors:Array=palettes.get(world.screen_id,palettes.BOOT)
 	draw_rect(view,Color(colors[0]))
+	if world.screen_id=="POP-UP":
+		draw_texture_rect_region(popup_far,view,Rect2(view.position*.15,view.size),Color(.46,.39,.58))
+		draw_texture_rect_region(popup_mid,view,view)
+		return
 	if world.screen_id=="BOOT":
 		draw_texture_rect_region(boot_far,view,Rect2(view.position*.15,view.size))
 		draw_texture_rect_region(boot_mid,view,view)

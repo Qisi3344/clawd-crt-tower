@@ -1,0 +1,325 @@
+{
+  "pack": "POP-UP / 弹窗区 v1.0",
+  "repository": "https://github.com/Qisi3344/clawd-crt-tower",
+  "godot_res_root": "CRT_CRAB_Code/crt_crab_devkit/",
+  "level": "data/levels/popup_01.json",
+  "world_size": [
+    1024,
+    768
+  ],
+  "display_viewport": [
+    320,
+    240
+  ],
+  "theme_color": "#E7A0C0",
+  "sources": {
+    "concept": {
+      "file": "reference/POPUP_full_concept_REFERENCE_ONLY.png",
+      "size": [
+        1448,
+        1086
+      ]
+    },
+    "far": {
+      "file": "background/POPUP_far_source.png",
+      "size": [
+        2172,
+        724
+      ]
+    },
+    "mid_concept": {
+      "file": "reference/POPUP_mid_concept_REFERENCE_ONLY.png",
+      "size": [
+        1448,
+        1086
+      ]
+    },
+    "props_sheet": {
+      "file": "props/POPUP_original_12_props.png",
+      "size": [
+        1448,
+        1086
+      ]
+    }
+  },
+  "props": [
+    {
+      "id": 1,
+      "source_file": "props/source_crops/01_warning_popup.png",
+      "candidate_file": "props/game_candidates/01_warning_popup.png",
+      "label": "警告弹窗",
+      "category": "01_warning_popup",
+      "suggested_area": "故障广告大厅/重叠窗口保险室",
+      "placement": "墙边、非交互提示牌，不能遮挡真正的保险丝",
+      "source_size": [
+        326,
+        231
+      ],
+      "candidate_size": [
+        48,
+        34
+      ],
+      "source_crop_on_sheet": [
+        31,
+        113,
+        357,
+        344
+      ]
+    },
+    {
+      "id": 2,
+      "source_file": "props/source_crops/02_broken_progress.png",
+      "candidate_file": "props/game_candidates/02_broken_progress.png",
+      "label": "破裂进度条",
+      "category": "02_broken_progress",
+      "suggested_area": "封存缓存夹层/供电竖井",
+      "placement": "断开的进度装置，放在真实平台后方",
+      "source_size": [
+        320,
+        192
+      ],
+      "candidate_size": [
+        46,
+        28
+      ],
+      "source_crop_on_sheet": [
+        399,
+        147,
+        719,
+        339
+      ]
+    },
+    {
+      "id": 3,
+      "source_file": "props/source_crops/03_cursor_cart.png",
+      "candidate_file": "props/game_candidates/03_cursor_cart.png",
+      "label": "光标搬运车",
+      "category": "03_cursor_cart",
+      "suggested_area": "故障广告大厅",
+      "placement": "只有小道具外观，不是真实可驾驶载具",
+      "source_size": [
+        280,
+        299
+      ],
+      "candidate_size": [
+        40,
+        43
+      ],
+      "source_crop_on_sheet": [
+        757,
+        62,
+        1037,
+        361
+      ]
+    },
+    {
+      "id": 4,
+      "source_file": "props/source_crops/04_cat_banner.png",
+      "candidate_file": "props/game_candidates/04_cat_banner.png",
+      "label": "猫咪广告牌",
+      "category": "04_cat_banner",
+      "suggested_area": "故障广告大厅",
+      "placement": "高处悬挂广告，注意不遮挡实际出口",
+      "source_size": [
+        332,
+        232
+      ],
+      "candidate_size": [
+        48,
+        34
+      ],
+      "source_crop_on_sheet": [
+        1087,
+        106,
+        1419,
+        338
+      ]
+    },
+    {
+      "id": 5,
+      "source_file": "props/source_crops/05_scroll_bar.png",
+      "candidate_file": "props/game_candidates/05_scroll_bar.png",
+      "label": "纵向滚动条",
+      "category": "05_scroll_bar",
+      "suggested_area": "重叠窗口保险室",
+      "placement": "作为墙面装饰，绝不能伪装真实梯子",
+      "source_size": [
+        148,
+        308
+      ],
+      "candidate_size": [
+        16,
+        33
+      ],
+      "source_crop_on_sheet": [
+        108,
+        381,
+        256,
+        689
+      ]
+    },
+    {
+      "id": 6,
+      "source_file": "props/source_crops/06_monitor_stack.png",
+      "candidate_file": "props/game_candidates/06_monitor_stack.png",
+      "label": "故障屏幕组",
+      "category": "06_monitor_stack",
+      "suggested_area": "供电竖井/故障广告大厅",
+      "placement": "墙角终端装饰，屏幕信号可轻微变化",
+      "source_size": [
+        329,
+        279
+      ],
+      "candidate_size": [
+        44,
+        37
+      ],
+      "source_crop_on_sheet": [
+        363,
+        401,
+        692,
+        680
+      ]
+    },
+    {
+      "id": 7,
+      "source_file": "props/source_crops/07_cache_cubes.png",
+      "candidate_file": "props/game_candidates/07_cache_cubes.png",
+      "label": "缓存方块堆",
+      "category": "07_cache_cubes",
+      "suggested_area": "底层缓存回路",
+      "placement": "底层废弃块，不能覆盖真机关或玩家",
+      "source_size": [
+        318,
+        249
+      ],
+      "candidate_size": [
+        44,
+        34
+      ],
+      "source_crop_on_sheet": [
+        728,
+        422,
+        1046,
+        671
+      ]
+    },
+    {
+      "id": 8,
+      "source_file": "props/source_crops/08_folder_crate.png",
+      "candidate_file": "props/game_candidates/08_folder_crate.png",
+      "label": "文件窗口箱",
+      "category": "08_folder_crate",
+      "suggested_area": "底层缓存回路",
+      "placement": "靠墙或地面静物；不要误认成奖励箱",
+      "source_size": [
+        315,
+        260
+      ],
+      "candidate_size": [
+        40,
+        33
+      ],
+      "source_crop_on_sheet": [
+        1088,
+        420,
+        1403,
+        680
+      ]
+    },
+    {
+      "id": 9,
+      "source_file": "props/source_crops/09_hourglass_popup.png",
+      "candidate_file": "props/game_candidates/09_hourglass_popup.png",
+      "label": "沙漏等待窗",
+      "category": "09_hourglass_popup",
+      "suggested_area": "封存缓存夹层",
+      "placement": "静态的系统等待标记，适量重复",
+      "source_size": [
+        307,
+        266
+      ],
+      "candidate_size": [
+        40,
+        35
+      ],
+      "source_crop_on_sheet": [
+        31,
+        748,
+        338,
+        1014
+      ]
+    },
+    {
+      "id": 10,
+      "source_file": "props/source_crops/10_cable_bridge.png",
+      "candidate_file": "props/game_candidates/10_cable_bridge.png",
+      "label": "悬挂线束梁",
+      "category": "10_cable_bridge",
+      "suggested_area": "供电竖井/重叠窗口保险室",
+      "placement": "只能当背景梁架，不能画假可走平台",
+      "source_size": [
+        347,
+        230
+      ],
+      "candidate_size": [
+        50,
+        33
+      ],
+      "source_crop_on_sheet": [
+        368,
+        773,
+        715,
+        1003
+      ]
+    },
+    {
+      "id": 11,
+      "source_file": "props/source_crops/11_glitch_coil.png",
+      "candidate_file": "props/game_candidates/11_glitch_coil.png",
+      "label": "故障能量线圈",
+      "category": "11_glitch_coil",
+      "suggested_area": "重叠窗口保险室",
+      "placement": "发光设备，仅装饰，与真实交互物保持距离",
+      "source_size": [
+        255,
+        291
+      ],
+      "candidate_size": [
+        34,
+        39
+      ],
+      "source_crop_on_sheet": [
+        768,
+        724,
+        1023,
+        1015
+      ]
+    },
+    {
+      "id": 12,
+      "source_file": "props/source_crops/12_recycle_bin.png",
+      "candidate_file": "props/game_candidates/12_recycle_bin.png",
+      "label": "回收桶",
+      "category": "12_recycle_bin",
+      "suggested_area": "底层缓存回路",
+      "placement": "底层回收道具，不把 POP-UP 变成 RECYCLE",
+      "source_size": [
+        253,
+        263
+      ],
+      "candidate_size": [
+        36,
+        37
+      ],
+      "source_crop_on_sheet": [
+        1122,
+        754,
+        1375,
+        1017
+      ]
+    }
+  ],
+  "integration_status": "Design source pack only. Not integrated or tested in Godot. No claims of seamless tiling.",
+  "alpha_note": "Original sheet is RGBA. Some colored fringe particles remain by design; inspect when scaling."
+}

@@ -15,6 +15,7 @@ try {
         @{ Name='portal-hud'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--portal-hud-qa'); Report="portal-hud-qa-$mode.json" },
         @{ Name='archive-art'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--archive-art-qa'); Report="archive-art-qa-$mode.json" },
         @{ Name='boot-art'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--boot-art-qa'); Report="boot-art-qa-$mode.json" },
+        @{ Name='popup-art'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--popup-art-qa'); Report="popup-art-qa-$mode.json" },
         @{ Name='touch-route'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--touch-route-qa'); Report="touch-route-qa-$mode.json" },
         @{ Name='campaign'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--chapter-qa'); Report="chapter-qa-$mode.json" },
         @{ Name='ecology'; Arguments=@('--path','.', '--fixed-fps','60','--','--qa','--ecology-qa'); Report="ecology-qa-$mode.json" },

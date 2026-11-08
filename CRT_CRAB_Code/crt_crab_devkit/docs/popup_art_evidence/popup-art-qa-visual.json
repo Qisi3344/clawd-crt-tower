@@ -1,0 +1,117 @@
+{
+	"captures": [
+		{
+			"draw_calls": 460.0,
+			"fps": 1.0,
+			"memory_mb": 82.1370210647583,
+			"name": "popup-art-hall-entry",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 451.0,
+			"fps": 57.0,
+			"memory_mb": 82.18785572052,
+			"name": "popup-art-hall-reflected",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 469.0,
+			"fps": 50.0,
+			"memory_mb": 82.1865434646606,
+			"name": "popup-art-cross-layer",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 468.0,
+			"fps": 96.0,
+			"memory_mb": 82.3741579055786,
+			"name": "popup-art-loft",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 444.0,
+			"fps": 96.0,
+			"memory_mb": 82.3355226516724,
+			"name": "popup-art-east",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 457.0,
+			"fps": 96.0,
+			"memory_mb": 82.4059076309204,
+			"name": "popup-art-shaft",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 414.0,
+			"fps": 96.0,
+			"memory_mb": 82.665997505188,
+			"name": "popup-art-drain",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"clips": {
+		"popup-art": 551
+	},
+	"passed": true,
+	"scope": "Fixture load at POP-UP entrance, then actual input through all five areas; panoramas are separate camera fixtures",
+	"tests": [
+		{
+			"passed": true,
+			"test": "POP-UP loads its own continuous art"
+		},
+		{
+			"passed": true,
+			"test": "twelve curated props add no physics bodies"
+		},
+		{
+			"passed": true,
+			"test": "single native pixel viewport"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_a"
+		},
+		{
+			"passed": true,
+			"test": "original loft ladder and treasure work"
+		},
+		{
+			"passed": true,
+			"test": "east machinery reached through the real fuse door"
+		},
+		{
+			"passed": true,
+			"test": "real mechanism raises popup_fuse_b"
+		},
+		{
+			"passed": true,
+			"test": "both reflected fuses restore original power"
+		},
+		{
+			"passed": true,
+			"test": "drain is reached with real ladder input"
+		}
+	]
+}

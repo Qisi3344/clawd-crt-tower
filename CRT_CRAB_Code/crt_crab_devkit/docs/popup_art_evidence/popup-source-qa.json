@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "test": "all supplied source files preserved byte for byte",
+      "passed": true
+    },
+    {
+      "test": "all twelve prop identities retained once",
+      "passed": true
+    },
+    {
+      "test": "fixed props cover all five actual areas",
+      "passed": true
+    },
+    {
+      "test": "standing props contact actual collision floors",
+      "passed": true
+    },
+    {
+      "test": "all atlas regions fit padded 512x128 texture",
+      "passed": true
+    },
+    {
+      "test": "prop silhouettes have binary alpha",
+      "passed": true
+    },
+    {
+      "test": "one continuous 1024x768 midground",
+      "passed": true
+    },
+    {
+      "test": "five observation windows expose parallax",
+      "passed": true
+    },
+    {
+      "test": "wall remains opaque away from openings",
+      "passed": true
+    },
+    {
+      "test": "far covers all camera bounds without repeating",
+      "passed": true
+    },
+    {
+      "test": "dedicated materials match collision heights",
+      "passed": true
+    }
+  ]
+}

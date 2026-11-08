@@ -219,6 +219,8 @@ func _run() -> void:
 	await press("interact")
 	check("optional archive treasure is collectible",game.save.data.collected.has("archive_hidden"))
 	check("reach archive exit without teleport",await walk_to(736))
+	await press("move_up",145)
+	check("upper return port is reached from the retrieval bridge",await walk_to(864))
 	await frames(20)
 	await press("interact")
 	await frames(110)

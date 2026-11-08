@@ -264,6 +264,8 @@ for link in links:
     offset=OFFSETS[source].get(old_room,[0,0])
     link['position']=shifted(link['position'],offset)
     link['room']=''
+    if link['id']=='archive_exit': link['position']=[864,64]
+    if link['id']=='archive_popup': link['position']=[864,208]
 write(ROOT/'data/screen_links.json',links)
 
 # Evidence diagrams use the same graph data as runtime navigation.

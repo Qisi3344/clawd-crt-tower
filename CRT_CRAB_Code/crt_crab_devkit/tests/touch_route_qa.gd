@@ -79,7 +79,7 @@ func _run() -> void:
 	game.world.player.struck.connect(func():strikes+=1)
 	var pause_button:Button
 	for b in game.hud.find_children("*","Button",true,false):
-		if b.text=="暂停": pause_button=b;break
+		if b.name=="HUD_pause": pause_button=b;break
 	for down in [true,false]:
 		var event:=InputEventMouseButton.new();event.button_index=MOUSE_BUTTON_LEFT;event.position=pause_button.get_global_rect().get_center();event.pressed=down;get_viewport().push_input(event,true);await frames(2)
 	check("native GUI pause click is consumed before combat polling",game.hud.paused and strikes==0)

@@ -19,7 +19,7 @@ func continue_chapters() -> void:
 	await walk_to(288);await press("move_up",85);await walk_to(328);await walk_to(368,true);await frames(55)
 	check("live A restored through the original heavy-stone route",game.save.data.flags.get("signal_archive_gate",false))
 	Input.action_press("move_right");await press("jump",36);Input.action_release("move_right");await frames(20)
-	await walk_to(704);await press("interact");await wait_transition()
+	await walk_to(864);await press("interact");await wait_transition()
 	check("ARCHIVE port enters continuous POP-UP",game.active_id=="POP-UP" and game.world.room_id.is_empty())
 	if game.active_id!="POP-UP": finish();return
 	record("popup-v2")

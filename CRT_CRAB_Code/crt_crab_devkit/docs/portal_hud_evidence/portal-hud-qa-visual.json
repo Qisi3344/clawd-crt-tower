@@ -1,0 +1,97 @@
+{
+	"captures": [
+		{
+			"draw_calls": 483.0,
+			"fps": 36.0,
+			"memory_mb": 83.9663181304932,
+			"name": "portal-pause-clean",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 485.0,
+			"fps": 25.0,
+			"memory_mb": 85.2032699584961,
+			"name": "portal-archive-lower",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 471.0,
+			"fps": 25.0,
+			"memory_mb": 85.2042427062988,
+			"name": "portal-archive-upper",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"passed": true,
+	"tests": [
+		{
+			"passed": true,
+			"test": "three compact textless icon buttons"
+		},
+		{
+			"passed": true,
+			"test": "pause has no duplicate internal-map entry"
+		},
+		{
+			"passed": true,
+			"test": "hover reveals the button caption"
+		},
+		{
+			"passed": true,
+			"test": "long hold reveals caption"
+		},
+		{
+			"passed": true,
+			"test": "long hold does not activate pause"
+		},
+		{
+			"passed": true,
+			"test": "short click still activates pause"
+		},
+		{
+			"passed": true,
+			"test": "touch caption stays hidden before long-press threshold"
+		},
+		{
+			"passed": true,
+			"test": "native touch long press reveals caption"
+		},
+		{
+			"passed": true,
+			"test": "native touch long press does not activate menu"
+		},
+		{
+			"passed": true,
+			"test": "every CRT exit has a native energy column"
+		},
+		{
+			"passed": true,
+			"test": "two east exits separated onto different floors"
+		},
+		{
+			"passed": true,
+			"test": "both exits clear all archive ladders"
+		},
+		{
+			"passed": true,
+			"test": "lower column resolves only the POP-UP destination"
+		},
+		{
+			"passed": true,
+			"test": "upper column resolves only the BOOT destination"
+		},
+		{
+			"passed": true,
+			"test": "reduced motion freezes the energy spiral"
+		}
+	]
+}

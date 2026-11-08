@@ -27,6 +27,7 @@ func skin(bg: Color, border: Color, pressed := false) -> StyleBoxTexture:
 
 func polish(node) -> void:
     if not is_instance_valid(node): return
+    if node.get_meta("custom_hud_icon",false): return
     var ancestor: Node = node
     while ancestor!=null:
         if ancestor.get_meta("story_ui",false): return

@@ -119,6 +119,7 @@ func _ready() -> void:
 		if "--chapter-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/exploration_qa.gd"
 		if "--ecology-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/ecology_qa.gd"
 		if "--touch-route-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/touch_route_qa.gd"
+		if "--portal-hud-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/portal_hud_qa.gd"
 		harness.set_script(load(test_script))
 		add_child(harness)
 	else:

@@ -112,7 +112,8 @@ func _ready() -> void:
 		crystals.append(crystal)
 	for entry in definition.terminals: PixelArt.sprite(self,13,point(entry.position)+Vector2(0,-16))
 	for link in links:
-		if link.from==screen_id and str(link.get("room",""))==room_id: PixelArt.sprite(self,13,point(link.position)+Vector2(0,-16))
+		if link.from==screen_id and str(link.get("room",""))==room_id:
+			var portal:=EnergyPortal.new();portal.world=self;portal.link=link;portal.position=point(link.position);add_child(portal)
 	for portal in definition.get("room_portals",[]): PixelArt.sprite(self,13,point(portal.position)+Vector2(0,-16))
 	player = SideCrab.new()
 	player.level = self

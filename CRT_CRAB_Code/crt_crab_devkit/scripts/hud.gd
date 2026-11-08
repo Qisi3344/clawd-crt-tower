@@ -71,7 +71,7 @@ func _ready() -> void:
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margins.add_child(column)
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation",16)
+	top.add_theme_constant_override("separation",10)
 	column.add_child(top)
 	title_label=_label("01 · 启动区",24)
 	top.add_child(title_label)
@@ -81,13 +81,9 @@ func _ready() -> void:
 	health_label = _label("● ● ●",24,Color("f1dfb0"))
 	health_label.hide();root.add_child(health_label)
 	vitals=Control.new();vitals.set_script(load("res://scripts/ui/vital_icons.gd"));top.add_child(vitals)
-	array_button=Button.new();array_button.text="阵列";array_button.pressed.connect(func():overview_requested.emit());top.add_child(array_button)
-	var local_map_button:=Button.new();local_map_button.text="地图";local_map_button.pressed.connect(func():get_parent().toggle_local_map());top.add_child(local_map_button)
-	var menu := Button.new()
-	menu.focus_mode = Control.FOCUS_NONE
-	menu.text = "暂停"
-	menu.pressed.connect(func(): set_paused(true))
-	top.add_child(menu)
+	array_button=_icon(top,"array","阵列",func():overview_requested.emit())
+	_icon(top,"map","地图",func():get_parent().toggle_local_map())
+	_icon(top,"pause","暂停",func():set_paused(true))
 	objective = _label("去左后方终端，按 E 唤醒信号",20,Color("e1e2d6"))
 	column.add_child(objective)
 	objective.hide()
@@ -307,6 +303,11 @@ func update_progress(id: String, session: Dictionary) -> void:
 	if last_objective!=objective.text:
 		last_objective=objective.text;show_message(objective.text)
 
+func _icon(parent: Control,glyph: String,caption: String,callback: Callable) -> Button:
+	var button:=HudIconButton.new();button.glyph=glyph;button.caption=caption;button.name="HUD_"+glyph
+	button.set_meta("custom_hud_icon",true);button.activated.connect(callback);parent.add_child(button)
+	return button
+
 func _label(text: String, size: int, color := Color("f0f0df")) -> Label:
 	var label := Label.new()
 	label.text = text
@@ -346,7 +347,6 @@ func _configure_pause_pages(column: VBoxContainer) -> void:
 		pause_pages[child]=page_id
 	_page_button(column,"操作指南","main",func():show_detail(get_parent().tutorial.guide()))
 	_page_button(column,"当前任务 / 关卡信息","main",func():show_detail(objective.text+"\n\n"+collection_label.text))
-	_page_button(column,"关卡内部地图","main",func():set_paused(false);get_parent().toggle_local_map())
 	_page_button(column,"游戏设置","main",func():show_pause_page("settings"))
 	_page_button(column,"复位当前谜题","main",func():reset_confirm.popup_centered(Vector2i(460,160)))
 	_page_button(column,"操作与新手提示","settings",func():show_pause_page("controls"))

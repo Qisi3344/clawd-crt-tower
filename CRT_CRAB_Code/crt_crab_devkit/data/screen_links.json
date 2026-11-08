@@ -39,8 +39,8 @@
     "target_computer_id": "crt_boot_00",
     "spawn_id": "return",
     "position": [
-      736,
-      208
+      864,
+      64
     ],
     "requires": "archive_key",
     "label": "携档案密钥返回 BOOT",
@@ -55,7 +55,7 @@
     "target_computer_id": "crt_sleep_04",
     "spawn_id": "entrance",
     "position": [
-      704,
+      864,
       208
     ],
     "requires": "archive_key",

@@ -1,0 +1,43 @@
+{
+	"captures": [],
+	"passed": true,
+	"scope": "Desktop native ScreenTouch and ScreenDrag only; mobile hardware pending",
+	"tests": [
+		{
+			"passed": true,
+			"test": "native touch jump clears the gap and reaches the raised floor"
+		},
+		{
+			"passed": true,
+			"test": "simultaneous held touch interaction and joystick opens real crate gate"
+		},
+		{
+			"passed": true,
+			"test": "touch ladder and interaction collect the original BOOT key"
+		},
+		{
+			"passed": true,
+			"test": "touch port makes a genuine BOOT to ARCHIVE transfer"
+		},
+		{
+			"passed": true,
+			"test": "touch claw hits a real patrol and records hit-based learning"
+		},
+		{
+			"passed": true,
+			"test": "touch pushes actual heavy stone into the live cross-screen source"
+		},
+		{
+			"passed": true,
+			"test": "touch roundtrip returns to the same persistent BOOT world"
+		},
+		{
+			"passed": true,
+			"test": "touch roundtrip reaches the remote signal reward"
+		},
+		{
+			"passed": true,
+			"test": "native GUI pause click is consumed before combat polling"
+		}
+	]
+}

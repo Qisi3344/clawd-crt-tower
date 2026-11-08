@@ -1,0 +1,194 @@
+[
+  {
+    "id": 1,
+    "filename": "01_power_cabinet.png",
+    "name": "配电柜",
+    "size": [
+      40,
+      64
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      8,
+      8,
+      40,
+      64
+    ]
+  },
+  {
+    "id": 2,
+    "filename": "02_server_rack.png",
+    "name": "服务器机柜",
+    "size": [
+      33,
+      65
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      92,
+      8,
+      33,
+      65
+    ]
+  },
+  {
+    "id": 3,
+    "filename": "03_backup_battery.png",
+    "name": "后备电池",
+    "size": [
+      36,
+      47
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      176,
+      8,
+      36,
+      47
+    ]
+  },
+  {
+    "id": 4,
+    "filename": "04_fuse_panel.png",
+    "name": "保险丝面板",
+    "size": [
+      56,
+      46
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      260,
+      8,
+      56,
+      46
+    ]
+  },
+  {
+    "id": 5,
+    "filename": "05_maintenance_cart.png",
+    "name": "维护工具车",
+    "size": [
+      49,
+      45
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      344,
+      8,
+      49,
+      45
+    ]
+  },
+  {
+    "id": 6,
+    "filename": "06_spare_parts_crate.png",
+    "name": "备用零件箱",
+    "size": [
+      37,
+      32
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      428,
+      8,
+      37,
+      32
+    ]
+  },
+  {
+    "id": 7,
+    "filename": "07_service_lamp.png",
+    "name": "吊式维修灯",
+    "size": [
+      34,
+      29
+    ],
+    "anchor": "top",
+    "atlas_rect": [
+      8,
+      100,
+      34,
+      29
+    ]
+  },
+  {
+    "id": 8,
+    "filename": "08_vent_fan.png",
+    "name": "排风机",
+    "size": [
+      40,
+      40
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      92,
+      100,
+      40,
+      40
+    ]
+  },
+  {
+    "id": 9,
+    "filename": "09_transformer_coil.png",
+    "name": "变压器线圈",
+    "size": [
+      51,
+      58
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      176,
+      100,
+      51,
+      58
+    ]
+  },
+  {
+    "id": 10,
+    "filename": "10_coiled_wires.png",
+    "name": "卷曲电缆",
+    "size": [
+      56,
+      46
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      260,
+      100,
+      56,
+      46
+    ]
+  },
+  {
+    "id": 11,
+    "filename": "11_maintenance_terminal.png",
+    "name": "维护终端",
+    "size": [
+      45,
+      52
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      344,
+      100,
+      45,
+      52
+    ]
+  },
+  {
+    "id": 12,
+    "filename": "12_signal_indicator.png",
+    "name": "信号指示牌",
+    "size": [
+      60,
+      35
+    ],
+    "anchor": "bottom",
+    "atlas_rect": [
+      428,
+      100,
+      60,
+      35
+    ]
+  }
+]

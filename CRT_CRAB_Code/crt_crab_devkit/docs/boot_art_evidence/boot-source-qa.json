@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "test": "supplied sources retained byte for byte",
+      "passed": true
+    },
+    {
+      "test": "all twelve distinct prop types placed once",
+      "passed": true
+    },
+    {
+      "test": "standing props contact actual floors",
+      "passed": true
+    },
+    {
+      "test": "atlas regions remain within padded atlas",
+      "passed": true
+    },
+    {
+      "test": "single world-sized continuous midground",
+      "passed": true
+    },
+    {
+      "test": "real transparent observation windows",
+      "passed": true
+    },
+    {
+      "test": "solid opaque wall architecture",
+      "passed": true
+    },
+    {
+      "test": "far covers full parallax sampling domain",
+      "passed": true
+    },
+    {
+      "test": "terrain sizes match existing collision thicknesses",
+      "passed": true
+    }
+  ]
+}

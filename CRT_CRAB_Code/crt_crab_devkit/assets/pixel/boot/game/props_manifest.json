@@ -1,0 +1,194 @@
+[
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			10.0,
+			11.0,
+			36,
+			59
+		],
+		"filename": "01_power_cabinet.png",
+		"id": 1.0,
+		"name": "配电柜",
+		"size": [
+			40.0,
+			64.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			95.0,
+			10.0,
+			27,
+			62
+		],
+		"filename": "02_server_rack.png",
+		"id": 2.0,
+		"name": "服务器机柜",
+		"size": [
+			33.0,
+			65.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			178.0,
+			12.0,
+			32,
+			41
+		],
+		"filename": "03_backup_battery.png",
+		"id": 3.0,
+		"name": "后备电池",
+		"size": [
+			36.0,
+			47.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			263.0,
+			13.0,
+			51,
+			40
+		],
+		"filename": "04_fuse_panel.png",
+		"id": 4.0,
+		"name": "保险丝面板",
+		"size": [
+			56.0,
+			46.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			348.0,
+			14.0,
+			41,
+			35
+		],
+		"filename": "05_maintenance_cart.png",
+		"id": 5.0,
+		"name": "维护工具车",
+		"size": [
+			49.0,
+			45.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			430.0,
+			12.0,
+			33,
+			25
+		],
+		"filename": "06_spare_parts_crate.png",
+		"id": 6.0,
+		"name": "备用零件箱",
+		"size": [
+			37.0,
+			32.0
+		]
+	},
+	{
+		"anchor": "top",
+		"atlas_rect": [
+			15.0,
+			100.0,
+			21,
+			27
+		],
+		"filename": "07_service_lamp.png",
+		"id": 7.0,
+		"name": "吊式维修灯",
+		"size": [
+			34.0,
+			29.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			94.0,
+			102.0,
+			36,
+			36
+		],
+		"filename": "08_vent_fan.png",
+		"id": 8.0,
+		"name": "排风机",
+		"size": [
+			40.0,
+			40.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			179.0,
+			109.0,
+			46,
+			47
+		],
+		"filename": "09_transformer_coil.png",
+		"id": 9.0,
+		"name": "变压器线圈",
+		"size": [
+			51.0,
+			58.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			261.0,
+			110.0,
+			49,
+			27
+		],
+		"filename": "10_coiled_wires.png",
+		"id": 10.0,
+		"name": "卷曲电缆",
+		"size": [
+			56.0,
+			46.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			348.0,
+			102.0,
+			37,
+			47
+		],
+		"filename": "11_maintenance_terminal.png",
+		"id": 11.0,
+		"name": "维护终端",
+		"size": [
+			45.0,
+			52.0
+		]
+	},
+	{
+		"anchor": "bottom",
+		"atlas_rect": [
+			430.0,
+			103.0,
+			56,
+			30
+		],
+		"filename": "12_signal_indicator.png",
+		"id": 12.0,
+		"name": "信号指示牌",
+		"size": [
+			60.0,
+			35.0
+		]
+	}
+]

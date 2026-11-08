@@ -1,0 +1,75 @@
+{
+	"captures": [
+		{
+			"draw_calls": 407.0,
+			"fps": 1.0,
+			"memory_mb": 81.2685289382935,
+			"name": "boot-art-entrance",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 406.0,
+			"fps": 54.0,
+			"memory_mb": 81.7434091567993,
+			"name": "boot-art-upper",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 408.0,
+			"fps": 91.0,
+			"memory_mb": 81.7556619644165,
+			"name": "boot-art-power-hall",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 406.0,
+			"fps": 90.0,
+			"memory_mb": 81.9549036026001,
+			"name": "boot-art-lower",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"clips": {
+		"boot-art": 347
+	},
+	"passed": true,
+	"scope": "Action traversal from BOOT entrance; full-width camera fixtures are separate",
+	"tests": [
+		{
+			"passed": true,
+			"test": "BOOT has twelve fixed decorations and no added decoration colliders"
+		},
+		{
+			"passed": true,
+			"test": "one native 320x240 screen"
+		},
+		{
+			"passed": true,
+			"test": "upper maintenance deck reached with real ladder input"
+		},
+		{
+			"passed": true,
+			"test": "original crate still activates original gate"
+		},
+		{
+			"passed": true,
+			"test": "real tutorial treasure remains collectible"
+		},
+		{
+			"passed": true,
+			"test": "lower cable well reached with real input"
+		}
+	]
+}

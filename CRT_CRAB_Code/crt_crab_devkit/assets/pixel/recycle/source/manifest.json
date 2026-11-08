@@ -1,0 +1,353 @@
+{
+  "version": "1.0",
+  "level": "RECYCLE",
+  "level_file": "data/levels/recycle_01.json",
+  "world_size": [
+    1024,
+    768
+  ],
+  "viewport_size": [
+    320,
+    240
+  ],
+  "palette_accent": "#B4CC8C",
+  "asset_status": "Prepared standalone art assets; NOT integrated or Godot-verified",
+  "game_images": {
+    "far": "game/far.png",
+    "mid": "game/mid-continuous.png",
+    "props_atlas": "game/props-atlas.png",
+    "terrain_reference": "game/terrain-style-reference-16px.png"
+  },
+  "props": [
+    {
+      "id": 1,
+      "filename": "01_broken_crt_stack.png",
+      "label": "废旧CRT堆",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        7,
+        12,
+        64,
+        60
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 2,
+      "filename": "02_scrap_crate.png",
+      "label": "废料箱",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        7,
+        17,
+        59,
+        55
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 3,
+      "filename": "03_cable_spool.png",
+      "label": "线缆卷轴",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        8,
+        11,
+        58,
+        58
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 4,
+      "filename": "04_broken_keyboard.png",
+      "label": "破损键盘",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        5,
+        26,
+        62,
+        56
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 5,
+      "filename": "05_cracked_monitor.png",
+      "label": "裂屏显示器",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        8,
+        18,
+        57,
+        57
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 6,
+      "filename": "06_e_waste_heap.png",
+      "label": "电子废料堆",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        4,
+        14,
+        58,
+        58
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 7,
+      "filename": "07_hanging_hook.png",
+      "label": "吊装吊钩",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        21,
+        1,
+        49,
+        60
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 8,
+      "filename": "08_sorting_bin.png",
+      "label": "分拣桶",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        12,
+        10,
+        55,
+        56
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 9,
+      "filename": "09_hazard_barricade.png",
+      "label": "警戒路障",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        6,
+        17,
+        64,
+        56
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 10,
+      "filename": "10_data_cartridges.png",
+      "label": "旧数据匣",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        12,
+        15,
+        52,
+        60
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 11,
+      "filename": "11_pipe_elbow.png",
+      "label": "管道弯头",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        0,
+        6,
+        53,
+        58
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    },
+    {
+      "id": 12,
+      "filename": "12_service_terminal.png",
+      "label": "维修终端",
+      "canvas": [
+        64,
+        64
+      ],
+      "visible_bounds": [
+        12,
+        7,
+        56,
+        59
+      ],
+      "default_anchor": "bottom-center",
+      "scale": 1.0,
+      "collision": false
+    }
+  ],
+  "real_areas": [
+    {
+      "id": "upper_left",
+      "label": "吊装观察台",
+      "rect": [
+        0,
+        0,
+        512,
+        288
+      ]
+    },
+    {
+      "id": "cache",
+      "label": "数据重构吊台",
+      "rect": [
+        512,
+        0,
+        512,
+        288
+      ]
+    },
+    {
+      "id": "sorter",
+      "label": "中央分拣大厅",
+      "rect": [
+        0,
+        288,
+        512,
+        240
+      ]
+    },
+    {
+      "id": "maintenance",
+      "label": "侧面维护竖井",
+      "rect": [
+        832,
+        288,
+        192,
+        480
+      ]
+    },
+    {
+      "id": "scrap",
+      "label": "地下废料坑",
+      "rect": [
+        352,
+        528,
+        160,
+        240
+      ]
+    },
+    {
+      "id": "well",
+      "label": "磁吸拆解井",
+      "rect": [
+        512,
+        528,
+        320,
+        240
+      ]
+    },
+    {
+      "id": "tunnel",
+      "label": "回访磁吸暗道",
+      "rect": [
+        0,
+        528,
+        352,
+        240
+      ]
+    }
+  ],
+  "protected_mechanism_positions": {
+    "conveyor": [
+      192,
+      448
+    ],
+    "crusher": [
+      288,
+      448
+    ],
+    "safe_stop": [
+      112,
+      448
+    ],
+    "magnet_well": [
+      680,
+      576
+    ],
+    "assembly": [
+      768,
+      208
+    ],
+    "fragments": [
+      [
+        400,
+        672
+      ],
+      [
+        592,
+        592
+      ],
+      [
+        608,
+        192
+      ]
+    ]
+  },
+  "render_notes": [
+    "far is an opaque 1024x768 world-based wallpaper; draw full world or sample using clamped viewport region",
+    "mid has alpha; sample world coordinates 1:1 and draw above far",
+    "No fake traversable platforms or ladders are painted in mid",
+    "preview contains a geometry overlay purely for checking; do not import preview as level art"
+  ]
+}

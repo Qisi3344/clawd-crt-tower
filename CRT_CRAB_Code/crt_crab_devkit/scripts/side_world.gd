@@ -54,6 +54,8 @@ func _ready() -> void:
 	if screen_id=="BOOT": add_child(BootDressing.new())
 	if screen_id=="POP-UP":
 		var dressing:=PopupDressing.new();dressing.world=self;add_child(dressing)
+	if screen_id in ["RECYCLE","SIGNAL"]:
+		var dressing:=IndustrialDressing.new();dressing.world=self;add_child(dressing)
 	for platform in definition.platforms: _solid(Rect2(platform[0],platform[1],platform[2],platform[3]),bool(platform[4]) if platform.size()>4 else platform[1]<208)
 	if screen_id=="ARCHIVE":
 		var terrain:=ArchiveTerrain.new();terrain.definition=definition;add_child(terrain)
@@ -61,6 +63,8 @@ func _ready() -> void:
 		var terrain:=ArchiveTerrain.new();terrain.definition=definition;terrain.art_root="res://assets/pixel/boot/game/";terrain.lip=Color("9ebdb6");add_child(terrain);terrain.name="BootTerrain"
 	if screen_id=="POP-UP":
 		var terrain:=ArchiveTerrain.new();terrain.definition=definition;terrain.art_root="res://assets/pixel/popup/game/";terrain.lip=Color("be91b6");add_child(terrain);terrain.name="PopupTerrain"
+	if screen_id in ["RECYCLE","SIGNAL"]:
+		var terrain:=ArchiveTerrain.new();terrain.definition=definition;terrain.art_root="res://assets/pixel/%s/game/"%screen_id.to_lower();terrain.lip=Color("b0b99a") if screen_id=="RECYCLE" else Color("a5c4cc");add_child(terrain);terrain.name="IndustrialTerrain"
 	_solid(Rect2(-16,0,16,world_size.y+16))
 	_solid(Rect2(world_size.x,0,16,world_size.y+16))
 	for ladder in definition.ladders:
@@ -162,7 +166,7 @@ func _solid(rect: Rect2, one_way := false) -> void:
 	shape.one_way_collision = one_way
 	if shape.one_way_collision: ladder_platforms.append(body)
 	body.add_child(shape)
-	if screen_id in ["ARCHIVE","BOOT","POP-UP"]: return
+	if screen_id in ["ARCHIVE","BOOT","POP-UP","RECYCLE","SIGNAL"]: return
 	for x in range(int(rect.position.x),int(rect.end.x),16):
 		for y in range(int(rect.position.y),int(rect.end.y),16): PixelArt.tile(self,Vector2(x,y),screen_id=="ARCHIVE",(x/16)%8)
 

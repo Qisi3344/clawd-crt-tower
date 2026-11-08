@@ -9,6 +9,9 @@ var boot_far:Texture2D
 var boot_mid:Texture2D
 var popup_far:Texture2D
 var popup_mid:Texture2D
+var industrial_far:Texture2D
+var industrial_mid:Texture2D
+var industrial_tint:=Color.WHITE
 func _ready() -> void:
 	if world.screen_id=="ARCHIVE":
 		archive_far=load("res://assets/pixel/archive/game/far.png")
@@ -19,6 +22,12 @@ func _ready() -> void:
 	if world.screen_id=="POP-UP":
 		popup_far=load("res://assets/pixel/popup/game/far.png")
 		popup_mid=load("res://assets/pixel/popup/game/mid-continuous.png")
+	if world.screen_id in ["RECYCLE","SIGNAL"]:
+		var key:=world.screen_id.to_lower()
+		industrial_far=load("res://assets/pixel/%s/game/far.png"%key)
+		industrial_mid=load("res://assets/pixel/%s/game/mid-continuous.png"%key)
+		var config:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/industrial_art_layout.json"))
+		var tint:Array=config[key].far_tint;industrial_tint=Color(tint[0],tint[1],tint[2])
 func _process(_delta: float) -> void:
 	if not is_instance_valid(world.camera): return
 	if world.camera.position!=last_view:
@@ -30,6 +39,12 @@ func _draw() -> void:
 	var palettes={"BOOT":["222c32","536e66"],"ARCHIVE":["282936","756985"],"POP-UP":["282338","69516d"],"RECYCLE":["242d32","6a7d6c"],"SIGNAL":["192e38","527d85"],"ERROR":["242337","655c8a"]}
 	var colors:Array=palettes.get(world.screen_id,palettes.BOOT)
 	draw_rect(view,Color(colors[0]))
+	if world.screen_id in ["RECYCLE","SIGNAL"]:
+		var origin:=Vector2(80+view.position.x*.5,40+view.position.y*.15)
+		origin=origin.clamp(Vector2.ZERO,industrial_far.get_size()-view.size)
+		draw_texture_rect_region(industrial_far,view,Rect2(origin,view.size),industrial_tint)
+		draw_texture_rect_region(industrial_mid,view,view)
+		return
 	if world.screen_id=="POP-UP":
 		# Frame the central CRT landmark instead of sampling only the far image's left side.
 		var far_origin:=Vector2(160+view.position.x*.5,view.position.y*.15)

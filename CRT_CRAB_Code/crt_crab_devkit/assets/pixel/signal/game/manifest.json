@@ -1,0 +1,126 @@
+{
+	"composition": "open-industrial-v1",
+	"props": [
+		{
+			"id": 1,
+			"label": "01_dish_antenna.png",
+			"rect": [
+				8,
+				8,
+				38,
+				54
+			]
+		},
+		{
+			"id": 2,
+			"label": "02_waveform_monitor.png",
+			"rect": [
+				72,
+				8,
+				36,
+				29
+			]
+		},
+		{
+			"id": 3,
+			"label": "03_relay_server.png",
+			"rect": [
+				136,
+				8,
+				28,
+				50
+			]
+		},
+		{
+			"id": 4,
+			"label": "04_optical_spool.png",
+			"rect": [
+				200,
+				8,
+				30,
+				30
+			]
+		},
+		{
+			"id": 5,
+			"label": "05_a_source_indicator.png",
+			"rect": [
+				264,
+				8,
+				24,
+				29
+			]
+		},
+		{
+			"id": 6,
+			"label": "06_bee_relay_housing.png",
+			"rect": [
+				328,
+				8,
+				32,
+				26
+			]
+		},
+		{
+			"id": 7,
+			"label": "07_fiber_coupler.png",
+			"rect": [
+				392,
+				8,
+				28,
+				40
+			]
+		},
+		{
+			"id": 8,
+			"label": "08_insulator_module.png",
+			"rect": [
+				456,
+				8,
+				24,
+				36
+			]
+		},
+		{
+			"id": 9,
+			"label": "09_signal_cable_crate.png",
+			"rect": [
+				8,
+				72,
+				34,
+				25
+			]
+		},
+		{
+			"id": 10,
+			"label": "10_optical_cable_coil.png",
+			"rect": [
+				72,
+				72,
+				34,
+				18
+			]
+		},
+		{
+			"id": 11,
+			"label": "11_caution_panel.png",
+			"rect": [
+				136,
+				72,
+				30,
+				28
+			]
+		},
+		{
+			"id": 12,
+			"label": "12_water_level_probe.png",
+			"rect": [
+				200,
+				72,
+				13,
+				54
+			]
+		}
+	],
+	"sky_key_pixels": 269153
+}

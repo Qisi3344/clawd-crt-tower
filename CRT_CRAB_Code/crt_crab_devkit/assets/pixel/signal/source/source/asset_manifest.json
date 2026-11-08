@@ -1,0 +1,365 @@
+{
+  "chapter": "SIGNAL",
+  "screen_id": "SIGNAL",
+  "source": "Qisi3344/clawd-crt-tower",
+  "world_size": [
+    1024,
+    768
+  ],
+  "viewport": [
+    320,
+    240
+  ],
+  "screen_color": "#74cbd0",
+  "areas": [
+    {
+      "id": "hub",
+      "name": "三路中央诊断台",
+      "rect": [
+        0,
+        288,
+        320,
+        240
+      ]
+    },
+    {
+      "id": "a",
+      "name": "A 真实源信号塔",
+      "rect": [
+        0,
+        0,
+        352,
+        288
+      ]
+    },
+    {
+      "id": "relay",
+      "name": "B 继电蜂桥",
+      "rect": [
+        320,
+        288,
+        480,
+        240
+      ]
+    },
+    {
+      "id": "fiber",
+      "name": "C 光纤汇流井",
+      "rect": [
+        704,
+        0,
+        320,
+        288
+      ]
+    },
+    {
+      "id": "return",
+      "name": "侧面光纤干道",
+      "rect": [
+        800,
+        288,
+        224,
+        240
+      ]
+    },
+    {
+      "id": "water",
+      "name": "绝缘水道旁路",
+      "rect": [
+        0,
+        528,
+        1024,
+        240
+      ]
+    }
+  ],
+  "textures": {
+    "far": "game/far.png",
+    "mid": "game/mid-continuous.png",
+    "terrain": [
+      "game/terrain-16.png",
+      "game/terrain-32.png",
+      "game/terrain-48.png"
+    ],
+    "props": "game/props-atlas.png"
+  },
+  "props": [
+    {
+      "id": 1,
+      "filename": "01_dish_antenna.png",
+      "rect": [
+        12,
+        24,
+        40,
+        48
+      ],
+      "suggested_area": "A真实源塔 / 上层",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 2,
+      "filename": "02_waveform_monitor.png",
+      "rect": [
+        75,
+        30,
+        42,
+        35
+      ],
+      "suggested_area": "中央诊断台",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 3,
+      "filename": "03_relay_server.png",
+      "rect": [
+        144,
+        24,
+        32,
+        48
+      ],
+      "suggested_area": "B继电蜂桥",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 4,
+      "filename": "04_optical_spool.png",
+      "rect": [
+        207,
+        31,
+        34,
+        34
+      ],
+      "suggested_area": "C光纤井",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 5,
+      "filename": "05_a_source_indicator.png",
+      "rect": [
+        272,
+        30,
+        32,
+        36
+      ],
+      "suggested_area": "A支路",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 6,
+      "filename": "06_bee_relay_housing.png",
+      "rect": [
+        331,
+        29,
+        42,
+        38
+      ],
+      "suggested_area": "B支路",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 7,
+      "filename": "07_fiber_coupler.png",
+      "rect": [
+        15,
+        122,
+        34,
+        44
+      ],
+      "suggested_area": "C支路",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 8,
+      "filename": "08_insulator_module.png",
+      "rect": [
+        82,
+        122,
+        28,
+        44
+      ],
+      "suggested_area": "绝缘水道",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 9,
+      "filename": "09_signal_cable_crate.png",
+      "rect": [
+        138,
+        128,
+        44,
+        32
+      ],
+      "suggested_area": "各区域边角",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 10,
+      "filename": "10_optical_cable_coil.png",
+      "rect": [
+        202,
+        130,
+        44,
+        28
+      ],
+      "suggested_area": "光纤干道",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 11,
+      "filename": "11_caution_panel.png",
+      "rect": [
+        270,
+        127,
+        36,
+        34
+      ],
+      "suggested_area": "危险水道墙边",
+      "role": "background_decor_only"
+    },
+    {
+      "id": 12,
+      "filename": "12_water_level_probe.png",
+      "rect": [
+        340,
+        120,
+        24,
+        48
+      ],
+      "suggested_area": "下层水道",
+      "role": "background_decor_only"
+    }
+  ],
+  "do_not_change": [
+    "platforms",
+    "ladders",
+    "mechanisms",
+    "boss",
+    "spawns",
+    "save",
+    "screen_links"
+  ],
+  "engine_integration_status": "NOT_INTEGRATED_NOT_TESTED",
+  "image_gen_reference_not_runtime": true,
+  "suggested_noninteractive_placements": [
+    {
+      "id": 1,
+      "position": [
+        268,
+        208
+      ],
+      "area": "a",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 2,
+      "position": [
+        208,
+        448
+      ],
+      "area": "hub",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 3,
+      "position": [
+        376,
+        448
+      ],
+      "area": "relay",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 4,
+      "position": [
+        766,
+        208
+      ],
+      "area": "fiber",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 5,
+      "position": [
+        241,
+        208
+      ],
+      "area": "a",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 6,
+      "position": [
+        729,
+        448
+      ],
+      "area": "relay",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 7,
+      "position": [
+        896,
+        208
+      ],
+      "area": "fiber",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 8,
+      "position": [
+        167,
+        688
+      ],
+      "area": "water",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 9,
+      "position": [
+        247,
+        688
+      ],
+      "area": "water",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 10,
+      "position": [
+        874,
+        448
+      ],
+      "area": "return",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 11,
+      "position": [
+        431,
+        688
+      ],
+      "area": "water",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    },
+    {
+      "id": 12,
+      "position": [
+        601,
+        688
+      ],
+      "area": "water",
+      "anchor": "feet_on_floor",
+      "needs_godot_occlusion_and_collision_lane_review": true
+    }
+  ]
+}

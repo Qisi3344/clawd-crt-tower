@@ -1,0 +1,13 @@
+﻿道具ID,文件名,世界X,世界Y,区域,规则
+1,01_dish_antenna.png, 268,208,a,仅背景装饰-需实机避让
+2,02_waveform_monitor.png, 208,448,hub,仅背景装饰-需实机避让
+3,03_relay_server.png, 376,448,relay,仅背景装饰-需实机避让
+4,04_optical_spool.png, 766,208,fiber,仅背景装饰-需实机避让
+5,05_a_source_indicator.png, 241,208,a,仅背景装饰-需实机避让
+6,06_bee_relay_housing.png, 729,448,relay,仅背景装饰-需实机避让
+7,07_fiber_coupler.png, 896,208,fiber,仅背景装饰-需实机避让
+8,08_insulator_module.png, 167,688,water,仅背景装饰-需实机避让
+9,09_signal_cable_crate.png, 247,688,water,仅背景装饰-需实机避让
+10,10_optical_cable_coil.png, 874,448,return,仅背景装饰-需实机避让
+11,11_caution_panel.png, 431,688,water,仅背景装饰-需实机避让
+12,12_water_level_probe.png, 601,688,water,仅背景装饰-需实机避让

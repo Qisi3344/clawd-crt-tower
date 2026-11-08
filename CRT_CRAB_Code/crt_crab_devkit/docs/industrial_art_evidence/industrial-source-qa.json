@@ -1,0 +1,165 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "test": "recycle supplied source bytes match ZIP",
+      "passed": true
+    },
+    {
+      "test": "recycle retains all twelve prop identities",
+      "passed": true
+    },
+    {
+      "test": "recycle covers all named areas with fixed props",
+      "passed": true
+    },
+    {
+      "test": "recycle standing props contact real floors",
+      "passed": true
+    },
+    {
+      "test": "recycle atlas regions fit 512x128",
+      "passed": true
+    },
+    {
+      "test": "recycle prop alpha is binary",
+      "passed": true
+    },
+    {
+      "test": "recycle one full-world scene canvas",
+      "passed": true
+    },
+    {
+      "test": "recycle broad open depth, not little wall windows",
+      "passed": true
+    },
+    {
+      "test": "recycle isolated well opening has no painted white background",
+      "passed": true
+    },
+    {
+      "test": "recycle painted apparatus stays opaque",
+      "passed": true
+    },
+    {
+      "test": "recycle single far texture covers bounded sampling",
+      "passed": true
+    },
+    {
+      "test": "recycle materials match 16/32/48 collision heights",
+      "passed": true
+    },
+    {
+      "test": "signal supplied source bytes match ZIP",
+      "passed": true
+    },
+    {
+      "test": "signal retains all twelve prop identities",
+      "passed": true
+    },
+    {
+      "test": "signal covers all named areas with fixed props",
+      "passed": true
+    },
+    {
+      "test": "signal standing props contact real floors",
+      "passed": true
+    },
+    {
+      "test": "signal atlas regions fit 512x128",
+      "passed": true
+    },
+    {
+      "test": "signal prop alpha is binary",
+      "passed": true
+    },
+    {
+      "test": "signal one full-world scene canvas",
+      "passed": true
+    },
+    {
+      "test": "signal broad open depth, not little wall windows",
+      "passed": true
+    },
+    {
+      "test": "signal painted apparatus stays opaque",
+      "passed": true
+    },
+    {
+      "test": "signal single far texture covers bounded sampling",
+      "passed": true
+    },
+    {
+      "test": "signal materials match 16/32/48 collision heights",
+      "passed": true
+    }
+  ],
+  "supplied_source_sha256": {
+    "recycle": {
+      "README_先看.md": "961b18f16b7ebc803dca7854f1bcf640598aca3405ac0f16d5c89002b328eeae",
+      "SHA256.txt": "7ef6725d5077eb9db3ee0b724a7c8ad11ccd02e2ba917e3423aee04246bf3964",
+      "docs\\RECYCLE_素材位置与Godot接入说明.md": "ba247db50fddbd509271f5093d900ad07d25acbae6e16fa48ebdbb6c0ac07be0",
+      "docs\\给Codex的执行任务.md": "fa0a24b58869da692f470aee4c97e8f6feebacef726fae425b44f555f33c2cad",
+      "game\\far.png": "9f9820f28038b1d20a7762df23520457af493023ba40c16005dd67dd335f99e7",
+      "game\\mid-continuous.png": "56833c299c20e1ff3ebd341f550d7d48c31e6785947a56f50c7833ddecbb4e8c",
+      "game\\props\\01_broken_crt_stack.png": "6e52053aa357fdb834b6efe989f3a6e85588ab4268171eb2ee80fdca2d63b83b",
+      "game\\props\\02_scrap_crate.png": "68fc17c3990baab5d38c30a9aa64b1b795c14ac47da96ae25ad6754fd24815b3",
+      "game\\props\\03_cable_spool.png": "ac36b7e94483584495ee0ea2fd065df056f41eea3c90dd2b2b79cb99038483b5",
+      "game\\props\\04_broken_keyboard.png": "e29c074ca65669b987197e6be7bbfb866ffa6fdac2f8e8d5d062361fbe30de3a",
+      "game\\props\\05_cracked_monitor.png": "4a6e58e28cca5533dc15c216ee3864d1bb2a073016b35eaf6328613d8faef9c8",
+      "game\\props\\06_e_waste_heap.png": "c0087b39c1f3878af4557ce3494724e95da6ccb4a67a31e0adc23e30943d7bc0",
+      "game\\props\\07_hanging_hook.png": "056848199b433518538bbb76dbe3d3dd84855b0b2aa18eb867800e9ffdf2e071",
+      "game\\props\\08_sorting_bin.png": "57718b7d5a48ede24b3be1f63cbdab58c47e16f076fbde1f0eafd01a32524e5b",
+      "game\\props\\09_hazard_barricade.png": "f354387dc91eb3305da7ff32ebc72d6453132e823648f65eac1961802cab226a",
+      "game\\props\\10_data_cartridges.png": "05c732804a7532aba988daf2dce27abfb6a284bfc5b87e02b61489e4821febf3",
+      "game\\props\\11_pipe_elbow.png": "245357595ceb75a51ab059b1f82497b7d61ed1a81e88299b2118d821cf4da2dc",
+      "game\\props\\12_service_terminal.png": "527f20ae249c22a74c58c4225269611a2338064be78f601483d572da69b3b738",
+      "game\\props-atlas.png": "826a823bdc47ac4ce6fb70ebb03b7a1f569ad3df9ace5272476fb7b831ca4ae6",
+      "game\\terrain-style-reference-16px.png": "9e8be24e20cebd20fed8540c2f7fb3423f8e361c8e2cf85233f6d22baea3ecfc",
+      "manifest.json": "d8e149b46c7e763ee63d1e5326edd1269adc2a7670c57018afdc4614b4f478dd",
+      "preview\\props_contact_sheet.png": "945306d378f535817376d5aca8c8e1b3cabc1ca77b6d76032e922232e9e212a3",
+      "preview\\viewport_magnet_well_REFERENCE_ONLY.png": "c0e4a5ad68d3bab40472387b5c1749b62b9cd642618278b87909de74cfc8fbc7",
+      "preview\\viewport_maintenance_REFERENCE_ONLY.png": "e7ce2e9b7592895572295ed3b8761b63eb28c7b6dd38eedd29d5fc3a85c4d137",
+      "preview\\viewport_sorter_REFERENCE_ONLY.png": "708c26ff6ce9a6b04a79e757d51cd7470b7f4555dbd7f9d9ad6bac1c84204093",
+      "preview\\viewport_upper_REFERENCE_ONLY.png": "fa37d9dab20b28686d43def46967e77037f0452b77e415fe57c41d6e4f65390c",
+      "preview\\world_layout_with_REAL_geometry_REFERENCE_ONLY.png": "9483909b135306cd9a14da4bca82021da349c9c7c6a3c663d424f2861de4e1e5",
+      "source\\RECYCLE_full_presentation_CONCEPT_ONLY.png": "c95ba2e6311250ed2bb5ccb42f6b74b341baf527c9dcf3366690a09614230e60",
+      "source\\RECYCLE_scene_crop_REFERENCE_ONLY.png": "8d9de971313c53a4c04b78d1a0ad371645d73b4a5e787b71e013d0d8dacfb45e"
+    },
+    "signal": {
+      "README_先看.md": "171074500ef4f20de09f966ff8c9aba55edb32964b9c2c42fef69a0d9e090c96",
+      "SHA256SUMS.txt": "703d9d8d34d928522ab21b554881b632c9ede1043d0938731e21ab34c87f61e2",
+      "docs\\接入说明.md": "f48e83e7e2a4f28625fe04a1f0eb9a12dc3d3f2a5a5ba5fada3e79ab3bd15206",
+      "docs\\给Codex的执行任务.md": "d21465a01cb63cbaadb66dfe2347b772b4352901af7079d949b9a330c3c86357",
+      "game\\far.png": "12b540b0c76c2e59d755a285d90842968683f04b05eca00c653e2e31393d288d",
+      "game\\mid-continuous.png": "6fe8d282553c9e860c519a338a86a4942fc4d98397ec73abf2b152db21b88968",
+      "game\\props\\01_dish_antenna.png": "46627554f5c845dea5c2ef7b25f1778d6934601f1b84a1e99fe173a0f0bf322f",
+      "game\\props\\02_waveform_monitor.png": "31a9863902f3d5e00873aad701cceedcd59559799d87ed9f0e21c8c8fc0c4648",
+      "game\\props\\03_relay_server.png": "212fb7a50c96aaf56040fa261bbb89acbe98ffeb0b0f02a3c6e9d23ac516b3b0",
+      "game\\props\\04_optical_spool.png": "4db133712fc5b2c940284170e80f3377d2f68d620f9200b7ee8d56c0cc101bed",
+      "game\\props\\05_a_source_indicator.png": "5e9976ba52463d1a00d250d17902ca8d01ce2027144f69a7fc76caf17d4b50f5",
+      "game\\props\\06_bee_relay_housing.png": "ed2f4a40854e5d986409fdf29d34366436dee6c8e4627c49c5280fa77666e67e",
+      "game\\props\\07_fiber_coupler.png": "d1548b9dbbe94c1d9a7314079b543ca2b0e3dc4a6c7ac77bbbae64906839a0e1",
+      "game\\props\\08_insulator_module.png": "bb007644e13748683beccc396d0cf9af0ec0d4014a33a6fb2d20e97798a5ae3c",
+      "game\\props\\09_signal_cable_crate.png": "207875be396dfa7ddd01c91151a81e990f4c3b5cb905739f9a19dcc1f02f6815",
+      "game\\props\\10_optical_cable_coil.png": "0bf946eeb3e7b5ab6ff681f1cef5a31555adf5c4de95378d9b0de949c24c51a2",
+      "game\\props\\11_caution_panel.png": "67adf49cd24806ac29ae31b34a63d742f7b8edb96e10cfedc4856fec84519db0",
+      "game\\props\\12_water_level_probe.png": "bc9c95d6827e7b47ae227f8a5317f2cab52b00e86e917b07db4221470568d892",
+      "game\\props-atlas.png": "147621001a1f9d32ff7c01313e16dba2b81657c77135f2025efd7e98f9856205",
+      "game\\terrain-16.png": "7ab9f74a17511f27d741508e8fae96bc76a85ba192943e860554f400b56f4fa8",
+      "game\\terrain-32.png": "c6202bc1b95878bc7f8644fa2b06f99a8b32274349da58d47135a8ac6bc5b07b",
+      "game\\terrain-48.png": "6b8470e5314fbb5a52eb9c3662edc3f028b9984ede1784056be6927eace0145d",
+      "preview\\LAYOUT_OVERLAY_REFERENCE_ONLY.png": "517f001b6d5d1d25cd697d8c446ed628d03659604fe5f7eb1cef16d15697df02",
+      "preview\\SCENE_MOCKUP_NOT_GAME.png": "f536320040306f2bace79cea3a95384d7691f8a648ec552c04431104dac1e263",
+      "preview\\continuous_background_composite.png": "035263eebaf52ae57d80723a3b2e9f88bbbfd20915b62cd4f687050f3489eef3",
+      "preview\\viewport_A_upper.png": "c9f9c161c1bebbfa4107dc8e1c24a6e28ccaf91a59fa410d439fc000afbf10a4",
+      "preview\\viewport_B_hub.png": "1f7f935cfadfb4ad69736374676e19118b9b308c3986eb70652a86a956fc7da8",
+      "preview\\viewport_C_fiber.png": "c804c8f0e577f61891c0f12cd782cd7556f892320016623d4633f694783f2b28",
+      "preview\\viewport_water_lower.png": "46efab1f09cd748e2c40c6a88401080962cd3a4d111ecd91f7ebbd424993f5f1",
+      "reference\\SIGNAL_style_board_02_NOT_GAME.png": "f1c1591f9f6752c9e7c586107026230edefa0f6528afb5ca1574ecc90122a098",
+      "reference\\SIGNAL_style_moodboard_NOT_GAME.png": "2d5d3581142f57d72a060defff85f58e5f5dcf597ad23394c2900c0c51506e9c",
+      "source\\asset_manifest.json": "e42079e1fcb8707356a7fb701426814e88fc954c23f44dc7ed10647aa9b36306",
+      "道具位置清单.csv": "5c19d1e5130f8e9b89b2531a0ac828a49d51fe73d542e85b5d218e46eb4658ad"
+    }
+  }
+}

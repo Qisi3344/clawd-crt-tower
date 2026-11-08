@@ -296,7 +296,8 @@ func _build_shell() -> void:
 	env.background_color = Color("20171e")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color("b4a1b1")
-	env.ambient_light_energy = 0.28
+	# Lift unlit case faces without flattening the directional key and rim.
+	env.ambient_light_energy = 0.38
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	# A very mild peach grade; keep black/white endpoints and near-equal luminance.
 	var grade := Gradient.new()

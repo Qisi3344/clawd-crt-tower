@@ -15,7 +15,7 @@ var status_label: Label3D
 var rear_z := -1.97
 
 func _ready() -> void:
-	var colors := [Color("aba897"),Color("87958d"),Color("293340"),Color("916c84")]
+	var colors := [Color("aba897"),Color("87958d"),Color("344150"),Color("916c84")]
 	var shell: Color = colors[model]
 	var case_size := Vector3(5.2,4.55,2.4 if model==2 else 3.4)
 	var case_center := Vector3(0,0,0.25 if model==2 else -0.25)

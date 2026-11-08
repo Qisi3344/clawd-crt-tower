@@ -1,0 +1,109 @@
+{
+	"captures": [
+		{
+			"draw_calls": 424.0,
+			"fps": 16.0,
+			"memory_mb": 82.0664033889771,
+			"name": "archive-v2-main-entry",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 412.0,
+			"fps": 86.0,
+			"memory_mb": 82.0724992752075,
+			"name": "archive-v2-main-puzzle",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 412.0,
+			"fps": 84.0,
+			"memory_mb": 82.1965761184692,
+			"name": "archive-v2-upper",
+			"size": [
+				1280,
+				800
+			]
+		},
+		{
+			"draw_calls": 403.0,
+			"fps": 85.0,
+			"memory_mb": 82.1915254592896,
+			"name": "archive-v2-lower",
+			"size": [
+				1280,
+				800
+			]
+		}
+	],
+	"clips": {
+		"archive-v2": 346
+	},
+	"passed": true,
+	"render_readback_ms": [
+		5.349,
+		5.913,
+		5.624,
+		5.955,
+		5.919,
+		7.181,
+		7.521,
+		7.407,
+		7.635,
+		9.824,
+		7.134,
+		7.267,
+		7.355,
+		7.409,
+		7.613,
+		7.305,
+		6.936,
+		7.026,
+		7.04,
+		6.874
+	],
+	"scope": "Native art and traversal check; camera edge samples are fixtures, not campaign progression",
+	"tests": [
+		{
+			"passed": true,
+			"test": "ARCHIVE loads its dedicated art layer"
+		},
+		{
+			"passed": true,
+			"test": "all 15 curated props have no decoration collision bodies"
+		},
+		{
+			"passed": true,
+			"test": "terrain material joins adjacent collider segments into seven visible surfaces"
+		},
+		{
+			"passed": true,
+			"test": "pixel output stays one 320x240 gameplay viewport"
+		},
+		{
+			"passed": true,
+			"test": "actual stone still supports the live A signal through the new art"
+		},
+		{
+			"passed": true,
+			"test": "upper retrieval bridge is reached by normal ladder input"
+		},
+		{
+			"passed": true,
+			"test": "lower broken records area is reached continuously"
+		},
+		{
+			"passed": true,
+			"test": "midground is a single world-sized canvas"
+		},
+		{
+			"passed": true,
+			"test": "far image covers every camera bound without repeating"
+		}
+	]
+}

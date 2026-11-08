@@ -24,12 +24,50 @@ func _initialize() -> void:
 		atlas.blit_rect(image,Rect2i(0,0,WIDTHS[i],height),pos)
 		regions.append({"id":i+1,"rect":[pos.x,pos.y,WIDTHS[i],height],"source":FILES[i]})
 	atlas.save_png(ROOT+"game/props.png")
-	var mid:=Image.load_from_file(SOURCE+"ARCHIVE_mid_source_中景.png")
-	# Upright cabinet facades only; all painted walkways and stairs are excluded.
-	var panels:=[Rect2i(365,270,185,280),Rect2i(600,275,180,250),Rect2i(1515,270,190,280)]
-	for i in range(panels.size()):
-		var panel:=mid.get_region(panels[i]);panel.resize(48,roundi(panel.get_height()*48.0/panel.get_width()),Image.INTERPOLATE_LANCZOS)
-		panel.save_png(ROOT+"game/cabinet_%d.png"%i)
+	# One authored canvas. No cabinet extraction or panel repetition.
+	var mid:=Image.load_from_file(SOURCE+"mid-continuous-v2.png")
+	mid.convert(Image.FORMAT_RGBA8)
+	# Generated window interiors contain a painted neutral checker instead of alpha.
+	# Flood-key only the four enclosed white interiors, never the architecture.
+	var holes:Dictionary={}
+	for seed in [Vector2(.155,.13),Vector2(.775,.13),Vector2(.20,.57),Vector2(.80,.57)]:
+		var pending:Array[Vector2i]=[Vector2i(seed*Vector2(mid.get_size()))]
+		while not pending.is_empty():
+			var pixel:Vector2i=pending.pop_back()
+			if holes.has(pixel) or pixel.x<0 or pixel.y<0 or pixel.x>=mid.get_width() or pixel.y>=mid.get_height(): continue
+			var color:=mid.get_pixelv(pixel)
+			if minf(color.r,minf(color.g,color.b))<.65 or maxf(color.r,maxf(color.g,color.b))-minf(color.r,minf(color.g,color.b))>.10: continue
+			holes[pixel]=true
+			for direction in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]: pending.append(pixel+direction)
+	for y in range(mid.get_height()):
+		for x in range(mid.get_width()):
+			var c:=mid.get_pixel(x,y);c.a=0 if holes.has(Vector2i(x,y)) else 1;mid.set_pixel(x,y,c)
+	mid.resize(1024,640,Image.INTERPOLATE_LANCZOS)
+	mid.save_png(ROOT+"game/mid-continuous.png")
+	var sheet:=Image.load_from_file(SOURCE+"terrain-material-v2.png");sheet.convert(Image.FORMAT_RGBA8)
+	var bands:Array[Rect2i]=[]
+	var start:=-1
+	for y in range(sheet.get_height()):
+		var occupied:=0
+		for x in range(sheet.get_width()):
+			if sheet.get_pixel(x,y).a>.5: occupied+=1
+		var active:bool=occupied>sheet.get_width()*.25
+		if active and start<0: start=y
+		if not active and start>=0:
+			if y-start>8: bands.append(Rect2i(0,start,sheet.get_width(),y-start))
+			start=-1
+	if start>=0: bands.append(Rect2i(0,start,sheet.get_width(),sheet.get_height()-start))
+	if bands.size()!=2: push_error("Expected two material strips; got %d"%bands.size());quit(1);return
+	for i in range(2):
+		var band:=sheet.get_region(bands[i]);band=band.get_region(band.get_used_rect())
+		if i==1:
+			var shallow:=band.duplicate();shallow.resize(1024,32,Image.INTERPOLATE_LANCZOS);shallow.save_png(ROOT+"game/foundation-32.png")
+		band.resize(1024,16 if i==0 else 48,Image.INTERPOLATE_LANCZOS)
+		band.save_png(ROOT+"game/"+("walkway.png" if i==0 else "foundation.png"))
+	var stem:=atlas.get_region(Rect2i(regions[5].rect[0],regions[5].rect[1],12,regions[5].rect[3]))
+	var column:=Image.create(12,128,false,Image.FORMAT_RGBA8);column.fill(Color.TRANSPARENT)
+	for y in range(128): column.blit_rect(stem,Rect2i(0,y%stem.get_height(),12,1),Vector2i(0,y))
+	column.save_png(ROOT+"game/column.png")
 	var raw_far:=Image.load_from_file(SOURCE+"ARCHIVE_far_source_远景.png")
 	var edge_error:=0.0
 	for y in range(raw_far.get_height()):
@@ -40,7 +78,7 @@ func _initialize() -> void:
 		var far:=Image.load_from_file(generated)
 		far.resize(768,roundi(far.get_height()*768.0/far.get_width()),Image.INTERPOLATE_LANCZOS)
 		far.save_png(ROOT+"game/far.png")
-	var manifest:={"props":regions,"source_far_edge_rgb_mean":edge_error/(raw_far.get_height()*3),"far_repeat":false,"panel_source_rects":panels.map(func(r):return [r.position.x,r.position.y,r.size.x,r.size.y])}
+	var manifest:={"props":regions,"source_far_edge_rgb_mean":edge_error/(raw_far.get_height()*3),"far_repeat":false,"mid_canvas_size":[1024,640],"window_key_pixels":holes.size(),"terrain_strip_sizes":[[1024,16],[1024,32],[1024,48]],"material_source_bands":bands.map(func(r):return [r.position.x,r.position.y,r.size.x,r.size.y])}
 	var file:=FileAccess.open(ROOT+"game/manifest.json",FileAccess.WRITE);file.store_string(JSON.stringify(manifest,"\t"));file.close()
-	print("Compiled 12 props and three cabinet facades; horizontal repeat disabled. far ready=",FileAccess.file_exists(generated))
+	print("Compiled continuous 1024x640 midground, two world-width materials, and 12 prop types.")
 	quit()

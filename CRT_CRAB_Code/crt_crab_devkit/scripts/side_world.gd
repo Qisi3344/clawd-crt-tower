@@ -52,6 +52,8 @@ func _ready() -> void:
 	if screen_id=="ARCHIVE":
 		var dressing:=ArchiveDressing.new();dressing.world=self;add_child(dressing)
 	for platform in definition.platforms: _solid(Rect2(platform[0],platform[1],platform[2],platform[3]),bool(platform[4]) if platform.size()>4 else platform[1]<208)
+	if screen_id=="ARCHIVE":
+		var terrain:=ArchiveTerrain.new();terrain.definition=definition;add_child(terrain)
 	_solid(Rect2(-16,0,16,world_size.y+16))
 	_solid(Rect2(world_size.x,0,16,world_size.y+16))
 	for ladder in definition.ladders:
@@ -153,6 +155,7 @@ func _solid(rect: Rect2, one_way := false) -> void:
 	shape.one_way_collision = one_way
 	if shape.one_way_collision: ladder_platforms.append(body)
 	body.add_child(shape)
+	if screen_id=="ARCHIVE": return
 	for x in range(int(rect.position.x),int(rect.end.x),16):
 		for y in range(int(rect.position.y),int(rect.end.y),16): PixelArt.tile(self,Vector2(x,y),screen_id=="ARCHIVE",(x/16)%8)
 

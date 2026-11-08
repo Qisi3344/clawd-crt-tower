@@ -1,0 +1,112 @@
+{
+  "checks": [
+    {
+      "test": "12 props fit a padded 512x128 atlas",
+      "passed": true
+    },
+    {
+      "test": "game prop silhouettes have clean binary alpha",
+      "passed": true
+    },
+    {
+      "test": "all 12 prop identities are represented",
+      "passed": true
+    },
+    {
+      "test": "every standing prop uses an existing actual floor",
+      "passed": true
+    },
+    {
+      "test": "all placements are fixed integer world positions",
+      "passed": true
+    },
+    {
+      "test": "all three archive regions receive decorations",
+      "passed": true
+    },
+    {
+      "test": "original sources are excluded from runtime imports",
+      "passed": true
+    },
+    {
+      "test": "single nonrepeating far image covers the full parallax domain",
+      "passed": true
+    },
+    {
+      "test": "one 1024x640 midground replaces all cabinet patches",
+      "passed": true
+    },
+    {
+      "test": "observation openings expose the parallax layer",
+      "passed": true
+    },
+    {
+      "test": "solid architecture remains opaque",
+      "passed": true
+    },
+    {
+      "test": "dedicated world-width terrain materials match collision heights",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "source_far_edge_rgb_mean": 0.00441808386621774,
+  "runtime_images": [
+    {
+      "file": "column.png",
+      "size": [
+        12,
+        128
+      ],
+      "sha256": "d102c192fb3905c5d6da4ac99e00eafb457a55885726e46685b5869a5cba304c"
+    },
+    {
+      "file": "far.png",
+      "size": [
+        768,
+        512
+      ],
+      "sha256": "871cfa893295e6d1b81bf9ff9d1ab692bdda3f786d4c8a7beed3ba02085d42ba"
+    },
+    {
+      "file": "foundation-32.png",
+      "size": [
+        1024,
+        32
+      ],
+      "sha256": "219032b8246e531275fae8f23cc759a811acac088a57689d8eb0c76248387208"
+    },
+    {
+      "file": "foundation.png",
+      "size": [
+        1024,
+        48
+      ],
+      "sha256": "55b12b86cef1e98f932288a6db481f09e9b116f07070944570ad07c5343f3840"
+    },
+    {
+      "file": "mid-continuous.png",
+      "size": [
+        1024,
+        640
+      ],
+      "sha256": "75e45ac7cb2726a6497992722d328ccd62a17727ef78ec1e3cc1b90ba5004a0a"
+    },
+    {
+      "file": "props.png",
+      "size": [
+        512,
+        128
+      ],
+      "sha256": "b5758db657313f492dc213e0a6a7dd94a69e235771655247059370076634a70a"
+    },
+    {
+      "file": "walkway.png",
+      "size": [
+        1024,
+        16
+      ],
+      "sha256": "5fcbc8568848423f38e71b8b6c0f5518404a7ed700d8a64548d45ebcd5f5d556"
+    }
+  ]
+}

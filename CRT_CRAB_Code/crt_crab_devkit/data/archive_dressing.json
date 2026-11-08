@@ -1,20 +1,128 @@
 [
- {"id":4,"position":[156,64],"area":"upper"},
- {"id":7,"position":[414,8],"hang":true,"area":"upper"},
- {"id":11,"position":[548,5],"hang":true,"area":"upper"},
- {"id":6,"position":[464,80],"hang":true,"area":"upper"},
- {"id":4,"position":[684,64],"area":"upper"},
- {"id":7,"position":[948,4],"hang":true,"area":"upper"},
- {"id":3,"position":[450,208],"area":"main"},
- {"id":1,"position":[160,208],"area":"main"},
- {"id":2,"position":[1008,208],"area":"main"},
- {"id":11,"position":[416,104],"hang":true,"area":"main"},
- {"id":5,"position":[960,130],"stowed":true,"area":"main"},
- {"id":4,"position":[944,208],"area":"main"},
- {"id":8,"position":[188,448],"area":"lower"},
- {"id":9,"position":[304,448],"area":"lower"},
- {"id":10,"position":[536,448],"area":"lower"},
- {"id":12,"position":[768,448],"area":"lower"},
- {"id":2,"position":[816,448],"area":"lower"},
- {"id":11,"position":[672,304],"hang":true,"area":"lower"}
+  {
+    "id": 4,
+    "position": [
+      156,
+      64
+    ],
+    "area": "upper"
+  },
+  {
+    "id": 7,
+    "position": [
+      414,
+      8
+    ],
+    "hang": true,
+    "area": "upper"
+  },
+  {
+    "id": 11,
+    "position": [
+      548,
+      5
+    ],
+    "hang": true,
+    "area": "upper"
+  },
+  {
+    "id": 6,
+    "position": [
+      464,
+      80
+    ],
+    "hang": true,
+    "area": "upper"
+  },
+  {
+    "id": 3,
+    "position": [
+      450,
+      208
+    ],
+    "area": "main"
+  },
+  {
+    "id": 1,
+    "position": [
+      160,
+      208
+    ],
+    "area": "main"
+  },
+  {
+    "id": 2,
+    "position": [
+      1008,
+      208
+    ],
+    "area": "main"
+  },
+  {
+    "id": 11,
+    "position": [
+      416,
+      104
+    ],
+    "hang": true,
+    "area": "main"
+  },
+  {
+    "id": 5,
+    "position": [
+      960,
+      130
+    ],
+    "stowed": true,
+    "area": "main"
+  },
+  {
+    "id": 4,
+    "position": [
+      944,
+      208
+    ],
+    "area": "main"
+  },
+  {
+    "id": 8,
+    "position": [
+      188,
+      448
+    ],
+    "area": "lower"
+  },
+  {
+    "id": 9,
+    "position": [
+      304,
+      448
+    ],
+    "area": "lower"
+  },
+  {
+    "id": 10,
+    "position": [
+      536,
+      448
+    ],
+    "area": "lower"
+  },
+  {
+    "id": 12,
+    "position": [
+      768,
+      448
+    ],
+    "area": "lower"
+  },
+  {
+    "id": 11,
+    "position": [
+      672,
+      304
+    ],
+    "hang": true,
+    "area": "lower"
+  }
 ]

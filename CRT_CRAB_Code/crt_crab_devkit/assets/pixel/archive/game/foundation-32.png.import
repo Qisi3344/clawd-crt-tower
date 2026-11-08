@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdxspgbcs38hf"
-path="res://.godot/imported/cabinet_2.png-1276f04c08e62b1d1ecce9aa6c204304.ctex"
+uid="uid://n4q04ar5cjif"
+path="res://.godot/imported/foundation-32.png-dfb4ef53eaa20a9556ea29ee87173fba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/archive/game/cabinet_2.png"
-dest_files=["res://.godot/imported/cabinet_2.png-1276f04c08e62b1d1ecce9aa6c204304.ctex"]
+source_file="res://assets/pixel/archive/game/foundation-32.png"
+dest_files=["res://.godot/imported/foundation-32.png-dfb4ef53eaa20a9556ea29ee87173fba.ctex"]
 
 [params]
 

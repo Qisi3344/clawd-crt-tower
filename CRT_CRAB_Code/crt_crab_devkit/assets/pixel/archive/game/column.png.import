@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://egsobotdp6bc"
-path="res://.godot/imported/cabinet_1.png-23429a3b9c920124b2ce8a08c94577db.ctex"
+uid="uid://bj3uofppstk2p"
+path="res://.godot/imported/column.png-1432ab0aed97dcd77927e2768d8a6681.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/archive/game/cabinet_1.png"
-dest_files=["res://.godot/imported/cabinet_1.png-23429a3b9c920124b2ce8a08c94577db.ctex"]
+source_file="res://assets/pixel/archive/game/column.png"
+dest_files=["res://.godot/imported/column.png-1432ab0aed97dcd77927e2768d8a6681.ctex"]
 
 [params]
 

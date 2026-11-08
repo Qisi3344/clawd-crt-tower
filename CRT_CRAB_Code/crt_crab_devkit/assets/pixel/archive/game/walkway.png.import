@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1an0jtq4fal3"
-path="res://.godot/imported/cabinet_0.png-40160d7b94d8748a64f3b5e7bf1445b9.ctex"
+uid="uid://8djwili1s4ae"
+path="res://.godot/imported/walkway.png-d76cf0caca6d4f56738e167800b70c26.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/archive/game/cabinet_0.png"
-dest_files=["res://.godot/imported/cabinet_0.png-40160d7b94d8748a64f3b5e7bf1445b9.ctex"]
+source_file="res://assets/pixel/archive/game/walkway.png"
+dest_files=["res://.godot/imported/walkway.png-d76cf0caca6d4f56738e167800b70c26.ctex"]
 
 [params]
 

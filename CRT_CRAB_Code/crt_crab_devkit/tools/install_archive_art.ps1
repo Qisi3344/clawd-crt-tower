@@ -3,8 +3,9 @@ $ErrorActionPreference='Stop'
 $projectPath=Split-Path -Parent $PSScriptRoot
 if (-not $GodotPath) { $GodotPath=Join-Path $projectPath '.tools\godot\Godot_v4.7.2-stable_win64_console.exe' }
 if (-not (Test-Path -LiteralPath $GodotPath)) { throw 'Run tools/setup.ps1 or supply -GodotPath.' }
-$cleanFar=Join-Path $projectPath 'assets\pixel\archive\source\far-clean.png'
-if (-not (Test-Path -LiteralPath $cleanFar)) { throw 'The committed cleaned far-background production source is missing.' }
+foreach ($source in @('far-clean.png','mid-continuous-v2.png','terrain-material-v2.png')) {
+    if (-not (Test-Path -LiteralPath (Join-Path $projectPath "assets\pixel\archive\source\$source"))) { throw "Committed production source missing: $source" }
+}
 New-Item -ItemType Directory -Force -Path (Join-Path $projectPath 'artifacts') | Out-Null
 Push-Location -LiteralPath $projectPath
 try {

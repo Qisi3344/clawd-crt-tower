@@ -32,6 +32,11 @@ check('all three archive regions receive decorations',set(p['area'] for p in pla
 check('original sources are excluded from runtime imports',(source/'.gdignore').exists())
 far=Image.open(game/'far.png')
 check('single nonrepeating far image covers the full parallax domain',not manifest['far_repeat'] and far.width>=704*.15+352 and far.height>=400*.15+272)
+mid=Image.open(game/'mid-continuous.png').convert('RGBA')
+check('one 1024x640 midground replaces all cabinet patches',mid.size==(1024,640) and not list(game.glob('cabinet_*.png')))
+check('observation openings expose the parallax layer',sum(a==0 for a in mid.getchannel('A').tobytes())>10000)
+check('solid architecture remains opaque',sum(a==255 for a in mid.getchannel('A').tobytes())>500000)
+check('dedicated world-width terrain materials match collision heights',all(Image.open(game/name).size==(1024,height) for name,height in [('walkway.png',16),('foundation-32.png',32),('foundation.png',48)]))
 provenance={'checks':checks,'passed':all(c['passed'] for c in checks),'source_far_edge_rgb_mean':manifest['source_far_edge_rgb_mean'],'runtime_images':[{'file':p.name,'size':list(Image.open(p).size),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(game.glob('*.png'))]}
 (ROOT/'artifacts/archive-source-qa.json').write_text(json.dumps(provenance,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 sys.exit(0 if provenance['passed'] else 1)

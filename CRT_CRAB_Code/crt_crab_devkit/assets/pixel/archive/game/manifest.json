@@ -1,24 +1,22 @@
 {
 	"far_repeat": false,
-	"panel_source_rects": [
+	"material_source_bands": [
 		[
-			365,
-			270,
-			185,
-			280
-		],
-		[
-			600,
-			275,
+			0,
 			180,
-			250
+			2172,
+			81
 		],
 		[
-			1515,
-			270,
-			190,
-			280
+			0,
+			468,
+			2172,
+			169
 		]
+	],
+	"mid_canvas_size": [
+		1024,
+		640
 	],
 	"props": [
 		{
@@ -142,5 +140,20 @@
 			"source": "12_sealed_case_封存保管箱.png"
 		}
 	],
-	"source_far_edge_rgb_mean": 0.00441808386621774
+	"source_far_edge_rgb_mean": 0.00441808386621774,
+	"terrain_strip_sizes": [
+		[
+			1024,
+			16
+		],
+		[
+			1024,
+			32
+		],
+		[
+			1024,
+			48
+		]
+	],
+	"window_key_pixels": 92924
 }

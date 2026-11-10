@@ -20,6 +20,8 @@ var wall:StaticBody2D
 var wall_enabled:=false
 var grid:GridContainer
 var detail:Label
+var cohort:=0
+var picker:OptionButton
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -29,7 +31,7 @@ func _ready() -> void:
 	add_child(margin)
 	var scroll:=ScrollContainer.new();scroll.follow_focus=true;scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;margin.add_child(scroll)
 	root_box=VBoxContainer.new();root_box.size_flags_horizontal=Control.SIZE_EXPAND_FILL;root_box.add_theme_constant_override("separation",14);scroll.add_child(root_box)
-	var heading:=Label.new();heading.text="第一弹试衣间 · 四款示范";heading.add_theme_font_size_override("font_size",30);root_box.add_child(heading)
+	var heading:=Label.new();heading.text="第一弹试衣间 · 八款示范";heading.add_theme_font_size_override("font_size",30);root_box.add_child(heading)
 	var navigation:=HBoxContainer.new();root_box.add_child(navigation)
 	button(navigation,"并排对比",func(): show_mode("compare"))
 	button(navigation,"试穿与试打",func(): show_mode("arena"))
@@ -51,8 +53,13 @@ func show_mode(value:String) -> void:
 	else: build_arena()
 
 func build_compare() -> void:
+	var groups:=HFlowContainer.new();content.add_child(groups)
+	button(groups,"原版 + 厨师 / 学院 / 机甲 / 闪电",func():cohort=0;show_mode("compare"))
+	button(groups,"原版 + 海盗 / 音乐 / 玩家 / 齐天",func():cohort=1;show_mode("compare"))
 	grid=GridContainer.new();grid.add_theme_constant_override("h_separation",12);grid.add_theme_constant_override("v_separation",12);content.add_child(grid)
-	for id in SkinDrafts.IDS:
+	var visible_ids:Array=["classic_orange"]+SkinDrafts.IDS.slice(1+cohort*4,5+cohort*4)
+	if selected not in visible_ids:selected=visible_ids[1]
+	for id in visible_ids:
 		var b:=Button.new();b.custom_minimum_size=Vector2(160,184);b.size_flags_horizontal=Control.SIZE_EXPAND_FILL;b.tooltip_text=SkinDrafts.entry(id).name
 		b.pressed.connect(func(): select_skin(id));grid.add_child(b);selection_buttons[id]=b
 		var box:=VBoxContainer.new();box.mouse_filter=Control.MOUSE_FILTER_IGNORE;box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);box.offset_left=8;box.offset_right=-8;box.offset_top=8;box.offset_bottom=-8;b.add_child(box)
@@ -61,22 +68,37 @@ func build_compare() -> void:
 		var rarity:=Label.new();rarity.text={"default":"原版","common":"普通 · 示范","rare":"稀有 · 示范","hidden":"隐藏 · 示范"}[SkinDrafts.entry(id).rarity];rarity.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;rarity.add_theme_font_size_override("font_size",16);box.add_child(rarity)
 	var poses:=HFlowContainer.new();content.add_child(poses)
 	for item in [["待机",0],["走动",1],["跳跃",2],["攻击",3]]:
-		button(poses,item[0],func():pose=item[1];for portrait in portraits:portrait.row=pose)
-	var toggle:=CheckButton.new();toggle.text="只看原版身体";toggle.button_pressed=body_only;toggle.toggled.connect(func(v):body_only=v;for portrait in portraits:portrait.body_only=v);poses.add_child(toggle)
-	var freeze:=CheckButton.new();freeze.text="暂停动作";freeze.button_pressed=paused;freeze.toggled.connect(func(v):paused=v;for portrait in portraits:portrait.paused=v);poses.add_child(freeze)
+		button(poses,item[0],set_pose.bind(item[1]))
+	var toggle:=CheckButton.new();toggle.text="只看原版身体";toggle.button_pressed=body_only;toggle.toggled.connect(set_body_only);poses.add_child(toggle)
+	var freeze:=CheckButton.new();freeze.text="暂停动作";freeze.button_pressed=paused;freeze.toggled.connect(set_paused);poses.add_child(freeze)
 	detail=Label.new();detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;detail.add_theme_font_size_override("font_size",20);content.add_child(detail)
 	select_skin(selected);selection_buttons[selected].grab_focus()
+
+func set_pose(value:int) -> void:
+	pose=value
+	for portrait in portraits: portrait.row=pose
+
+func set_body_only(value:bool) -> void:
+	body_only=value
+	for portrait in portraits: portrait.body_only=value
+
+func set_paused(value:bool) -> void:
+	paused=value
+	for portrait in portraits: portrait.paused=value
 
 func select_skin(id:String) -> void:
 	selected=id
 	var entry:=SkinDrafts.entry(id)
-	if is_instance_valid(detail): detail.text="%s · %s\n试调：1 伤害 / %dpx 距离 / %.2fs 冷却。配件和攻击演出独立；八款与扭蛋奖励尚未接入。"%[entry.name,entry.appearance.weapon_name,entry.combat.enemy_reach_px,entry.combat.cooldown_s]
+	if is_instance_valid(detail): detail.text="%s · %s\n试调：1 伤害 / %dpx 距离 / %.2fs 冷却。八款均可试穿；正式收藏与扭蛋奖励尚未接入。"%[entry.name,entry.appearance.weapon_name,entry.combat.enemy_reach_px,entry.combat.cooldown_s]
 	for key in selection_buttons:
 		var skin:=StyleBoxFlat.new();skin.bg_color=Color("30273e") if key==id else Color("211e2d");skin.border_color=Color("82dde5") if key==id else Color("70596e");skin.set_border_width_all(3 if key==id else 1);skin.set_corner_radius_all(8);selection_buttons[key].add_theme_stylebox_override("normal",skin)
 
 func build_arena() -> void:
 	var choices:=HFlowContainer.new();content.add_child(choices)
-	for id in SkinDrafts.IDS: button(choices,SkinDrafts.entry(id).name,func():selected=id;reset_arena())
+	var caption:=Label.new();caption.text="试穿皮肤：";choices.add_child(caption)
+	picker=OptionButton.new();picker.custom_minimum_size=Vector2(260,44)
+	for id in SkinDrafts.IDS: picker.add_item(SkinDrafts.entry(id).name)
+	picker.item_selected.connect(func(index):selected=SkinDrafts.IDS[index];reset_arena());choices.add_child(picker)
 	var center:=CenterContainer.new();content.add_child(center)
 	viewport=SubViewport.new();viewport.size=Vector2i(320,240);viewport.world_2d=World2D.new();viewport.disable_3d=true;viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS;content.add_child(viewport)
 	var image:=TextureRect.new();image.name="ArenaImage";image.texture=viewport.get_texture();image.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;image.custom_minimum_size=Vector2(640,480) if size.x>=1000 and size.y>=780 else Vector2(320,240);image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;center.add_child(image)
@@ -91,6 +113,7 @@ func build_arena() -> void:
 	reset_arena()
 
 func reset_arena() -> void:
+	picker.select(SkinDrafts.IDS.find(selected))
 	if is_instance_valid(router): router.release_all();router.queue_free()
 	if is_instance_valid(arena): viewport.remove_child(arena);arena.free()
 	router=ControlRouter.new();router.profile=ControlProfile.new();router.profile.enabled=false;router.allowed=true;viewport.add_child(router)
@@ -113,8 +136,8 @@ func reset_arena() -> void:
 func swing() -> void:
 	var combat:Dictionary=SkinDrafts.entry(selected).combat
 	arena.player.attack_cooldown=float(combat.cooldown_s)
-	if combat.pattern=="short_projectile":
-		var shot:=SkinLabShot.new();shot.player=arena.player;shot.direction=arena.player.facing;shot.remaining=float(combat.enemy_reach_px)-12;shot.position=arena.player.position+Vector2(arena.player.facing*12,-9);arena.add_child(shot);return
+	if combat.pattern in ["short_projectile","short_wave"]:
+		var shot:=SkinLabShot.new();shot.style=selected;shot.player=arena.player;shot.direction=arena.player.facing;shot.remaining=float(combat.enemy_reach_px)-12;shot.position=arena.player.position+Vector2(arena.player.facing*12,-9);arena.add_child(shot);return
 	var target:DataBug
 	var nearest:=INF
 	for enemy in arena.enemies:

@@ -114,7 +114,7 @@ func show_page(value: String) -> void:
 		if game.save.status not in ["valid","missing"]: _label("原存档暂不可继续，已停止自动覆盖。",18,Color("ea5985"))
 	elif value=="wardrobe":
 		_inventory()
-		_button("第一弹试衣间 · 四款示范",func():show_page("skin_studio"))
+		_button("第一弹试衣间 · 八款示范",func():show_page("skin_studio"))
 		preview = TextureRect.new()
 		preview.custom_minimum_size = Vector2(160,160)
 		preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

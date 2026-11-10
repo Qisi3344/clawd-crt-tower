@@ -1,0 +1,250 @@
+{
+	"passed": true,
+	"scope": "Eight prototype outfits in an isolated trial; formal game skins, attacks, unlocks and gacha store remain original",
+	"tests": [
+		{
+			"passed": true,
+			"test": "four old wardrobe records remain unchanged"
+		},
+		{
+			"passed": true,
+			"test": "sandbox begins with formal saves disabled in QA"
+		},
+		{
+			"passed": true,
+			"test": "wardrobe opens five-way original-plus-four comparison"
+		},
+		{
+			"passed": true,
+			"test": "keyboard Enter selects chef without changing equipment"
+		},
+		{
+			"passed": true,
+			"test": "second group includes original and all four new outfits"
+		},
+		{
+			"passed": true,
+			"test": "attack pose button updates every portrait"
+		},
+		{
+			"passed": true,
+			"test": "all original body eye claw and leg pixels are preserved in all48frames"
+		},
+		{
+			"passed": true,
+			"test": "outfit dropdown changes the real trial rig"
+		},
+		{
+			"passed": true,
+			"test": "classic_orange keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "classic_orange single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "classic_orange trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "classic_orange left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "chef_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "chef_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "chef_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "chef_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "academy_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "academy_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "academy_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "academy_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "mecha_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "mecha_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "mecha_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "mecha_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "lightning_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "lightning_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "lightning_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "lightning_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "pirate_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "pirate_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "pirate_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "pirate_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "music_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "music_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "music_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "music_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "player_one_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "player_one_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "player_one_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "player_one_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "heavenly_crab keeps original collision and orange body catalog"
+		},
+		{
+			"passed": true,
+			"test": "heavenly_crab single attack deals exactly1damage to one closest enemy"
+		},
+		{
+			"passed": true,
+			"test": "heavenly_crab trial parameters stay within agreed range and damage"
+		},
+		{
+			"passed": true,
+			"test": "heavenly_crab left facing targets only the front enemy"
+		},
+		{
+			"passed": true,
+			"test": "pirate_crab cannot strike through a real wall"
+		},
+		{
+			"passed": true,
+			"test": "heavenly_crab cannot strike through a real wall"
+		},
+		{
+			"passed": true,
+			"test": "music_crab stops at a real wall"
+		},
+		{
+			"passed": true,
+			"test": "music_crab expires without reaching distant targets"
+		},
+		{
+			"passed": true,
+			"test": "player_one_crab stops at a real wall"
+		},
+		{
+			"passed": true,
+			"test": "player_one_crab expires without reaching distant targets"
+		},
+		{
+			"passed": true,
+			"test": "wand bolt is stopped by real world collision"
+		},
+		{
+			"passed": true,
+			"test": "wand bolt expires at bounded42px range"
+		},
+		{
+			"passed": true,
+			"test": "trial uses real player movement"
+		},
+		{
+			"passed": true,
+			"test": "trial uses real jump without extra mobility"
+		},
+		{
+			"passed": true,
+			"test": "physical Space jumps without activating a focused navigation button"
+		},
+		{
+			"passed": true,
+			"test": "physical J fires the trial weapon"
+		},
+		{
+			"passed": true,
+			"test": "clicking the attack button fires and releases its held input"
+		},
+		{
+			"passed": true,
+			"test": "attack control stays inside the small landscape viewport"
+		},
+		{
+			"passed": true,
+			"test": "Escape returns to comparison and releases trial inputs"
+		},
+		{
+			"passed": true,
+			"test": "Escape returns to original wardrobe"
+		},
+		{
+			"passed": true,
+			"test": "trial changes neither progress equipment nor pet-gacha collection"
+		}
+	]
+}

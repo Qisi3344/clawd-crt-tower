@@ -1,7 +1,7 @@
 class_name SkinDrafts
 extends RefCounted
 
-const IDS=["classic_orange","chef_crab","academy_crab","mecha_crab","lightning_crab"]
+const IDS=["classic_orange","chef_crab","academy_crab","mecha_crab","lightning_crab","pirate_crab","music_crab","player_one_crab","heavenly_crab"]
 static var manifest:Dictionary={}
 static var body_atlas:Texture2D
 
@@ -36,12 +36,33 @@ static func paint(canvas:CanvasItem,id:String,row:int,index:int,attack:float=0.0
 	var y:=10-bob
 	var ink:=Color("263044");var ivory:=Color("f4f1e9");var cyan:=Color("68cfe6")
 	if back:
+		if id=="pirate_crab":
+			polygon(canvas,[[0,0],[-6,3],[-2,4],[-5,7],[2,5]],Vector2(8,y-1),0,Color("b88c5b"))
+		if id=="heavenly_crab":
+			polygon(canvas,[[0,0],[-5,0],[-7,5],[-3,4]],Vector2(8,y+9),0,Color("bb423b"))
 		if id=="mecha_crab":
 			px(canvas,20,y-2,8,10,ink);px(canvas,22,y,5,6,Color("63727d"));px(canvas,25,y+1,2,3,cyan)
 		if id=="lightning_crab":
 			px(canvas,22,y+2,4,7,Color("27364d"));px(canvas,24,y+3,2,3,cyan)
 		return
 	match id:
+		"pirate_crab":
+			px(canvas,8,y-3,16,4,ink);px(canvas,9,y-2,14,3,Color("263a49"))
+			px(canvas,10,y-2,12,1,Color("b88c5b"));px(canvas,16,y-1,2,2,ivory)
+			px(canvas,9,y+10,14,2,Color("b88c5b"));px(canvas,18,y+10,2,2,Color("dccdba"))
+		"music_crab":
+			px(canvas,10,y-7,12,6,ink);px(canvas,11,y-6,10,5,Color("563957"))
+			px(canvas,11,y-2,10,1,Color("d89aab"));px(canvas,7,y-1,18,2,ink)
+			polygon(canvas,[[0,0],[3,1],[6,0],[6,3],[3,2],[0,3]],Vector2(13,y+10),0,Color("d89aab"))
+		"player_one_crab":
+			px(canvas,9,y-2,15,5,ink);px(canvas,10,y-1,13,3,Color("433b71"))
+			px(canvas,11,y,10,1,Color("66cdc7"))
+			for x in [5,24]:
+				px(canvas,x,y+1,3,7,ink);px(canvas,x,y+2,2,5,Color("9b85c6"))
+		"heavenly_crab":
+			px(canvas,8,y-2,16,3,Color("bb423b"));px(canvas,9,y-2,14,1,Color("d3a348"))
+			px(canvas,15,y-3,3,3,Color("d3a348"));px(canvas,16,y-2,1,1,ivory)
+			px(canvas,10,y+10,12,2,Color("bb423b"));px(canvas,15,y+10,2,2,Color("d3a348"))
 		"chef_crab":
 			px(canvas,9,y-8,14,7,ink);px(canvas,10,y-9,5,7,ivory);px(canvas,15,y-10,6,8,ivory);px(canvas,21,y-8,3,5,ivory)
 			px(canvas,10,y-2,14,2,Color("cbd2d3"));px(canvas,11,y+10,10,3,ivory);px(canvas,15,y+10,2,2,Color("f2b2a3"))
@@ -60,6 +81,28 @@ static func paint(canvas:CanvasItem,id:String,row:int,index:int,attack:float=0.0
 	var progress:float=attack if swinging else 0.0
 	var anchor:=Vector2(28,y+7)
 	match id:
+		"pirate_crab":
+			var angle:float=lerpf(-1.0,.9,progress) if swinging else -.5
+			polygon(canvas,[[0,-1],[5,-1],[5,2],[0,2]],anchor,angle,Color("b88c5b"))
+			polygon(canvas,[[4,-3],[6,-3],[6,4],[4,4]],anchor,angle,Color("b88c5b"))
+			polygon(canvas,[[6,-1],[14,-1],[18,-4],[17,1],[13,3],[6,2]],anchor,angle,ink)
+			polygon(canvas,[[6,0],[14,0],[17,-2],[15,1],[12,2],[6,1]],anchor,angle,Color("dccdba"))
+		"music_crab":
+			px(canvas,28,y+5,7,3,Color("e4c89f"));px(canvas,31,y+7,4,3,Color("b88c5b"))
+			polygon(canvas,[[0,-2],[5,-4],[5,4],[0,2]],Vector2(35,y+6),0,Color("e4c89f"))
+			if swinging:
+				var drift:=roundi(progress*5)
+				px(canvas,41+drift,y+2,1,6,Color("d89aab"));px(canvas,39+drift,y+7,3,2,Color("d89aab"));px(canvas,42+drift,y+2,2,1,Color("d89aab"))
+		"player_one_crab":
+			px(canvas,27,y+4,9,7,ink);px(canvas,28,y+5,7,5,Color("433b71"))
+			px(canvas,33,y+6,3,3,Color("66cdc7"));px(canvas,29,y+5,2,1,Color("9b85c6"))
+			if swinging:
+				px(canvas,39+roundi(progress*5),y+6,3,3,Color("66cdc7"))
+		"heavenly_crab":
+			var angle:float=lerpf(-1.3,.65,progress) if swinging else -.9
+			polygon(canvas,[[-3,-1],[16,-1],[16,2],[-3,2]],anchor,angle,ink)
+			polygon(canvas,[[-2,0],[15,0],[15,1],[-2,1]],anchor,angle,Color("2f6a65"))
+			for tip in [-2,12]: polygon(canvas,[[tip,-1],[tip+3,-1],[tip+3,2],[tip,2]],anchor,angle,Color("d3a348"))
 		"chef_crab":
 			var angle:float=lerpf(-1.1,.7,progress) if swinging else -.6
 			polygon(canvas,[[0,-1],[12,-1],[12,2],[0,2]],anchor,angle,ink)
@@ -78,5 +121,5 @@ static func paint(canvas:CanvasItem,id:String,row:int,index:int,attack:float=0.0
 			if swinging:
 				var end:=Vector2(42,y+6)
 				canvas.draw_polyline(PackedVector2Array([Vector2(29,y+6)-Vector2(16,16),Vector2(34,y+3)-Vector2(16,16),Vector2(35,y+8)-Vector2(16,16),end-Vector2(16,16)]),cyan,1)
-	if swinging and id in ["chef_crab","mecha_crab"]:
+	if swinging and id in ["chef_crab","mecha_crab","pirate_crab","heavenly_crab"]:
 		canvas.draw_arc(Vector2(23,y+7)-Vector2(16,16),9,-.8,1.1,8,ivory if id=="chef_crab" else cyan,1)

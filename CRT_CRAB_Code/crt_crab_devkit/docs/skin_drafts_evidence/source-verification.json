@@ -1,0 +1,26 @@
+{
+  "source_files": [
+    {
+      "file": "Clawd_8_Skins_JSON_Spec_v1.docx",
+      "sha256": "c73f1863a8e4b9d1eeb700b4ce89c46f0cb0e246596d9303ef307fb5e5520003",
+      "identical": true
+    },
+    {
+      "file": "clawd_skins_v1.json",
+      "sha256": "5b2e8526e2ea1df98fe16647f540bb43689f9b85de4d47203eec4fca8ed243ec",
+      "identical": true
+    },
+    {
+      "file": "README_Codex.txt",
+      "sha256": "ef693f3f0caed9d75261837f6489f719ef9a9cc748da62f467ae55600249c428",
+      "identical": true
+    }
+  ],
+  "all_eight_drafts_preserved": true,
+  "enabled_prototypes": [
+    "chef_crab",
+    "academy_crab",
+    "mecha_crab",
+    "lightning_crab"
+  ]
+}

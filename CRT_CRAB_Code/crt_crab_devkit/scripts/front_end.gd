@@ -16,6 +16,7 @@ var return_focus := "继续冒险"
 var confirm: ConfirmationDialog
 var pending_adventure:=-1
 var selected_profile:="keyboard"
+var skin_studio:SkinStudio
 
 func _ready() -> void:
 	layer = 20
@@ -86,7 +87,12 @@ func show_page(value: String) -> void:
 	page = value
 	game._control_state()
 	preview = null
+	if is_instance_valid(skin_studio): root.remove_child(skin_studio);skin_studio.queue_free();skin_studio=null
+	panel.visible=value!="skin_studio"
 	for child in column.get_children(): column.remove_child(child); child.queue_free()
+	if value=="skin_studio":
+		skin_studio=SkinStudio.new();skin_studio.game=game;root.add_child(skin_studio)
+		skin_studio.closed.connect(func():show_page("wardrobe"));return
 	_label("CRT小蟹闯塔记",32,Color("ffc09e"))
 	_label("CRT CRAB // SCREEN ADVENTURE",15,Color("86bdb4"))
 	if value=="title":
@@ -108,6 +114,7 @@ func show_page(value: String) -> void:
 		if game.save.status not in ["valid","missing"]: _label("原存档暂不可继续，已停止自动覆盖。",18,Color("ea5985"))
 	elif value=="wardrobe":
 		_inventory()
+		_button("第一弹试衣间 · 四款示范",func():show_page("skin_studio"))
 		preview = TextureRect.new()
 		preview.custom_minimum_size = Vector2(160,160)
 		preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -201,6 +208,7 @@ func _ask(text: String, callback: Callable) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible: return
+	if page=="skin_studio": return
 	if event.is_action_pressed("pause") and not confirm.visible and page!="title":
 		var destination:="title"
 		if page in ["control_settings","audio_settings","video_settings"]: destination="settings"

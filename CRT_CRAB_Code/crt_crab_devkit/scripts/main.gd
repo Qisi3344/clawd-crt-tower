@@ -136,6 +136,7 @@ func _ready() -> void:
 			var harness := Node.new()
 			var script_path:="res://tests/story_qa.gd" if "--story-qa" in OS.get_cmdline_user_args() else "res://tests/stage2_qa.gd"
 			if "--controls-qa" in OS.get_cmdline_user_args(): script_path="res://tests/controls_qa.gd"
+			if "--skins-qa" in OS.get_cmdline_user_args(): script_path="res://tests/skin_drafts_qa.gd"
 			harness.set_script(load(script_path))
 			add_child(harness)
 

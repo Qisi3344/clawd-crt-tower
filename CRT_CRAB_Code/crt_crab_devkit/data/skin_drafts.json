@@ -1,0 +1,457 @@
+{
+  "schema_id": "clawd.crt_tower.skin_manifest",
+  "schema_version": 1,
+  "status": "draft_for_codex_review_not_integrated",
+  "project": "Clawd CRT Tower",
+  "engine": "Godot 4.x",
+  "rules": {
+    "keep_clawd_original_body": true,
+    "keep_body_color": "#D97757",
+    "keep_body_geometry_and_limbs": true,
+    "keep_collision_and_movement": true,
+    "keep_puzzle_attack_logic": true,
+    "only_change_weapon_attack_presentation_and_small_combat_reach": true,
+    "no_status_effects_no_mobility_boosts": true,
+    "all_skins_same_enemy_damage": 1,
+    "one_attack_input": true,
+    "no_pay_to_win": true
+  },
+  "existing_code_reference": {
+    "primary_2d_controller": "res://scripts/side_crab.gd",
+    "primary_2d_hit_handler": "res://scripts/side_world.gd",
+    "existing_2d_attack_cooldown_s": 0.32,
+    "existing_2d_hit_rect_half_extent_px": [
+      31,
+      23
+    ],
+    "existing_3d_controller": "res://scripts/crab_player.gd",
+    "existing_3d_avatar": "res://scripts/crab_avatar.gd",
+    "existing_2d_sprite_catalog": "res://data/cosmetics.json",
+    "existing_sprite_frame_px": [
+      32,
+      32
+    ],
+    "sprite_columns": 8,
+    "sprite_rows": 6,
+    "note": "以上为仓库现状，配置数值是提案；优先接入屏幕内2D战斗。不要以这份数据覆写原版资源。"
+  },
+  "gacha": {
+    "base_rarity_rates": {
+      "common": 0.72,
+      "rare": 0.25,
+      "hidden": 0.03
+    },
+    "reuse_existing_rare_and_hidden_pity": true,
+    "draw_order": "roll_rarity_with_existing_pity_then_uniform_skin_within_rarity",
+    "capsule_visual_ids_by_rarity": {
+      "common": [
+        "cat",
+        "dog"
+      ],
+      "rare": [
+        "hamster",
+        "rabbit",
+        "bear"
+      ],
+      "hidden": [
+        "hidden_cat"
+      ]
+    },
+    "keep_capsule_appearance_separate_from_skin_reward": true,
+    "duplicate_skin_award": "increment_duplicate_count_only_no_stats",
+    "existing_pet_gacha_v1_save_must_be_preserved": true,
+    "note": "目前扭蛋仅存6款动物收藏。Codex须在确认存档迁移与原子写入方案后接入8款皮肤，不得直接覆盖pet_gacha.json。"
+  },
+  "combat_contract": {
+    "damage_per_hit": 1,
+    "max_enemy_targets_per_attack": 1,
+    "hit_area_origin": "player_facing_front",
+    "enemy_hit_height_px": 23,
+    "enemy_range_px_limit": [
+      28,
+      42
+    ],
+    "cooldown_s_limit": [
+      0.32,
+      0.42
+    ],
+    "projectile_types": [
+      "short_projectile",
+      "short_wave"
+    ],
+    "projectiles_can_target": [
+      "normal_enemy"
+    ],
+    "projectiles_cannot_target": [
+      "puzzle",
+      "switch",
+      "receiver",
+      "door",
+      "breakable",
+      "story_trigger"
+    ],
+    "puzzle_hit_detection": "call_existing_vanilla_handler_once_only",
+    "projectile_collision": "enemy_only_no_world_piercing",
+    "status_effects": [],
+    "movement_modifiers": {},
+    "notes": [
+      "攻速/射程参数为首轮试调值，保留玩家与谜题原判定",
+      "即使视觉是音波或能量弹也必须有真实且与演出匹配的普通敌人命中判定",
+      "不得将皮肤影响接到ChapterMechanics等解谜类脚本"
+    ]
+  },
+  "skins": [
+    {
+      "id": "chef_crab",
+      "name": "厨师小蟹",
+      "rarity": "common",
+      "inspiration_internal_only": "《料理鼠王》：厨房职业、认真又笨拙的喜剧感",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "white_chef_hat",
+          "short_apron"
+        ],
+        "weapon_id": "spatula",
+        "weapon_name": "锅铲",
+        "accent_palette": [
+          "#F4F1E9",
+          "#F2B2A3",
+          "#4E5C62"
+        ],
+        "attack_animation": "attack_spatula",
+        "vfx_key": "spatula_swipe",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "锅铲短拍",
+        "pattern": "melee",
+        "enemy_damage": 1,
+        "enemy_reach_px": 30,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.32,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "小金属拍击；禁止附加眩晕"
+    },
+    {
+      "id": "pirate_crab",
+      "name": "海盗小蟹",
+      "rarity": "common",
+      "inspiration_internal_only": "《加勒比海盗》：自由、旧航海冒险的氛围",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "naval_bandana",
+          "mini_sash"
+        ],
+        "weapon_id": "cutlass",
+        "weapon_name": "小弯刀",
+        "accent_palette": [
+          "#263A49",
+          "#B88C5B",
+          "#DCCDBA"
+        ],
+        "attack_animation": "attack_cutlass",
+        "vfx_key": "cutlass_slash",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "弯刀斜劈",
+        "pattern": "melee",
+        "enemy_damage": 1,
+        "enemy_reach_px": 31,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.34,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "不添加远程火枪、钩爪抓取"
+    },
+    {
+      "id": "music_crab",
+      "name": "音乐小蟹",
+      "rarity": "common",
+      "inspiration_internal_only": "《爱乐之城》：爵士演出、舞台节奏和明快气质",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "tiny_jazz_hat",
+          "bow_tie"
+        ],
+        "weapon_id": "mini_trumpet",
+        "weapon_name": "小号",
+        "accent_palette": [
+          "#563957",
+          "#D89AAB",
+          "#E4C89F"
+        ],
+        "attack_animation": "attack_music",
+        "vfx_key": "music_note_wave",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "短音波",
+        "pattern": "short_wave",
+        "enemy_damage": 1,
+        "enemy_reach_px": 34,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.38,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "单目标音波，不附加群体击退或音波解谜"
+    },
+    {
+      "id": "player_one_crab",
+      "name": "玩家一号小蟹",
+      "rarity": "common",
+      "inspiration_internal_only": "《头号玩家》：复古电玩玩家、虚拟世界",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "vr_visor",
+          "tiny_headphones"
+        ],
+        "weapon_id": "pixel_emitter",
+        "weapon_name": "小型像素发射器",
+        "accent_palette": [
+          "#433B71",
+          "#66CDC7",
+          "#9B85C6"
+        ],
+        "attack_animation": "attack_pixel",
+        "vfx_key": "pixel_packet",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "像素脉冲",
+        "pattern": "short_projectile",
+        "enemy_damage": 1,
+        "enemy_reach_px": 42,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.4,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "射程略增但冷却更长；禁止黑客破解"
+    },
+    {
+      "id": "heavenly_crab",
+      "name": "齐天小蟹",
+      "rarity": "rare",
+      "inspiration_internal_only": "孙悟空：中国神话、灵动的棍术和红金小配饰",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "small_mythic_headband",
+          "short_red_sash"
+        ],
+        "weapon_id": "short_staff",
+        "weapon_name": "短棍",
+        "accent_palette": [
+          "#BB423B",
+          "#D3A348",
+          "#2F6A65"
+        ],
+        "attack_animation": "attack_staff",
+        "vfx_key": "staff_arc",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "短棍横扫",
+        "pattern": "melee",
+        "enemy_damage": 1,
+        "enemy_reach_px": 34,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.38,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "不加分身、腾云、二段跳或破门能力"
+    },
+    {
+      "id": "academy_crab",
+      "name": "魔法学院小蟹",
+      "rarity": "rare",
+      "inspiration_internal_only": "《哈利·波特》：神秘学院、咒语和奇幻道具",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "short_wizard_cap",
+          "academy_scarf"
+        ],
+        "weapon_id": "wand",
+        "weapon_name": "小魔杖",
+        "accent_palette": [
+          "#494064",
+          "#A6A8C9",
+          "#72B8A3"
+        ],
+        "attack_animation": "attack_wand",
+        "vfx_key": "arcane_bolt",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "微型魔法弹",
+        "pattern": "short_projectile",
+        "enemy_damage": 1,
+        "enemy_reach_px": 42,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.4,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "弹体仅对普通敌人有效；不激活机关"
+    },
+    {
+      "id": "mecha_crab",
+      "name": "机甲小蟹",
+      "rarity": "rare",
+      "inspiration_internal_only": "《钢铁侠》《环太平洋》：厚重机甲、工程机械的重量感",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "thin_shoulder_plates",
+          "micro_back_module"
+        ],
+        "weapon_id": "mechanical_claw_cover",
+        "weapon_name": "机械拳套",
+        "accent_palette": [
+          "#4E5862",
+          "#8E9DA4",
+          "#62BFC4"
+        ],
+        "attack_animation": "attack_mecha",
+        "vfx_key": "metal_impact",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "机械重拳",
+        "pattern": "heavy_melee",
+        "enemy_damage": 1,
+        "enemy_reach_px": 28,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.42,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "盔甲为外层挂件；无护盾、破墙、重石推动"
+    },
+    {
+      "id": "lightning_crab",
+      "name": "闪电小蟹",
+      "rarity": "hidden",
+      "inspiration_internal_only": "《闪电侠》：速度的视觉语言、瞬态电弧与残影",
+      "appearance": {
+        "body_ref": "classic_orange",
+        "preserve_original_body": true,
+        "attachments": [
+          "thin_lightning_trim",
+          "small_back_emblem"
+        ],
+        "weapon_id": "electric_claw_fx",
+        "weapon_name": "电弧钳饰",
+        "accent_palette": [
+          "#27364D",
+          "#68CFE6",
+          "#B99AD8"
+        ],
+        "attack_animation": "attack_electric",
+        "vfx_key": "electric_afterimage",
+        "sprite_frame_px": [
+          32,
+          32
+        ]
+      },
+      "combat": {
+        "presentation": "电弧爪击",
+        "pattern": "melee",
+        "enemy_damage": 1,
+        "enemy_reach_px": 30,
+        "enemy_hit_height_px": 23,
+        "cooldown_s": 0.32,
+        "max_enemy_targets": 1,
+        "status_effects": [],
+        "movement_modifiers": {},
+        "puzzle_interaction": false
+      },
+      "unlock": {
+        "method": "gacha",
+        "weight_within_rarity": 1
+      },
+      "guardrail": "残影只在原地表现；无冲刺、瞬移、加速、穿墙"
+    }
+  ]
+}

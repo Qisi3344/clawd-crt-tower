@@ -34,6 +34,11 @@ func _initialize() -> void:
 	var moth:=MechanicalAnimal.new();moth.system=system;moth.species="moth";moth.origin=Vector2(200,100);moth.position=moth.origin;moth.stun=.5;moth.time=.69
 	moth._physics_process(.05)
 	check("stunned moth cannot fire during recovery",moth.time<.71 and moth.phase=="stunned")
+	moth.stun=0;moth.time=.69;moth.health=2
+	moth.hit()
+	check("interrupting moth restarts its full warning",moth.time==0 and moth.phase=="cue")
+	moth._physics_process(.4)
+	check("moth recovery still leaves a readable aim window",moth.phase=="cue" and moth.time<.7)
 	moth.free()
 	core.free();system.free();world.player.free();world.free();shot.free()
 	quit(0 if failures==0 else 1)

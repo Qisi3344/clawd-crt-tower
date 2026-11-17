@@ -137,6 +137,8 @@ func hit(crushed: bool = false) -> void:
 	health-=3 if crushed else 1
 	if not crushed: system.world.learning_event.emit("attack")
 	stun=.35
+	if species=="moth" and not crushed:
+		time=0;phase_time=0;phase="cue"
 	system.world.sound_requested.emit("hit")
 	if health<=0:
 		defeated=true

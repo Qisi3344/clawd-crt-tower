@@ -301,7 +301,8 @@
         424
       ],
       "flag": "popup_fuse_a",
-      "legacy_room": "hall"
+      "legacy_room": "hall",
+      "reflector": "reflect_a"
     },
     {
       "id": "current_a",
@@ -363,7 +364,8 @@
         176
       ],
       "flag": "popup_fuse_b",
-      "legacy_room": "shaft"
+      "legacy_room": "shaft",
+      "reflector": "reflect_b"
     },
     {
       "id": "current_b",
@@ -422,6 +424,20 @@
       ],
       "flag": "popup_wire_live",
       "legacy_room": "loft"
+    },
+    {
+      "id": "popup_fuse_reader",
+      "type": "inspect",
+      "position": [
+        288,
+        448
+      ],
+      "label": "检查现场链路",
+      "watch_flags": [
+        "popup_fuse_a",
+        "popup_fuse_b"
+      ],
+      "hint": "两片镜面分别导向各自保险丝；回弹可处理飞蛾，备用脉冲避免失去弹源。"
     }
   ],
   "animals": [
@@ -504,6 +520,11 @@
       890,
       658,
       "↑ 返回保险室"
+    ],
+    [
+      208,
+      410,
+      "两片镜面分别导向各自保险丝"
     ]
   ],
   "size": [
@@ -732,5 +753,6 @@
       0
     ]
   },
-  "legacy_entry": "hall"
+  "legacy_entry": "hall",
+  "challenge_brief": "两路导流镜各自接收；上折、下折和回弹可改变敌我弹道，备用脉冲可恢复解法。"
 }

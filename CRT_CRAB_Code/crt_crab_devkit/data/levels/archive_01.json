@@ -240,7 +240,21 @@
     }
   ],
   "terminals": [],
-  "mechanisms": [],
+  "mechanisms": [
+    {
+      "id": "archive_pressure_reader",
+      "type": "inspect",
+      "position": [
+        368,
+        208
+      ],
+      "label": "检查现场链路",
+      "watch_flags": [
+        "signal_archive_gate"
+      ],
+      "hint": "需要重量 2：上层重石可推落；轻箱和螃蟹不能代替。"
+    }
+  ],
   "animals": [],
   "signs": [
     [
@@ -267,6 +281,11 @@
       570,
       418,
       "↑ 返回大厅"
+    ],
+    [
+      288,
+      170,
+      "需要重量 2：上层重石可推落"
     ]
   ],
   "size": [
@@ -424,5 +443,6 @@
       0
     ]
   },
-  "legacy_entry": "main"
+  "legacy_entry": "main",
+  "challenge_brief": "轻箱无法触发重压板；打破上层封条，将重石推落到下层目标。"
 }

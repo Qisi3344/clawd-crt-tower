@@ -33,7 +33,12 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not system.world.enabled or defeated: return
-	time+=delta;phase_time+=delta;stun=maxf(0,stun-delta)
+	stun=maxf(0,stun-delta)
+	# A hit interrupts the wind-up instead of letting a stunned animal fire or dive.
+	# Owl's landing recovery owns its timer and must continue to return to its perch.
+	if stun>0 and not (species=="owl" and phase=="stunned"):
+		phase="stunned";velocity.x=0;queue_redraw();return
+	time+=delta;phase_time+=delta
 	match species:
 		"moth": _moth(delta)
 		"hamster","snail": _ground(delta)
@@ -154,7 +159,9 @@ func _draw() -> void:
 			draw_rect(Rect2(-4,-15,8,17),ink);draw_rect(Rect2(-2,-13,4,12),metal)
 			draw_line(Vector2(-2,-14),Vector2(-6,-20),gold);draw_line(Vector2(2,-14),Vector2(6,-20),gold)
 			draw_rect(Rect2(-2,-13,4,3),lit)
-			if phase=="cue": draw_line(Vector2(10,-5),Vector2(90,-5),Color("ef8b9f66"))
+			if phase=="cue":
+				var direction:=float(entry.get("direction",1))
+				draw_line(Vector2(10*direction,0),Vector2(90*direction,0),Color("ef8b9f66"))
 		"hamster":
 			draw_circle(Vector2(0,-10),13,ink)
 			for i in range(8):

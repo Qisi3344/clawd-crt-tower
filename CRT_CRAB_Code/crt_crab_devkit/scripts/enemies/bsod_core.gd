@@ -32,7 +32,7 @@ func _physics_process(delta: float) -> void:
 			var local:=system.world.player.position-arena_origin
 			var safe: bool=local.y<=161 or local.x<54 or local.x>274
 			if not safe: system.world.player.take_damage()
-			if pulse_redirected and WorldProgress.missing_inputs(system.world.flags).is_empty(): advance()
+			if safe and pulse_redirected and WorldProgress.missing_inputs(system.world.flags).is_empty(): advance()
 	queue_redraw()
 
 func advance() -> void:
@@ -50,7 +50,7 @@ func advance() -> void:
 	system.world.progress_changed.emit()
 
 func receive(shot: SignalProjectile) -> bool:
-	if stage==1 and shot.reflected and shot.position.distance_to(arena_origin+Vector2(176,184))<11:
+	if stage==1 and shot.reflected and shot.last_reflector=="boss_reflector" and shot.position.distance_to(arena_origin+Vector2(176,184))<11:
 		advance();return true
 	return false
 
@@ -63,7 +63,7 @@ func interact() -> void:
 	if stage==2:
 		if not WorldProgress.missing_inputs(system.world.flags).is_empty():
 			system.world.message.emit("反向脉冲缺少："+WorldProgress.missing_inputs(system.world.flags));return
-		pulse_redirected=true
+		pulse_redirected=true;clock=0
 		system.world.message.emit("脉冲已反接 · 站在两侧绝缘台，等 0.9 秒预警结束")
 	elif stage==3: disable_core()
 

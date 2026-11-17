@@ -205,6 +205,9 @@ func _update_plates() -> void:
 			for animal in mechanisms.animals:
 				if is_instance_valid(animal) and not animal.defeated and absf(animal.position.x-p.x)<11 and absf(animal.position.y-p.y)<4: total+=animal.weight
 		var active: bool = total>=int(plate.weight)
+		if int(plate.get("load", -1)) != total:
+			plate.load = total
+			queue_redraw()
 		if plate.active!=active:
 			plate.active = active
 			plate.sprite.texture = PixelArt.frame(11,1 if active else 0)
@@ -330,6 +333,7 @@ func reset_puzzle() -> void:
 	if is_instance_valid(mechanisms): mechanisms.reset_local(area)
 	player.spawn=point(area.get("checkpoint"),player.spawn)
 	player.position = player.spawn
+	player.dash_time = 0.0
 	player.velocity = Vector2.ZERO
 	player.climbing = false
 	_update_plates()
@@ -378,12 +382,26 @@ func _draw() -> void:
 				draw_line(corner,corner-Vector2(0,sy*5),Color("efcd79"),1)
 	for sign in definition.get("signs",[]): draw_string(font,Vector2(sign[0],sign[1]),str(sign[2]),HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("aec8ba"))
 	for plate in plates:
-		if int(plate.weight)<2: continue
 		var p := point(plate.position)-Vector2(0,15)
 		var color := Color("54cfc3") if plate.active else Color("dce65b")
+		if player.position.distance_to(point(plate.position)) < 100:
+			var caption := pressure_readout(plate)
+			var label_pos := p + Vector2(-47, -47)
+			label_pos.x = clampf(label_pos.x, 4, world_size.x - 140)
+			draw_style_box(_pressure_label_style(), Rect2(label_pos-Vector2(3,12),Vector2(140,17)))
+			draw_string(font,label_pos,caption,HORIZONTAL_ALIGNMENT_LEFT,-1,12,color)
+		if int(plate.weight)<2: continue
 		for y in range(int(p.y)-35,int(p.y)-7,6): draw_line(Vector2(p.x,y),Vector2(p.x,y+2),color)
 		draw_line(p-Vector2(5,5),p,color)
 		draw_line(p-Vector2(-5,5),p,color)
+
+func pressure_readout(plate: Dictionary) -> String:
+	return "重量 %d/%d · %s" % [int(plate.get("load",0)), int(plate.weight), "接通" if plate.get("active",false) else "未接通"]
+
+func _pressure_label_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("141d29ed")
+	return style
 
 static func point(value, fallback := Vector2.ZERO) -> Vector2:
 	if value is Array and value.size()==2 and value.all(func(v): return v is float or v is int):

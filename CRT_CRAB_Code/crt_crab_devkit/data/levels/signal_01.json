@@ -340,6 +340,21 @@
       "label": "校准 A 支路 · 读取档案真实重量",
       "locked_hint": "A 需要 ARCHIVE 的重石持续压住压板。",
       "success": "本地 A 已校准 · 源信号仍按真实重量读取"
+    },
+    {
+      "id": "signal_branch_reader",
+      "type": "inspect",
+      "position": [
+        800,
+        208
+      ],
+      "label": "检查现场链路",
+      "watch_flags": [
+        "signal_local_a",
+        "signal_local_b",
+        "signal_local_c"
+      ],
+      "hint": "A 在左上真实源，B 保存蜂桥旁路，C 在第二层光纤；总线只读取当前上游输入。"
     }
   ],
   "animals": [
@@ -413,6 +428,11 @@
       762,
       658,
       "→ 保存旁路"
+    ],
+    [
+      720,
+      170,
+      "A 在左上真实源，B 保存蜂桥旁路，C 在第二层光纤"
     ]
   ],
   "size": [
@@ -653,5 +673,6 @@
       0
     ]
   },
-  "legacy_entry": "diagnostic"
+  "legacy_entry": "diagnostic",
+  "challenge_brief": "先校准真实 A 源，选择绝缘通道或蜂桥穿越，保存旁路，再接合光纤与总线。"
 }

@@ -1,7 +1,7 @@
 extends Node3D
 # Reversible arcade art layer; geometry/layout and pixel-screen materials stay intact.
 var changed: Array = []
-var converted := {}
+var cel_materials = preload("res://scripts/cel_materials.gd").new()
 var original_environment: Environment
 var world_environment: WorldEnvironment
 var original_lights: Array = []
@@ -13,21 +13,17 @@ var environment_cache: Environment
 var game: Node
 var decorations: Node3D
 var source_lights: Array = []
+var fittings: Array[MeshInstance3D] = []
+var finish: Node3D
+var stage: Node3D
+var deck_material: ShaderMaterial
+var club_mood: Node3D
 @export var cel_shading_enabled := true
 @export var source_light_scale := 1.0
 @export var decorations_enabled := true
 
-func cel(source: StandardMaterial3D) -> ShaderMaterial:
-	var id := source.get_instance_id()
-	if converted.has(id): return converted[id]
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://assets/shaders/light_cel.gdshader")
-	mat.set_shader_parameter("base_color",source.albedo_color)
-	mat.set_shader_parameter("textured",source.albedo_texture!=null)
-	mat.set_shader_parameter("vertex_colors",source.vertex_color_use_as_albedo)
-	if source.albedo_texture!=null: mat.set_shader_parameter("base_texture",source.albedo_texture)
-	converted[id] = mat
-	return mat
+func cel(source: StandardMaterial3D, node: GeometryInstance3D = null) -> ShaderMaterial:
+	return cel_materials.convert(source, node)
 
 func eligible(mat: Material) -> bool:
 	return mat is StandardMaterial3D and mat.shading_mode!=BaseMaterial3D.SHADING_MODE_UNSHADED and mat.transparency==BaseMaterial3D.TRANSPARENCY_DISABLED and not mat.emission_enabled
@@ -48,23 +44,14 @@ func prepare(owner_game: Node, whole_hall := false) -> void:
 	var roots: Array = [game.devices[0],game.devices[4],game.shell.get_node("GapFillers/Speaker_A"),game.shell.get_node("GapFillers/Speaker_B"),arcade]
 	if full_scene: roots = [game.shell]
 	for target in roots:
-		for node in target.find_children("*","GeometryInstance3D",true,false):
-			if node.is_queued_for_deletion() or is_ancestor_of(node): continue
-			if eligible(node.material_override):
-				var replacement: Material = cel(node.material_override)
-				if full_scene and node is MeshInstance3D and node.get_aabb().size.x>20 and node.global_position.y< -1.1:
-					replacement = floor_material()
-				changed.append([node,-1,node.material_override,replacement])
-			elif node is MeshInstance3D and node.material_override==null:
-				for i in range(node.mesh.get_surface_count()):
-					var src: Material = node.get_active_material(i)
-					if eligible(src): changed.append([node,i,node.get_surface_override_material(i),cel(src)])
+		track_materials(target)
+	game.surroundings.zones[1].get_node("PetGashaponMachine").visual_added.connect(_visual_added)
 	# A visible suspended fluorescent fitting, warm tube and solid metal housing.
 	Craft.box(additions,Vector3(0,17.5,13.5),Vector3(7,0.22,1.0),Color("44404e"),0.04)
-	Craft.box(additions,Vector3(0,17.36,13.5),Vector3(6.5,0.06,0.65),Color("f3dfbb"),0.02,1.2)
+	fittings.append(Craft.box(additions,Vector3(0,17.36,13.5),Vector3(6.5,0.06,0.65),Color("f3dfbb"),0.02,1.2))
 	for x in [-2.7,2.7]:
 		Craft.cable(additions,PackedVector3Array([Vector3(x,17.6,13.5),Vector3(x,20.2,13.5)]),Color("38333f"),0.025)
-	lamp(Vector3(0,17.1,13.5),Color("ffe5c4"),3.8,32,true)
+	lamp(Vector3(0,17.1,13.5),Color("dee9f2"),3.8,32,true)
 	for device in (game.devices if full_scene else [game.devices[0],game.devices[4]]):
 		lamp(device.to_global(Vector3(0,0.2,2.02)),Color("6acdbb") if device.model==0 else Color("c996d2"),0.30 if full_scene else 0.55,3.6 if full_scene else 4.1,false)
 	lamp(arcade.to_global(Vector3(0,3.537,0.75)),Color("67d6c8"),0.65,4.5,false)
@@ -74,12 +61,25 @@ func prepare(owner_game: Node, whole_hall := false) -> void:
 	title.modulate = Color("dce65b")
 	# Local fluorescent source above the existing arcade, not a colored fill.
 	Craft.box(additions,Vector3(18,11,5),Vector3(4,0.18,0.7),Color("44404e"),0.03)
-	Craft.box(additions,Vector3(18,10.88,5),Vector3(3.7,0.045,0.5),Color("f3dfbb"),0.015,1.0)
+	fittings.append(Craft.box(additions,Vector3(18,10.88,5),Vector3(3.7,0.045,0.5),Color("f3dfbb"),0.015,1.0))
 	for x in [16.5,19.5]:
 		Craft.cable(additions,PackedVector3Array([Vector3(x,11.1,5),Vector3(x,20.2,5)]),Color("38333f"),0.02)
-	lamp(Vector3(18,10.7,5),Color("f9dab5"),2.0,16,false)
+	lamp(Vector3(18,10.7,5),Color("ffcad2"),2.0,16,false)
 	if full_scene:
 		build_hall()
+		club_mood = preload("res://scripts/club_mood.gd").new()
+		decorations.add_child(club_mood)
+		club_mood.build(game.surroundings.zones[0], game.surroundings.zones[1].get_node("PetGashaponMachine"))
+		var footprints: PackedVector4Array = club_mood.build_shafts(fittings)
+		floor_material().set_shader_parameter("footprints",footprints)
+		stage = preload("res://scripts/club_stage.gd").new()
+		stage.name = "ArcadeEntrance"
+		decorations.add_child(stage)
+		stage.build()
+		finish = preload("res://scripts/hall_surface_finish.gd").new()
+		finish.name = "EquipmentFinish"
+		decorations.add_child(finish)
+		finish.build(game,changed)
 	else:
 		var floor := MeshInstance3D.new()
 		var plane := PlaneMesh.new()
@@ -89,6 +89,24 @@ func prepare(owner_game: Node, whole_hall := false) -> void:
 		floor.material_override = floor_material()
 		additions.add_child(floor)
 	additions.hide()
+
+func track_materials(target: Node3D) -> void:
+	for node in target.find_children("*", "GeometryInstance3D", true, false):
+		if node.is_queued_for_deletion() or is_ancestor_of(node): continue
+		if eligible(node.material_override):
+			var replacement: Material = cel(node.material_override, node)
+			if full_scene and node is MeshInstance3D and node.get_aabb().size.x > 20 and node.global_position.y < -1.1:
+				replacement = floor_material()
+			changed.append([node, -1, node.material_override, replacement])
+		elif node is MeshInstance3D and node.material_override == null:
+			for i in range(node.mesh.get_surface_count()):
+				var src: Material = node.get_active_material(i)
+				if eligible(src): changed.append([node, i, node.get_surface_override_material(i), cel(src, node)])
+
+func _visual_added(target: Node3D) -> void:
+	changed = changed.filter(func(item): return is_instance_valid(item[0]))
+	track_materials(target)
+	set_enabled(enabled)
 
 func lamp(p: Vector3, color: Color, energy: float, reach: float, shadows: bool) -> OmniLight3D:
 	var light := OmniLight3D.new()
@@ -113,25 +131,50 @@ func set_enabled(value: bool) -> void:
 	if environment_cache==null:
 		environment_cache = original_environment.duplicate() as Environment
 		environment_cache.background_color = Color("181221")
+		if full_scene:
+			var backdrop := ShaderMaterial.new()
+			backdrop.shader = preload("res://assets/shaders/club_distance.gdshader")
+			var sky := Sky.new()
+			sky.radiance_size = Sky.RADIANCE_SIZE_32
+			sky.sky_material = backdrop
+			environment_cache.sky = sky
+			environment_cache.background_mode = Environment.BG_SKY
+			environment_cache.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
 		environment_cache.ambient_light_color = Color("a797b8")
 		environment_cache.ambient_light_energy = 0.52
-		environment_cache.glow_enabled = false
+		environment_cache.glow_enabled = full_scene
+		environment_cache.glow_intensity = 0.28
+		environment_cache.glow_hdr_threshold = 0.91
 	world_environment.environment = environment_cache if value else original_environment
 	additions.visible = value
 	if decorations!=null: decorations.visible = decorations_enabled
 	for light in source_lights: light.light_energy = float(light.get_meta("source_energy"))*maxf(source_light_scale,0)
+	for item in room_occluders:
+		for light in item.lights:
+			light.light_energy *= item.coverage
+	if finish:
+		finish.set_energy(maxf(source_light_scale,0) if decorations_enabled else 0.0)
+		stage.set_energy(maxf(source_light_scale,0))
+	if club_mood:
+		floor_material().set_shader_parameter("fixture_energy",maxf(source_light_scale,0))
+		var motion: bool = game.audio.environment_motion and not game.audio.reduced_motion
+		club_mood.configure(value and decorations_enabled, motion, maxf(source_light_scale,0))
+		for device in game.devices:
+			device.screen_material.set_shader_parameter("idle_shimmer", 1.0 if value and motion else 0.0)
+			device.screen_material.set_shader_parameter("shimmer_phase", float(device.device_index) * 1.37)
 
 func floor_material() -> ShaderMaterial:
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://assets/shaders/arcade_floor.gdshader")
-	return mat
+	if deck_material == null:
+		deck_material = ShaderMaterial.new()
+		deck_material.shader = preload("res://assets/shaders/arcade_floor.gdshader")
+	return deck_material
 
 func fluorescent(p: Vector3, width: float, energy: float, reach: float) -> void:
 	Craft.box(additions,p,Vector3(width,0.18,0.7),Color("44404e"),0.03)
-	Craft.box(additions,p+Vector3(0,-0.12,0),Vector3(width-0.3,0.045,0.5),Color("f3dfbb"),0.015,1)
+	fittings.append(Craft.box(additions,p+Vector3(0,-0.12,0),Vector3(width-0.3,0.045,0.5),Color("f3dfbb"),0.015,1))
 	for x in [-width*0.36,width*0.36]:
 		Craft.cable(additions,PackedVector3Array([p+Vector3(x,0.1,0),Vector3(p.x+x,20.2,p.z)]),Color("38333f"),0.02)
-	lamp(p+Vector3(0,-0.3,0),Color("f9dab5"),energy,reach,false)
+	lamp(p+Vector3(0,-0.3,0),Color("c9dce4"),energy,reach,false)
 
 func wall(p: Vector3, size: Vector3) -> MeshInstance3D:
 	var mesh := Craft.box(decorations,p,size,Color("312a3b"),0.03)
@@ -165,8 +208,8 @@ func build_hall() -> void:
 	mural.mesh.size = Vector2(16.5,8.8)
 	mural.material_override.emission_enabled = true
 	mural.material_override.emission_texture = mural.material_override.albedo_texture
-	mural.material_override.emission = Color("eedce8")
-	mural.material_override.emission_energy_multiplier = 0.08
+	mural.material_override.emission = Color("f4addf")
+	mural.material_override.emission_energy_multiplier = 0.22
 	for spec in [["Left",-13.5,0.45,5.4,"crt_poster"],["Right",14.0,-1.15,4.6,"archive_link"]]:
 		var poster := Craft.sticker(rear,spec[4],Vector3(spec[1],spec[2],0.145),spec[3])
 		poster.name = "BackWallPoster"+spec[0]
@@ -205,10 +248,11 @@ func build_hall() -> void:
 			scratch.rotation_degrees.y = 18-i*13
 			scratch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	connect_floor_zones()
+	prepare_wall_fades()
 	# Additions are independent of the reversible material selection above.
 	for node in additions.find_children("*","GeometryInstance3D",true,false):
 		if not node.is_queued_for_deletion() and eligible(node.material_override) and node not in room_occluders.map(func(o): return o.node):
-			if not node is MeshInstance3D or not node.mesh is PlaneMesh: node.material_override = cel(node.material_override)
+			if not node is MeshInstance3D or not node.mesh is PlaneMesh: node.material_override = cel(node.material_override, node)
 
 func connect_floor_zones() -> void:
 	var links := Node3D.new()
@@ -261,9 +305,42 @@ func connect_floor_zones() -> void:
 		links.add_child(coin)
 	Craft.batch_static(links)
 
+func prepare_wall_fades() -> void:
+	for item in room_occluders:
+		var wall_parts := [item.node]
+		wall_parts.append_array(item.node.find_children("*","MeshInstance3D",true,false))
+		item["surfaces"] = []
+		for part in wall_parts:
+			var source := part.material_override as StandardMaterial3D
+			if source == null: continue
+			var fading := source.duplicate() as StandardMaterial3D
+			fading.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_HASH if source.transparency==BaseMaterial3D.TRANSPARENCY_DISABLED else BaseMaterial3D.TRANSPARENCY_ALPHA
+			item.surfaces.append({"node":part,"fading":fading,"opaque":null,"alpha":source.albedo_color.a})
+		item["labels"] = item.node.find_children("*","Label3D",true,false)
+		item["lights"] = item.node.find_children("*","OmniLight3D",true,false)
+		item["coverage"] = 1.0
+
+func set_wall_coverage(item: Dictionary, coverage: float) -> void:
+	if is_equal_approx(item.coverage,coverage): return
+	item.coverage = coverage
+	item.node.visible = coverage>0.001
+	for part in item.surfaces:
+		if coverage>0.001 and coverage<1.0:
+			if part.opaque == null: part.opaque = part.node.material_override
+			part.fading.albedo_color.a = coverage*part.alpha
+			part.node.material_override = part.fading
+		elif part.opaque != null:
+			part.node.material_override = part.opaque
+			part.opaque = null
+	for label in item.labels: label.modulate.a = coverage
+	for light in item.lights:
+		light.light_energy = float(light.get_meta("source_energy"))*maxf(source_light_scale,0)*coverage
+
 func _process(_delta: float) -> void:
 	if not enabled or game==null: return
 	var from: Vector3 = game.director.camera.global_position
+	var targets: Array[Vector3] = game.surroundings._targets()
+	if stage and decorations.visible: stage.update_cutaways(from,targets)
 	for item in room_occluders:
 		var bounds: AABB = item.bounds
 		var axis := 0
@@ -272,6 +349,7 @@ func _process(_delta: float) -> void:
 		var middle: float = bounds.get_center()[axis]
 		# A cutaway must protect peripheral machines too, not only tower center rays.
 		var hidden := (from[axis]-middle)*(Vector3(0,6,0)[axis]-middle)<0 or bounds.has_point(from)
-		for target in game.surroundings._targets():
+		for target in targets:
 			if EnvironmentSurroundings.segment_hits(bounds,from,target): hidden = true; break
-		item.node.visible = not hidden
+		var clearance := absf(from[axis]-middle)-bounds.size[axis]*0.5
+		set_wall_coverage(item,0.0 if hidden else smoothstep(0.0,3.5,clearance))

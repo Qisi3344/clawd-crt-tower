@@ -1,0 +1,50 @@
+{
+  "furniture-kit__desk": [
+    0,
+    0
+  ],
+  "furniture-kit__chairDesk": [
+    1,
+    0
+  ],
+  "furniture-kit__bookcaseOpen": [
+    2,
+    0
+  ],
+  "furniture-kit__cardboardBoxOpen": [
+    3,
+    0
+  ],
+  "furniture-kit__computerScreen": [
+    0,
+    1
+  ],
+  "furniture-kit__computerKeyboard": [
+    1,
+    1
+  ],
+  "furniture-kit__lampRoundTable": [
+    2,
+    1
+  ],
+  "mini-arcade__arcade-machine": [
+    3,
+    1
+  ],
+  "mini-arcade__ticket-machine": [
+    0,
+    2
+  ],
+  "mini-arcade__vending-machine": [
+    1,
+    2
+  ],
+  "factory-kit__machine-fortified": [
+    2,
+    2
+  ],
+  "factory-kit__machine": [
+    3,
+    2
+  ]
+}

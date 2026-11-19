@@ -2,9 +2,17 @@ shader_type spatial;
 uniform vec4 outer_color : source_color = vec4(0.16,0.14,0.20,1.0);
 uniform vec4 core_color : source_color = vec4(0.21,0.18,0.25,1.0);
 uniform vec4 route_color : source_color = vec4(0.31,0.46,0.43,1.0);
+uniform vec4 footprints[4];
+uniform float fixture_energy = 1.0;
 varying vec3 world_pos;
-void vertex() { world_pos = (MODEL_MATRIX * vec4(VERTEX,1.0)).xyz; }
+varying float up_face;
+void vertex() { up_face = max(0.0,(MODEL_NORMAL_MATRIX*NORMAL).y); world_pos = (MODEL_MATRIX * vec4(VERTEX,1.0)).xyz; }
 float hash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+float pool(vec2 p, vec2 center, vec2 radii) {
+    vec2 q = (p-center)/radii;
+    float r = dot(q,q);
+    return (1.0-smoothstep(0.18,1.0,r))*(0.82-0.22*min(r,1.0));
+}
 float segment(vec2 p,vec2 a,vec2 b) {
     vec2 v=b-a;
     return length(p-a-v*clamp(dot(p-a,v)/dot(v,v),0.0,1.0));
@@ -38,6 +46,16 @@ void fragment() {
     float corner=step(21.5,abs(p.x))*step(20.5,-p.y);
     color*=1.0-corner*(0.08+step(0.5,cell)*0.10);
     ALBEDO=color;
+    // Broad reflected color on the floor keeps the routes and grout visible.
+    vec3 lamps = vec3(0.0);
+    for (int i=0; i<4; i++) {
+        vec4 f = footprints[i];
+        vec3 lamp_color = f.x>10.0 ? vec3(0.54,0.29,0.38) : vec3(0.35,0.46,0.52);
+        lamps += step(0.01,f.z)*lamp_color*pool(p,f.xy,max(f.zw,vec2(0.01)));
+    }
+    vec3 spill = vec3(0.21,0.44,0.43)*pool(p,vec2(-1.0,8.0),vec2(8.4,4.0));
+    spill += vec3(0.38,0.19,0.38)*pool(p,vec2(7.1,6.1),vec2(6.2,3.7));
+    EMISSION = (lamps*fixture_energy+spill) * (0.38 + color * 1.15) * up_face;
     METALLIC=0.0;
     ROUGHNESS=mix(0.80,0.68,traffic);
     SPECULAR=0.23;

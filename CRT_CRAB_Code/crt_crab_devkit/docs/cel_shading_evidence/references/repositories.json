@@ -1,0 +1,20 @@
+[
+  {
+    "repository": "ColinLeung-NiloCat/UnityURPToonLitShaderExample",
+    "url": "https://github.com/ColinLeung-NiloCat/UnityURPToonLitShaderExample",
+    "stars": 7864,
+    "branch": "master",
+    "commit": "fbe276e0df1d1f9379e13581c20b6a080a1a6977",
+    "license": "MIT",
+    "checked": "2026-11-17"
+  },
+  {
+    "repository": "eldskald/godot4-cel-shader",
+    "url": "https://github.com/eldskald/godot4-cel-shader",
+    "stars": 316,
+    "branch": "main",
+    "commit": "8129cec497e008ded7af44b323860163e6aa50db",
+    "license": "MIT",
+    "checked": "2026-11-17"
+  }
+]

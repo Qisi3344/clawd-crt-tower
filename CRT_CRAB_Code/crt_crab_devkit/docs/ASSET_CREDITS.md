@@ -69,3 +69,7 @@ ARCHIVE（2026-11-08）：用户提供 `ARCHIVE_Asset_Pack_v1.zip` 的背景、1
 ## 第二阶段像素外观与音效
 
 `assets/pixel/skins/` 四套 256×192 PNG，均由现有原创角色六行动作图集调色并补眼镜/耳机/静态错位细节。作者工具为 `tools/build_pixel_assets.py`，预览与角色共用 `Cosmetics.frame`；原角色形体参考权利说明仍适用。`PortalFX2D` 按当前动作/服装的真实透明像素采样并分解/重组，位于内部 2D 世界，不导入外部特效资源。新增 start/select/purchase/error/transfer_exit/link/enter 为本工程代码合成电子短音，无真人语音。
+
+### 外围旧显示器机架
+
+八组外围机架复用两种组合，采用 Kenney Furniture Kit 的 `televisionVintage` 和 `televisionAntenna`。原始 GLB 和随包 CC0 许可位于 `assets/environment/originals/furniture-kit/`。本项目重配木壳与仪表面板颜色，另行建模广播监视器、便携机、机架和线缆，绘制六套屏显并烘焙局部环境遮蔽。[Kenney Furniture Kit](https://kenney.nl/assets/furniture-kit)

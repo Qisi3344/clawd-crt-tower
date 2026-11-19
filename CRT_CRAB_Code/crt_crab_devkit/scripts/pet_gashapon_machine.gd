@@ -1,5 +1,6 @@
 extends Node3D
 signal dispensed
+signal visual_added(root: Node3D)
 const PETS := ["cat","dog","hamster","rabbit","bear","hidden_cat"]
 var casing: Array[Node3D] = []
 var pile: Array[Node3D] = []
@@ -384,6 +385,7 @@ func present_reward(award: Dictionary) -> bool:
     reward = load("res://scenes/pets/"+PETS[int(award.kind)]+".tscn").instantiate() as Node3D
     reward.name = "DispensedPet"; reward.scale = Vector3.ONE*0.38
     reward.position = Vector3(-0.58,0.48,1.0); reward.visible = false; add_child(reward); selected = reward
+    visual_added.emit(reward)
     effects = Node3D.new(); effects.name = "RewardEffects"; add_child(effects)
     effects.set_meta("rarity",int(award.rarity)); effects.set_meta("kind",int(award.kind))
     busy = true; sound_step = -1; shake_started = false; effect_started = false

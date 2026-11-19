@@ -1,6 +1,8 @@
 class_name MonitorDevice
 extends Node3D
 
+signal display_texture_changed
+
 var screen: MeshInstance3D
 var screen_material: ShaderMaterial
 var indicator: MeshInstance3D
@@ -144,6 +146,7 @@ func set_texture(texture: Texture2D) -> void:
 	else:
 		screen_material.set_shader_parameter("screen_texture",texture)
 		screen_material.set_shader_parameter("screen_region",Vector4(0,0,1,1))
+	display_texture_changed.emit()
 
 func _standby_texture() -> Texture2D:
 	return load("res://assets/pixel/standby_%d.png"%device_index)

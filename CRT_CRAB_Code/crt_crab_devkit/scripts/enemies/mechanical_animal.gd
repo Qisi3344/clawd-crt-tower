@@ -54,6 +54,13 @@ func _physics_process(delta: float) -> void:
 
 func _moth(_delta: float) -> void:
 	position=origin+Vector2(0,sin(time*1.5)*3)
+	if entry.has("engage_range"):
+		var offset := system.world.player.position - position
+		var ahead := offset.x * float(entry.get("direction",1))
+		if ahead < 0 or ahead > float(entry.engage_range) or absf(offset.y)>24:
+			time = 0
+			phase = "patrol"
+			return
 	var period := fmod(time,2.8)
 	phase = "cue" if period<.7 else "patrol"
 	if period>=.7 and fmod(time-_delta,2.8)<.7:

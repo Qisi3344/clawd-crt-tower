@@ -7,6 +7,7 @@ signal travel_requested(link: Dictionary)
 signal progress_changed
 signal sound_requested(kind: String)
 signal room_requested(portal: Dictionary)
+signal puzzle_requested(entry: Dictionary)
 signal learning_event(id: String)
 var controls: ControlRouter
 var screen_id := "BOOT"
@@ -182,12 +183,14 @@ func _physics_process(delta: float) -> void:
 	for i in range(crystals.size()-1,-1,-1):
 		var crystal: Dictionary = crystals[i]
 		crystal.sprite.texture = PixelArt.frame(15,int(elapsed*8))
+		if crystal.has("requires") and not flags.get(crystal.requires,false): continue
 		if player.position.distance_to(point(crystal.position)+Vector2(0,10))<18:
 			session.pickups.append(crystal.id)
 			session.crystals += 1
 			pickup_burst(crystal.sprite.position)
 			crystal.sprite.queue_free()
 			crystals.remove_at(i)
+			if crystal.has("requires"): queue_redraw()
 			sound_requested.emit("unlock")
 			progress_changed.emit()
 	if action_just("interact") and not player.pushing and absf(control_axis("move_left","move_right"))<.2: interact()
@@ -195,6 +198,7 @@ func _physics_process(delta: float) -> void:
 
 func _update_plates() -> void:
 	var changed := false
+	var needs_checkpoint := false
 	for plate in plates:
 		var p := point(plate.position)
 		var total := 0
@@ -215,6 +219,7 @@ func _update_plates() -> void:
 		if flags.get(plate.flag,false)!=active:
 			flags[plate.flag] = active
 			changed = true
+			if not plate.get("transient",false): needs_checkpoint = true
 	for door in doors:
 		var open: bool = flags.get(door.requires,false)
 		if door.open!=open:
@@ -224,7 +229,7 @@ func _update_plates() -> void:
 	if changed:
 		if flags.get("signal_archive_gate",false): learning_event.emit("heavy")
 		queue_redraw()
-		if plate_settle>0.1: progress_changed.emit()
+		if needs_checkpoint and plate_settle>0.1: progress_changed.emit()
 
 func try_push(actor: SideCrab, axis: float, grab: bool) -> bool:
 	if not grab or axis==0: return false
@@ -380,6 +385,13 @@ func _draw() -> void:
 				var corner:=p+Vector2(sx*14,sy*15)
 				draw_line(corner,corner-Vector2(sx*5,0),Color("efcd79"),1)
 				draw_line(corner,corner-Vector2(0,sy*5),Color("efcd79"),1)
+	for crystal in crystals:
+		if not crystal.has("requires"): continue
+		var center := point(crystal.position)
+		var sealed := not bool(flags.get(crystal.requires,false))
+		draw_rect(Rect2(center-Vector2(12,14),Vector2(24,28)),Color("a88496") if sealed else Color("8dcabb"),false,2)
+		if sealed:
+			for dx in [-6,0,6]: draw_line(center+Vector2(dx,-13),center+Vector2(dx,13),Color("a88496"),1)
 	for sign in definition.get("signs",[]): draw_string(font,Vector2(sign[0],sign[1]),str(sign[2]),HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("aec8ba"))
 	for plate in plates:
 		var p := point(plate.position)-Vector2(0,15)

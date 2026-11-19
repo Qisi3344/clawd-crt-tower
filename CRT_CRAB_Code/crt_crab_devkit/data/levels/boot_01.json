@@ -76,6 +76,20 @@
       896,
       32,
       false
+    ],
+    [
+      0,
+      64,
+      64,
+      16,
+      false
+    ],
+    [
+      0,
+      18,
+      64,
+      8,
+      false
     ]
   ],
   "ladders": [
@@ -184,6 +198,15 @@
       ],
       "height": 192,
       "requires": "signal_archive_gate"
+    },
+    {
+      "id": "boot_service_shutter",
+      "position": [
+        57,
+        64
+      ],
+      "height": 40,
+      "requires": "boot_service_power"
     }
   ],
   "chests": [
@@ -232,10 +255,34 @@
         194
       ],
       "legacy_room": "main"
+    },
+    {
+      "id": "boot_service_crystal",
+      "position": [
+        25,
+        51
+      ],
+      "requires": "boot_service_power"
     }
   ],
-  "breakables": [],
-  "enemies": [],
+  "breakables": [
+    {
+      "id": "boot_lower_crate",
+      "position": [
+        250,
+        440
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "boot_patrol",
+      "position": [
+        466,
+        64
+      ]
+    }
+  ],
   "terminals": [
     {
       "position": [
@@ -259,6 +306,18 @@
         "boot_gate_open"
       ],
       "hint": "箱体留在压板上，门才保持开启；E + 方向键推拉，R 可复位。"
+    },
+    {
+      "id": "boot_wire",
+      "type": "puzzle",
+      "game": "wire",
+      "position": [
+        104,
+        64
+      ],
+      "label": "接通维护线盒",
+      "flag": "boot_service_power",
+      "success": "维护灯已亮 · 左侧检修舱的闸门已打开。"
     }
   ],
   "animals": [],
@@ -292,6 +351,11 @@
       208,
       170,
       "箱体留在压板上，门才保持开启"
+    ],
+    [
+      68,
+      107,
+      "↑ 接线盒 / 灯带晶格"
     ]
   ],
   "size": [

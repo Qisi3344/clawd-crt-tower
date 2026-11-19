@@ -135,6 +135,14 @@
       ],
       "weight": 2,
       "legacy_room": "main"
+    },
+    {
+      "id": "archive_sort_weight",
+      "position": [
+        226,
+        440
+      ],
+      "weight": 2
     }
   ],
   "plates": [
@@ -147,6 +155,16 @@
       "weight": 2,
       "flag": "signal_archive_gate",
       "legacy_room": "main"
+    },
+    {
+      "id": "archive_sort_plate",
+      "position": [
+        290,
+        448
+      ],
+      "weight": 2,
+      "flag": "archive_sort_supported",
+      "transient": true
     }
   ],
   "doors": [
@@ -177,6 +195,15 @@
       ],
       "height": 192,
       "requires": "signal_archive_gate"
+    },
+    {
+      "id": "archive_sort_gate",
+      "position": [
+        362,
+        448
+      ],
+      "height": 54,
+      "requires": "archive_sort_supported"
     }
   ],
   "chests": [
@@ -209,6 +236,22 @@
         194
       ],
       "legacy_room": "main"
+    },
+    {
+      "id": "archive_cabinet_crystal",
+      "position": [
+        194,
+        52
+      ],
+      "requires": "archive_cabinet_open"
+    },
+    {
+      "id": "archive_sort_crystal",
+      "position": [
+        389,
+        435
+      ],
+      "requires": "archive_sort_supported"
     }
   ],
   "breakables": [
@@ -227,6 +270,13 @@
         200
       ],
       "legacy_room": "main"
+    },
+    {
+      "id": "archive_lower_packing",
+      "position": [
+        333,
+        440
+      ]
     }
   ],
   "enemies": [
@@ -253,9 +303,66 @@
         "signal_archive_gate"
       ],
       "hint": "需要重量 2：上层重石可推落；轻箱和螃蟹不能代替。"
+    },
+    {
+      "id": "archive_cabinet",
+      "type": "puzzle",
+      "game": "cabinet",
+      "code": "472",
+      "position": [
+        166,
+        64
+      ],
+      "label": "输入入库柜密码",
+      "requires": "archive_receipt",
+      "locked_hint": "柜门缺少回执 · 向右寻找散落的碎纸。",
+      "flag": "archive_cabinet_open",
+      "success": "柜锁已开 · 领取柜边的藏晶。"
+    },
+    {
+      "id": "archive_paper",
+      "type": "puzzle",
+      "game": "paper",
+      "position": [
+        350,
+        64
+      ],
+      "label": "拼合入库回执",
+      "flag": "archive_receipt",
+      "success": "回执写着「4 · 架号 · 2」 · 回左侧柜，用柜旁标牌补上中间位。"
     }
   ],
-  "animals": [],
+  "animals": [
+    {
+      "id": "archive_shelf_guard",
+      "species": "snail",
+      "position": [
+        254,
+        64
+      ],
+      "range": 14,
+      "health": 2
+    },
+    {
+      "id": "archive_lower_patrol",
+      "species": "hamster",
+      "position": [
+        290,
+        448
+      ],
+      "range": 44
+    },
+    {
+      "id": "archive_lower_moth",
+      "species": "moth",
+      "position": [
+        446,
+        432
+      ],
+      "direction": -1,
+      "engage_range": 148
+    }
+  ],
   "signs": [
     [
       188,
@@ -286,6 +393,21 @@
       288,
       170,
       "需要重量 2：上层重石可推落"
+    ],
+    [
+      110,
+      30,
+      "入库柜 / 架号 7"
+    ],
+    [
+      297,
+      36,
+      "碎纸修复台 →"
+    ],
+    [
+      165,
+      398,
+      "滚轮压板开闸 / 重箱可保压"
     ]
   ],
   "size": [

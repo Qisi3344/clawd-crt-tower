@@ -1,6 +1,8 @@
 extends Node3D
 
 var pet_gacha := PetGachaStore.new()
+const FieldPuzzle = preload("res://scripts/ui/field_puzzle.gd")
+var field_puzzle: FieldPuzzle
 var gacha_panel: PetGachaPanel
 var ambience: Node3D
 var shell: Node3D
@@ -125,6 +127,7 @@ func _ready() -> void:
 		if "--popup-art-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/popup_art_qa.gd"
 		if "--industrial-art-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/industrial_art_qa.gd"
 		if "--gameplay-upgrade-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/gameplay_upgrade_qa.gd"
+		if "--field-puzzle-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/field_puzzle_qa.gd"
 		harness.set_script(load(test_script))
 		add_child(harness)
 	else:
@@ -219,7 +222,7 @@ func set_tutorial_enabled(value: bool) -> void:
 	hud.refresh_controls()
 
 func toggle_local_map() -> void:
-	if in_menu or transitioning or story_active or hud.paused or director.overview or is_instance_valid(gacha_panel): return
+	if in_menu or transitioning or story_active or hud.paused or director.overview or is_instance_valid(gacha_panel) or is_instance_valid(field_puzzle): return
 	hud.set_map(not hud.map_open,world);_control_state()
 
 func _start_story(kind: String) -> void:
@@ -426,6 +429,7 @@ func _load_world(id: String, spawn_id: String = "", requested_room: String = "")
 	var saved_health = save.data.get("health",3)
 	world.player.health = clampi(int(saved_health),1,3) if saved_health is float or saved_health is int else 3
 	world._snap_camera(true)
+	world.puzzle_requested.connect(_open_field_puzzle)
 	world.message.connect(hud.show_message)
 	world.prompt_changed.connect(hud.set_prompt)
 	world.learning_event.connect(tutorial.observe)
@@ -612,7 +616,7 @@ func _process(delta: float) -> void:
 				director.camera.position=Vector3(sin(angle)*28,lerpf(10,24,minf(story.clock/3.8,1)),cos(angle)*28)
 				director.camera.look_at(Vector3(0,7,0))
 		return
-	if is_instance_valid(gacha_panel): return
+	if is_instance_valid(field_puzzle) or is_instance_valid(gacha_panel): return
 	if in_menu:
 		if not director.reduced_motion: director.orbit += delta*0.025
 		return
@@ -639,7 +643,7 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if story_active: return
-	if is_instance_valid(gacha_panel): return
+	if is_instance_valid(field_puzzle) or is_instance_valid(gacha_panel): return
 	if in_menu: return
 	if event.is_action_pressed("pause") and not transitioning:
 		if hud.map_open: toggle_local_map()
@@ -661,7 +665,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: director.elevation = clampf(director.elevation+1,5,30)
 
 func _toggle_overview() -> void:
-	if in_menu or transitioning or story_active or hud.map_open or hud.paused or is_instance_valid(gacha_panel):
+	if in_menu or transitioning or story_active or hud.map_open or hud.paused or is_instance_valid(gacha_panel) or is_instance_valid(field_puzzle):
 		return
 	director.toggle_overview()
 	if not director.overview: tutorial.observe("array")
@@ -670,7 +674,7 @@ func _toggle_overview() -> void:
 	_control_state()
 
 func open_gacha() -> void:
-	if transitioning or story_active or surroundings==null or is_instance_valid(gacha_panel): return
+	if transitioning or story_active or surroundings==null or is_instance_valid(gacha_panel) or is_instance_valid(field_puzzle): return
 	gacha_panel = PetGachaPanel.new()
 	gacha_panel.game = self
 	gacha_panel.machine = surroundings.zones[1].get_node("PetGashaponMachine")
@@ -678,8 +682,35 @@ func open_gacha() -> void:
 	add_child(gacha_panel)
 	_control_state()
 
+func _open_field_puzzle(entry: Dictionary) -> void:
+	if not world.enabled or is_instance_valid(field_puzzle): return
+	if world.flags.get(entry.flag,false):
+		hud.show_message(entry.success,80)
+		return
+	if entry.has("requires") and not world.flags.get(entry.requires,false):
+		hud.show_message(entry.locked_hint,80)
+		return
+	field_puzzle = FieldPuzzle.new()
+	field_puzzle.entry = entry
+	field_puzzle.finished.connect(func(solved: bool):
+		field_puzzle.queue_free()
+		field_puzzle = null
+		hud.show()
+		if solved:
+			world.mechanisms.latch(entry.flag)
+			world.queue_redraw()
+			hud.show_message(entry.success,80)
+		_control_state()
+	, CONNECT_ONE_SHOT)
+	hud.hide()
+	add_child(field_puzzle)
+	_control_state()
+
 func _control_state() -> void:
-	if is_instance_valid(gacha_panel):
+	if is_instance_valid(field_puzzle):
+		field_puzzle.set_process(field_puzzle.entry.game == "popup" and not orientation_blocked)
+		input_mode = InputMode.PAUSED
+	elif is_instance_valid(gacha_panel):
 		input_mode = InputMode.PAUSED
 	elif story_active:
 		input_mode=InputMode.STORY
@@ -690,7 +721,7 @@ func _control_state() -> void:
 	else:
 		input_mode = InputMode.PAUSED if hud.paused or hud.map_open or orientation_blocked else (InputMode.ARRAY_VIEW if director.overview else InputMode.PLAY_2D)
 	if is_instance_valid(world):
-		var allowed := not in_menu and not transitioning and not story_active and not orientation_blocked and not hud.map_open and not hud.paused and not director.overview and not is_instance_valid(gacha_panel)
+		var allowed := not in_menu and not transitioning and not story_active and not orientation_blocked and not hud.map_open and not hud.paused and not director.overview and not is_instance_valid(gacha_panel) and not is_instance_valid(field_puzzle)
 		world.enabled = allowed
 		world.player.enabled = allowed
 		world.process_mode = Node.PROCESS_MODE_INHERIT if allowed else Node.PROCESS_MODE_DISABLED
@@ -744,7 +775,7 @@ func _notification(what: int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(input_router):
 		input_router.release_all()
 		if is_instance_valid(touch_controls): touch_controls.release_all()
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning and not in_menu and not story_active:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_instance_valid(hud) and not test_mode and not transitioning and not in_menu and not story_active and not is_instance_valid(field_puzzle):
 		hud.set_paused(true)
 
 func _quit() -> void:

@@ -78,7 +78,7 @@ func _physics_process(delta: float) -> void:
 func candidates() -> Array[Dictionary]:
 	var list: Array[Dictionary]=[]
 	for entry in entries:
-		if entry.type in ["reflector","conveyor","magnet","stop","pulse","assembly","repair","insulator","inspect","diagnostic"]:
+		if entry.type in ["puzzle","reflector","conveyor","magnet","stop","pulse","assembly","repair","insulator","inspect","diagnostic"]:
 			list.append({"type":"mechanism","position":entry.get("control",entry.position),"object":entry,"prompt":"E  "+mechanism_prompt(entry)})
 	if is_instance_valid(boss): list.append_array(boss.candidates())
 	return list
@@ -87,6 +87,9 @@ func interact(entry: Dictionary) -> void:
 	var id:=str(entry.id)
 	world.learning_event.emit(str(entry.type))
 	match str(entry.type):
+		"puzzle":
+			world.puzzle_requested.emit(entry)
+			return
 		"inspect","diagnostic":
 			world.message.emit(inspect_message(entry))
 		"reflector":
@@ -118,6 +121,7 @@ func mechanism_prompt(entry: Dictionary) -> String:
 	var label:=str(entry.get("label","操作机关"))
 	var id:=str(entry.id)
 	match str(entry.type):
+		"puzzle": return label+(" [已接通]" if world.flags.get(entry.flag,false) else "")
 		"reflector": return label+" ["+["↑","↓","←"][int(switches.get(id,0))%3]+"]"
 		"conveyor": return label+(" [← 向左]" if switches.get(id,false) else " [→ 向右]")
 		"magnet": return label+(" [吸持中 · 再按释放]" if switches.get(id,false) else " [已释放]")
@@ -306,6 +310,11 @@ func _draw() -> void:
 				for key in WorldProgress.circuit_inputs(world.flags):
 					var active: bool=WorldProgress.circuit_inputs(world.flags)[key]
 					draw_string(font,p+Vector2(7,-48+i*16),("[OK] " if active else "[--] ")+str(key),HORIZONTAL_ALIGNMENT_LEFT,-1,12,green if active else gold);i+=1
+			"puzzle":
+				var lit: Color = green if world.flags.get(entry.flag,false) else (gold if p.distance_to(world.player.position)<27 else Color("a88496"))
+				draw_rect(Rect2(p-Vector2(11,22),Vector2(22,22)),ink)
+				draw_rect(Rect2(p-Vector2(9,20),Vector2(18,13)),lit,false,2)
+				draw_line(p-Vector2(5,4),p+Vector2(5,-4),lit,2)
 			"stop","pulse","assembly","repair","insulator","inspect":
 				draw_rect(Rect2(p-Vector2(8,16),Vector2(16,16)),ink)
 				draw_rect(Rect2(p-Vector2(6,14),Vector2(12,10)),green if on else gold,false,2)

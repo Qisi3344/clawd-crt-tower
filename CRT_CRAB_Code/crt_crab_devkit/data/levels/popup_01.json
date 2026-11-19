@@ -139,6 +139,20 @@
       192,
       16,
       true
+    ],
+    [
+      292,
+      662,
+      42,
+      10,
+      true
+    ],
+    [
+      335,
+      636,
+      80,
+      12,
+      true
     ]
   ],
   "ladders": [
@@ -273,9 +287,25 @@
         112
       ],
       "legacy_room": "loft"
+    },
+    {
+      "id": "popup_process_crystal",
+      "position": [
+        370,
+        623
+      ],
+      "requires": "popup_cache_clean"
     }
   ],
-  "breakables": [],
+  "breakables": [
+    {
+      "id": "popup_old_cache",
+      "position": [
+        427,
+        680
+      ]
+    }
+  ],
   "enemies": [],
   "terminals": [],
   "mechanisms": [
@@ -438,6 +468,18 @@
         "popup_fuse_b"
       ],
       "hint": "两片镜面分别导向各自保险丝；回弹可处理飞蛾，备用脉冲避免失去弹源。"
+    },
+    {
+      "id": "popup_process",
+      "type": "puzzle",
+      "game": "popup",
+      "position": [
+        234,
+        688
+      ],
+      "flag": "popup_cache_clean",
+      "label": "关闭失控的缓存窗口",
+      "success": "底层缓存已恢复 · 右边检修台的晶格已打开。"
     }
   ],
   "animals": [
@@ -488,6 +530,35 @@
         64
       ],
       "legacy_room": "loft"
+    },
+    {
+      "id": "popup_cache_guard",
+      "species": "snail",
+      "position": [
+        381,
+        636
+      ],
+      "range": 12,
+      "health": 2
+    },
+    {
+      "id": "popup_east_patrol",
+      "species": "hamster",
+      "position": [
+        774,
+        448
+      ],
+      "range": 47
+    },
+    {
+      "id": "popup_drain_moth",
+      "species": "moth",
+      "position": [
+        736,
+        669
+      ],
+      "direction": -1,
+      "engage_range": 148
     }
   ],
   "signs": [
@@ -525,6 +596,16 @@
       208,
       410,
       "两片镜面分别导向各自保险丝"
+    ],
+    [
+      92,
+      655,
+      "缓存终端 →"
+    ],
+    [
+      240,
+      628,
+      "↑ 检修台晶格"
     ]
   ],
   "size": [

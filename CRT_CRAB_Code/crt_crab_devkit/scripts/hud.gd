@@ -60,6 +60,9 @@ var mission_lock: Label
 var mission_progress: ProgressBar
 var mission_summary: Label
 var mission_details := ""
+var mission_time := 0.0
+var mission_key := ""
+var mission_done := false
 var mission_poll := 0.0
 var dodge_label: Label
 
@@ -233,7 +236,13 @@ func _process(delta: float) -> void:
 	var game:=get_parent()
 	bottom_band.custom_minimum_size.y=140 if game.controls.profile=="touch" else 0
 	var playable:bool=is_instance_valid(game.world) and game.world.enabled
-	mission_card.visible = playable and not map_open and not game.director.overview and not paused
+	if playable:
+		mission_time = maxf(0,mission_time-delta)
+	var expanded := mission_time > 0
+	mission_card.visible = visible and playable and not map_open and not game.director.overview and not paused and (expanded or not mission_done)
+	mission_card.modulate.a = minf(1,mission_time/.45) if mission_done else 1.0
+	mission_step.visible = expanded
+	mission_card.reset_size()
 	dodge_label.visible = playable and game.controls.profile == "keyboard"
 	if playable:
 		dodge_label.text = _dodge_status(game.world.player.dash_cooldown, game.world.player.climbing, game.world.player.pushing)
@@ -257,11 +266,12 @@ func _process(delta: float) -> void:
 			if not notices.is_empty():
 				var next:Dictionary=notices.pop_front();_notice(next.text,next.priority)
 
-func show_message(text: String) -> void:
+func show_message(text: String, minimum_priority := 0) -> void:
 	var priority:=100 if text.contains("失败") or text.contains("未能写入") or text.begins_with("NO SIGNAL") else 20
 	if text.begins_with("LINK ESTABLISHED"): priority=70
 	elif text.begins_with("宝箱已") or text.begins_with("通信碎片"): priority=60
-	if text==toast_label.text: return
+	priority = maxi(priority, minimum_priority)
+	if text==toast_label.text and priority<80: return
 	if toast_time>0 and (priority<notice_priority or (priority==notice_priority and priority<80)):
 		if notices.size()<4 and not notices.any(func(n):return n.text==text): notices.append({"text":text,"priority":priority})
 		return
@@ -269,7 +279,7 @@ func show_message(text: String) -> void:
 
 func _notice(text: String,priority: int) -> void:
 	toast_label.text=get_parent().controls.hint(text);notice_priority=priority;toast_time=5 if priority>=80 else 3
-	toast_label.add_theme_color_override("font_color",Color("f2a5ae") if priority>=80 else Color("f0f0df"))
+	toast_label.add_theme_color_override("font_color",Color("f2a5ae") if priority>=100 else Color("f0f0df"))
 
 func set_health(value: int) -> void:
 	health_label.text = "生命 %d / 3"%value
@@ -300,26 +310,44 @@ func _build_mission_card(column: VBoxContainer) -> void:
 	mission_card = _panel(Color("141d29ed"))
 	mission_card.name = "TacticalMissionCard"
 	mission_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(mission_card)
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("182130ba")
+	style.border_color = Color("92aaab99")
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(4)
+	for side in [SIDE_LEFT,SIDE_RIGHT]: style.set_content_margin(side,5)
+	for side in [SIDE_TOP,SIDE_BOTTOM]: style.set_content_margin(side,2)
+	mission_card.set_meta("custom_hud_icon",true)
+	mission_card.add_theme_stylebox_override("panel",style)
+	if get_parent() != null and get_parent().get("viewport") is SubViewport:
+		var glass := CanvasLayer.new()
+		glass.custom_viewport = get_parent().viewport
+		add_child(glass)
+		glass.add_child(mission_card)
+		mission_card.position = Vector2(10,10)
+	else:
+		column.add_child(mission_card)
 	var content := VBoxContainer.new()
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_theme_constant_override("separation", 3)
 	mission_card.add_child(content)
 	var heading := HBoxContainer.new()
 	content.add_child(heading)
-	objective = _label("连接任务", 19)
+	objective = _label("连接任务", 12)
 	objective.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	objective.autowrap_mode = TextServer.AUTOWRAP_OFF
 	heading.add_child(objective)
-	mission_summary = _label("0 / 0", 18, Color("7bd9d3"))
+	mission_summary = _label("0 / 0", 12, Color("7bd9d3"))
 	heading.add_child(mission_summary)
 	mission_progress = ProgressBar.new()
 	mission_progress.show_percentage = false
 	mission_progress.custom_minimum_size.y = 4
 	mission_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(mission_progress)
-	mission_step = _label("下一步：等待屏幕连接", 18)
+	mission_progress.hide()
+	mission_step = _label("下一步：等待屏幕连接", 12)
 	mission_step.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	mission_step.custom_minimum_size.x = 218
 	content.add_child(mission_step)
 	mission_lock = _label("", 16, Color("efcd79"))
 	mission_lock.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -332,9 +360,14 @@ func _refresh_mission(id: String, session: Dictionary) -> void:
 	var mission: Dictionary = mission_director.describe(id, session, live_state)
 	title_label.text = "%02d / 06 · %s" % [mission.chapter, mission.title]
 	title_label.add_theme_color_override("font_color", mission.accent)
-	objective.text = "当前目标 · " + str(mission.objective)
-	objective.add_theme_color_override("font_color", mission.accent)
-	mission_summary.text = "%d / %d%s" % [mission.completed, mission.total, " 完成" if mission.complete else ""]
+	var key := str([id,mission.completed,mission.total,mission.next_step,mission.complete])
+	if mission_key != key:
+		mission_key = key
+		mission_time = 3.0
+	mission_done = mission.complete
+	objective.text = ("✓ " if mission_done else "") + str(mission.objective)
+	objective.add_theme_color_override("font_color", Color("8de0aa") if mission_done else Color("e0ece7"))
+	mission_summary.text = "%d/%d" % [mission.completed, mission.total]
 	mission_progress.max_value = mission.total
 	mission_progress.value = mission.completed
 	var fill := StyleBoxFlat.new()
@@ -342,7 +375,7 @@ func _refresh_mission(id: String, session: Dictionary) -> void:
 	mission_progress.add_theme_stylebox_override("fill", fill)
 	mission_step.text = game.controls.hint("下一步：" + str(mission.next_step))
 	mission_lock.text = str(mission.lock_reason)
-	mission_lock.visible = not mission.lock_reason.is_empty()
+	mission_lock.hide()
 	mission_details = title_label.text + "
 
 " + "
@@ -353,6 +386,11 @@ func _refresh_mission(id: String, session: Dictionary) -> void:
 " + str(mission.lock_reason)
 	route_label.text = mission_director.route(session)
 	last_objective = objective.text
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_Q and event.pressed and not event.echo and is_instance_valid(get_parent().world) and get_parent().world.enabled:
+		mission_time = 3.0
+		get_viewport().set_input_as_handled()
 
 func _dodge_status(cooldown: float, climbing: bool, pushing: bool) -> String:
 	if climbing: return "闪避 · 先离开梯子"

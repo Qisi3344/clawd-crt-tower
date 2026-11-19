@@ -371,6 +371,19 @@
       "range": 160,
       "label": "磁吸挪开暗道挡块",
       "legacy_room": "tunnel"
+    },
+    {
+      "id": "recycle_weight_reader",
+      "type": "inspect",
+      "position": [
+        704,
+        688
+      ],
+      "label": "检查现场链路",
+      "watch_flags": [
+        "recycle_heavy_supported"
+      ],
+      "hint": "先吸持钢块，再释放落到压板；可停压机保安全，无须击败全部动物。"
     }
   ],
   "animals": [
@@ -452,6 +465,11 @@
       298,
       658,
       "← 回访暗道"
+    ],
+    [
+      624,
+      650,
+      "先吸持钢块，再释放落到压板"
     ]
   ],
   "size": [
@@ -741,5 +759,6 @@
       480
     ]
   },
-  "legacy_entry": "sorter"
+  "legacy_entry": "sorter",
+  "challenge_brief": "停压机走安全路线，或反转输送带借压机处理仓鼠；磁吸后释放重物才可持续保压。"
 }

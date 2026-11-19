@@ -22,6 +22,20 @@ var level: SideWorld
 var walk_distance:=0.0
 var climb_distance:=0.0
 var jumped:=false
+var dash_time := 0.0
+var dash_cooldown := 0.0
+var dash_direction := 1
+
+func start_dash() -> bool:
+	if not enabled or climbing or pushing or dash_cooldown > 0: return false
+	dash_direction = facing
+	dash_time = 0.14
+	dash_cooldown = 0.85
+	invulnerable = maxf(invulnerable, 0.18)
+	if is_instance_valid(level):
+		level.sound_requested.emit("select")
+		level.learning_event.emit("dash")
+	return true
 
 func _ready() -> void:
 	name = "OnlyControllableCrab"
@@ -42,6 +56,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not enabled: return
 	invulnerable = maxf(0,invulnerable-delta)
+	dash_time = maxf(0,dash_time-delta)
+	dash_cooldown = maxf(0,dash_cooldown-delta)
 	attack_time = maxf(0,attack_time-delta)
 	attack_cooldown = maxf(0,attack_cooldown-delta)
 	jump_buffer = maxf(0,jump_buffer-delta)
@@ -76,6 +92,10 @@ func _physics_process(delta: float) -> void:
 			jumped=true
 			coyote = 0
 			jump_buffer = 0
+	if level.action_just("dash"): start_dash()
+	if dash_time > 0:
+		velocity.x = dash_direction * 230
+		velocity.y = minf(velocity.y, 80)
 	if level.action_just("attack") and attack_cooldown<=0:
 		attack_time = 0.22
 		attack_cooldown = 0.32
@@ -114,6 +134,7 @@ func take_damage(amount: int = 1, forced: bool = false) -> void:
 		velocity = Vector2(-facing*80,-120)
 
 func respawn() -> void:
+	dash_time = 0.0
 	position = spawn
 	velocity = Vector2.ZERO
 	climbing = false

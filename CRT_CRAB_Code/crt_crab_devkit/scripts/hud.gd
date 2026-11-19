@@ -53,6 +53,15 @@ var map_open:=false
 var last_objective:=""
 var notice_priority:=0
 var notices:Array[Dictionary]=[]
+var mission_director := preload("res://scripts/mission_director.gd").new()
+var mission_card: PanelContainer
+var mission_step: Label
+var mission_lock: Label
+var mission_progress: ProgressBar
+var mission_summary: Label
+var mission_details := ""
+var mission_poll := 0.0
+var dodge_label: Label
 
 func _ready() -> void:
 	layer = 10
@@ -84,9 +93,7 @@ func _ready() -> void:
 	array_button=_icon(top,"array","阵列",func():overview_requested.emit())
 	_icon(top,"map","地图",func():get_parent().toggle_local_map())
 	_icon(top,"pause","暂停",func():set_paused(true))
-	objective = _label("去左后方终端，按 E 唤醒信号",20,Color("e1e2d6"))
-	column.add_child(objective)
-	objective.hide()
+	_build_mission_card(column)
 	collection_label = _label("",18,Color("dce65b"))
 	collection_label.hide()
 	column.add_child(collection_label)
@@ -94,6 +101,8 @@ func _ready() -> void:
 	for row in [15,6,8]:
 		var icon := TextureRect.new(); icon.texture = PixelArt.icon(row); icon.custom_minimum_size = Vector2(32,32); icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE; icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST; inventory.add_child(icon)
 		var count := _label("0",20); inventory.add_child(count); counters.append(count)
+	dodge_label = _label("Shift · 闪避就绪", 17, Color("7bd9d3"))
+	inventory.add_child(dodge_label)
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	space.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -224,6 +233,14 @@ func _process(delta: float) -> void:
 	var game:=get_parent()
 	bottom_band.custom_minimum_size.y=140 if game.controls.profile=="touch" else 0
 	var playable:bool=is_instance_valid(game.world) and game.world.enabled
+	mission_card.visible = playable and not map_open and not game.director.overview and not paused
+	dodge_label.visible = playable and game.controls.profile == "keyboard"
+	if playable:
+		dodge_label.text = _dodge_status(game.world.player.dash_cooldown, game.world.player.climbing, game.world.player.pushing)
+	mission_poll += delta
+	if playable and mission_poll >= 0.2:
+		mission_poll = 0.0
+		_refresh_mission(game.active_id, game.save.data)
 	tutorial_label.text=game.tutorial.prompt(game.world) if playable and prompt_label.text.is_empty() else ""
 	prompt_label.visible=playable and not prompt_label.text.is_empty()
 	tutorial_label.visible=playable and not tutorial_label.text.is_empty()
@@ -271,37 +288,77 @@ func set_paused(value: bool) -> void:
 	pause_changed.emit(value)
 
 func update_progress(id: String, session: Dictionary) -> void:
-	var flags: Dictionary = session.flags
 	var total: int = get_parent().treasure_count
-	if counters.size()==3:
-		counters[0].text = str(session.crystals); counters[1].text = "%d / %d"%[session.collected.size(),total]; counters[2].text = str(session.screen_repaired.size())
-	var index: int = WorldProgress.ORDER.find(id)
-	title_label.text = "%02d · %s"%[index+1,WorldProgress.NAMES[index]]
-	collection_label.text = "◇ %d 晶体   ▣ 宝箱 %d / %d"%[session.crystals,session.collected.size(),total]
-	if id=="ARCHIVE":
-		objective.text = "档案密钥已记录 · 可回访 BOOT 的远端门" if flags.get("archive_key",false) else ("重压板已接通 · 通过右侧机关门取得档案密钥" if flags.get("signal_archive_gate",false) else "爬上档案台 · 右推重石落到 WEIGHT 2 压板")
-	elif flags.get("slice_complete",false):
-		objective.text = "两屏切片完成 · 四个宝箱已记录，可以继续探索"
-	elif flags.get("signal_archive_gate",false):
-		objective.text = "ARCHIVE 重压板已接通 · 右侧远端宝库已开"
-	elif flags.get("boot_access",false):
-		objective.text = "启动密钥已记录 · 向右连接 ARCHIVE"
-	else:
-		objective.text = "按住 E 推箱压板 → 开门 → W 爬梯开箱"
-	if id=="ARCHIVE" and flags.get("archive_key",false): objective.text="档案密钥已记录 · 右侧 POP-UP 端口修复供电，仍可回 BOOT"
-	if id=="POP-UP": objective.text="两房导流片把飞蛾弹引向保险丝 → 竖井顶层恢复供电" if not flags.get("popup_power_restored",false) else "噪声已隔离 · RECYCLE 已供电，可继续回访"
-	if id=="RECYCLE": objective.text="输送、磁吸与压机 → 回收三片通信数据 → 重构台"
-	if id=="SIGNAL": objective.text="三路输入 + 继电蜜蜂接线 → 向上接通发送通道"
-	if id=="ERROR": objective.text="解除重力 / 反射 / 电路三个护罩节点，再关闭核心"
-	if flags.get("message_delivered",false): objective.text="通信已恢复 · User 的消息已送达，继续探索与收集"
-	var rows: Array[String]=[]
-	for screen in WorldProgress.ORDER:
-		rows.append(("▶ " if screen==id else "  ")+str(WorldProgress.NAMES[WorldProgress.ORDER.find(screen)])+" / "+("已修复" if session.screen_repaired.get(screen,false) else ("可进入" if session.screen_unlocked.get(screen,false) else "未连接")))
-	rows.append("ARCHIVE 重压板："+("接通" if flags.get("signal_archive_gate",false) else "未接通"))
-	rows.append("User 消息："+("已送达" if flags.get("message_delivered",false) else "发送失败"))
-	route_label.text="\n".join(rows)
-	if last_objective!=objective.text:
-		last_objective=objective.text;show_message(objective.text)
+	if counters.size() == 3:
+		counters[0].text = str(session.crystals)
+		counters[1].text = "%d / %d" % [session.collected.size(), total]
+		counters[2].text = str(session.screen_repaired.size())
+	collection_label.text = "◇ %d 晶体   ▣ 宝箱 %d / %d" % [session.crystals, session.collected.size(), total]
+	_refresh_mission(id, session)
+
+func _build_mission_card(column: VBoxContainer) -> void:
+	mission_card = _panel(Color("141d29ed"))
+	mission_card.name = "TacticalMissionCard"
+	mission_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(mission_card)
+	var content := VBoxContainer.new()
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_theme_constant_override("separation", 3)
+	mission_card.add_child(content)
+	var heading := HBoxContainer.new()
+	content.add_child(heading)
+	objective = _label("连接任务", 19)
+	objective.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	heading.add_child(objective)
+	mission_summary = _label("0 / 0", 18, Color("7bd9d3"))
+	heading.add_child(mission_summary)
+	mission_progress = ProgressBar.new()
+	mission_progress.show_percentage = false
+	mission_progress.custom_minimum_size.y = 4
+	mission_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_child(mission_progress)
+	mission_step = _label("下一步：等待屏幕连接", 18)
+	mission_step.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(mission_step)
+	mission_lock = _label("", 16, Color("efcd79"))
+	mission_lock.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	mission_lock.max_lines_visible = 2
+	content.add_child(mission_lock)
+
+func _refresh_mission(id: String, session: Dictionary) -> void:
+	var game := get_parent()
+	var live_state: Dictionary = game.world.state if is_instance_valid(game.world) else {}
+	var mission: Dictionary = mission_director.describe(id, session, live_state)
+	title_label.text = "%02d / 06 · %s" % [mission.chapter, mission.title]
+	title_label.add_theme_color_override("font_color", mission.accent)
+	objective.text = "当前目标 · " + str(mission.objective)
+	objective.add_theme_color_override("font_color", mission.accent)
+	mission_summary.text = "%d / %d%s" % [mission.completed, mission.total, " 完成" if mission.complete else ""]
+	mission_progress.max_value = mission.total
+	mission_progress.value = mission.completed
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = mission.accent
+	mission_progress.add_theme_stylebox_override("fill", fill)
+	mission_step.text = game.controls.hint("下一步：" + str(mission.next_step))
+	mission_lock.text = str(mission.lock_reason)
+	mission_lock.visible = not mission.lock_reason.is_empty()
+	mission_details = title_label.text + "
+
+" + "
+".join(mission.checklist) + "
+
+" + mission_step.text
+	if not mission.lock_reason.is_empty(): mission_details += "
+" + str(mission.lock_reason)
+	route_label.text = mission_director.route(session)
+	last_objective = objective.text
+
+func _dodge_status(cooldown: float, climbing: bool, pushing: bool) -> String:
+	if climbing: return "闪避 · 先离开梯子"
+	if pushing: return "闪避 · 先松开推拉"
+	if cooldown > 0: return "闪避冷却 %.1fs" % cooldown
+	return "Shift · 闪避就绪"
 
 func _icon(parent: Control,glyph: String,caption: String,callback: Callable) -> Button:
 	var button:=HudIconButton.new();button.glyph=glyph;button.caption=caption;button.name="HUD_"+glyph

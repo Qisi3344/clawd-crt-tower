@@ -279,7 +279,8 @@
         448
       ],
       "flag": "error_foyer_open",
-      "legacy_room": "foyer"
+      "legacy_room": "foyer",
+      "impact_only": false
     },
     {
       "id": "error_press_a",
@@ -354,6 +355,29 @@
       ],
       "label": "核心导流镜：把弹引向下方节点 B",
       "legacy_room": "boss"
+    },
+    {
+      "id": "error_panel_reader",
+      "type": "inspect",
+      "position": [
+        192,
+        448
+      ],
+      "label": "检查现场链路",
+      "watch_flags": [
+        "error_foyer_open"
+      ],
+      "hint": "站到装甲板附近吸引俯冲，出现瞄准线后移开；落地硬直时可反击。"
+    },
+    {
+      "id": "owl_precision_panel",
+      "type": "break_panel",
+      "position": [
+        304,
+        448
+      ],
+      "flag": "error_owl_precision",
+      "impact_only": true
     }
   ],
   "animals": [
@@ -398,6 +422,16 @@
       458,
       34,
       "→ B 上层回环"
+    ],
+    [
+      112,
+      410,
+      "站到装甲板附近吸引俯冲，出现瞄准线后移开"
+    ],
+    [
+      270,
+      388,
+      "装甲靶：诱导俯冲 / 可选"
     ]
   ],
   "size": [
@@ -662,5 +696,6 @@
       352,
       480
     ]
-  }
+  },
+  "challenge_brief": "诱导猫头鹰锁定装甲后避让，停活塞保压，核心依次使用重量、反射与安全反脉冲。"
 }

@@ -124,6 +124,7 @@ func _ready() -> void:
 		if "--boot-art-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/boot_art_qa.gd"
 		if "--popup-art-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/popup_art_qa.gd"
 		if "--industrial-art-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/industrial_art_qa.gd"
+		if "--gameplay-upgrade-qa" in OS.get_cmdline_user_args(): test_script = "res://tests/gameplay_upgrade_qa.gd"
 		harness.set_script(load(test_script))
 		add_child(harness)
 	else:

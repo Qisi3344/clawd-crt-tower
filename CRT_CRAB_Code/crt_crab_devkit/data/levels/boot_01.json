@@ -246,7 +246,21 @@
       "legacy_room": "main"
     }
   ],
-  "mechanisms": [],
+  "mechanisms": [
+    {
+      "id": "boot_pressure_reader",
+      "type": "inspect",
+      "position": [
+        288,
+        208
+      ],
+      "label": "检查现场链路",
+      "watch_flags": [
+        "boot_gate_open"
+      ],
+      "hint": "箱体留在压板上，门才保持开启；E + 方向键推拉，R 可复位。"
+    }
+  ],
   "animals": [],
   "signs": [
     [
@@ -273,6 +287,11 @@
       570,
       418,
       "↑ 返回大厅"
+    ],
+    [
+      208,
+      170,
+      "箱体留在压板上，门才保持开启"
     ]
   ],
   "size": [
@@ -466,5 +485,6 @@
       0
     ]
   },
-  "legacy_entry": "main"
+  "legacy_entry": "main",
+  "challenge_brief": "推拉箱体保压，观察门和压板联动；跳过敌人或用螯击开路。"
 }

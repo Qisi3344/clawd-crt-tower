@@ -78,8 +78,8 @@ func _physics_process(delta: float) -> void:
 func candidates() -> Array[Dictionary]:
 	var list: Array[Dictionary]=[]
 	for entry in entries:
-		if entry.type in ["reflector","conveyor","magnet","stop","pulse","assembly","repair","insulator"]:
-			list.append({"type":"mechanism","position":entry.get("control",entry.position),"object":entry,"prompt":"E  "+str(entry.get("label","操作机关"))})
+		if entry.type in ["reflector","conveyor","magnet","stop","pulse","assembly","repair","insulator","inspect","diagnostic"]:
+			list.append({"type":"mechanism","position":entry.get("control",entry.position),"object":entry,"prompt":"E  "+mechanism_prompt(entry)})
 	if is_instance_valid(boss): list.append_array(boss.candidates())
 	return list
 
@@ -87,13 +87,17 @@ func interact(entry: Dictionary) -> void:
 	var id:=str(entry.id)
 	world.learning_event.emit(str(entry.type))
 	match str(entry.type):
+		"inspect","diagnostic":
+			world.message.emit(inspect_message(entry))
 		"reflector":
 			switches[id]=(int(switches.get(id,0))+1)%3
 			world.sound_requested.emit("select")
+			world.message.emit("导流方向："+["上折 ↑","下折 ↓","原路返回 ←"][int(switches[id])]+" · 观察弹道或用备用脉冲测试")
 		"conveyor","magnet","stop","insulator":
 			switches[id]=not bool(switches.get(id,entry.get("on",false)))
 			if entry.has("flag"): world.flags[entry.flag]=switches[id]
 			world.sound_requested.emit("select")
+			world.message.emit(mechanism_prompt(entry))
 		"pulse":
 			shoot(SideWorld.point(entry.get("emitter",entry.position)),SideWorld.point(entry.get("direction",[1,0]),Vector2.RIGHT))
 		"repair","assembly":
@@ -109,6 +113,31 @@ func interact(entry: Dictionary) -> void:
 		"core":
 			if is_instance_valid(boss): boss.interact()
 	world.progress_changed.emit()
+
+func mechanism_prompt(entry: Dictionary) -> String:
+	var label:=str(entry.get("label","操作机关"))
+	var id:=str(entry.id)
+	match str(entry.type):
+		"reflector": return label+" ["+["↑","↓","←"][int(switches.get(id,0))%3]+"]"
+		"conveyor": return label+(" [← 向左]" if switches.get(id,false) else " [→ 向右]")
+		"magnet": return label+(" [吸持中 · 再按释放]" if switches.get(id,false) else " [已释放]")
+		"stop": return label+(" [已停机 · 安全通过]" if switches.get(id,false) else " [运转 · 黄灯后落下]")
+		"insulator": return label+(" [已绝缘]" if switches.get(id,false) else " [通电危险]")
+		"repair","assembly":
+			var ready:=0
+			for flag in entry.get("requires_all",[]):
+				if world.flags.get(flag,false): ready+=1
+			return label+" [%d/%d]"%[ready,entry.get("requires_all",[]).size()]
+	return label
+
+func inspect_message(entry: Dictionary) -> String:
+	if entry.type=="diagnostic":
+		var missing:=WorldProgress.missing_inputs(world.flags)
+		return "实时线路："+("A / B / C 全部有效 · 可校准本地分支" if missing.is_empty() else "缺少 "+missing)
+	var ready:=0
+	for flag in entry.get("watch_flags",[]):
+		if world.flags.get(flag,false): ready+=1
+	return str(entry.get("label","现场检测"))+" · %d / %d · "%[ready,entry.get("watch_flags",[]).size()]+str(entry.get("hint",""))
 
 func latch(flag: String) -> void:
 	if flag.is_empty() or world.flags.get(flag,false): return
@@ -132,8 +161,8 @@ func projectile_step(shot: SignalProjectile, _previous: Vector2) -> void:
 			else: shot.velocity=Vector2(0,70 if orientation==1 else -70) if absf(shot.velocity.x)>0 else Vector2(70 if orientation==1 else -70,0)
 			shot.position=p+shot.velocity.normalized()*11
 			world.sound_requested.emit("hit")
-		elif entry.type=="receiver" and (shot.reflected or not entry.get("reflected",true)):
-			latch(str(entry.flag));shot.queue_free();return
+		elif entry.type=="receiver" and (shot.reflected or not entry.get("reflected",true)) and (not entry.has("reflector") or shot.last_reflector==str(entry.reflector)):
+			latch(str(entry.flag));world.message.emit(str(entry.get("success","接收器已锁定 · 本路危险解除，可继续检查下一路")));shot.queue_free();return
 	if is_instance_valid(boss) and boss.receive(shot): shot.queue_free();return
 	if shot.reflected:
 		for animal in animals:
@@ -177,7 +206,9 @@ func attack() -> void:
 			animal.stun=1.2;world.sound_requested.emit("hit")
 		if absf(offset.x)<31 and absf(offset.y)<25 and offset.x*world.player.facing>-5: animal.hit()
 	for entry in entries:
-		if entry.type=="break_panel" and SideWorld.point(entry.position).distance_to(p)<28: latch(str(entry.flag))
+		if entry.type=="break_panel" and SideWorld.point(entry.position).distance_to(p)<28:
+			if entry.get("impact_only",false): world.message.emit("装甲板抵挡螯击 · 站到标记处诱导俯冲，锁定后移开")
+			else: latch(str(entry.flag))
 	if is_instance_valid(boss): boss.attack(p)
 
 func break_marked(id: String) -> void:
@@ -223,10 +254,14 @@ func _draw() -> void:
 				var active:bool=world.flags.get(entry.flag,false)
 				draw_line(p-Vector2(24,4),p+Vector2(24,-4),green if active else Color("526471"),3 if active else 1)
 			"reflector":
+				var orientation:=int(switches.get(entry.id,0))%3
+				var output:Vector2=[Vector2.UP,Vector2.DOWN,Vector2.LEFT][orientation]
 				draw_circle(p,11,ink);draw_circle(p,11,gold,false,1)
-				draw_line(p+Vector2(-7,-7 if on else 7),p+Vector2(7,7 if on else -7),green,3)
-				draw_line(p,p+Vector2(0,28 if on else -28),Color("54cfc366"),1)
-				if int(switches.get(entry.id,0))==2: draw_line(p,p-Vector2(28,0),gold,2)
+				if orientation==2: draw_line(p+Vector2(0,-7),p+Vector2(0,7),green,3)
+				else: draw_line(p+Vector2(-7,-7 if orientation==1 else 7),p+Vector2(7,7 if orientation==1 else -7),green,3)
+				draw_line(p,p+output*28,green,2)
+				draw_line(p+output*28,p+output*22+output.orthogonal()*4,green,2)
+				draw_line(p+output*28,p+output*22-output.orthogonal()*4,green,2)
 				var ctrl:=SideWorld.point(entry.get("control",entry.position))
 				draw_line(p,ctrl,Color("536675"),1);draw_rect(Rect2(ctrl-Vector2(7,13),Vector2(14,13)),gold)
 			"receiver","relay","sensor":
@@ -271,7 +306,7 @@ func _draw() -> void:
 				for key in WorldProgress.circuit_inputs(world.flags):
 					var active: bool=WorldProgress.circuit_inputs(world.flags)[key]
 					draw_string(font,p+Vector2(7,-48+i*16),("[OK] " if active else "[--] ")+str(key),HORIZONTAL_ALIGNMENT_LEFT,-1,12,green if active else gold);i+=1
-			"stop","pulse","assembly","repair","insulator":
+			"stop","pulse","assembly","repair","insulator","inspect":
 				draw_rect(Rect2(p-Vector2(8,16),Vector2(16,16)),ink)
 				draw_rect(Rect2(p-Vector2(6,14),Vector2(12,10)),green if on else gold,false,2)
 				draw_line(p-Vector2(4,6),p+Vector2(4,-6),gold)

@@ -51,7 +51,15 @@ func _ready() -> void:
 	add_child(bg)
 	if screen_id=="ARCHIVE":
 		var dressing:=ArchiveDressing.new();dressing.world=self;add_child(dressing)
-	if screen_id=="BOOT": add_child(BootDressing.new())
+	if screen_id=="BOOT":
+		add_child(BootDressing.new())
+		var lighting := Node2D.new()
+		lighting.set_script(load("res://scripts/boot_lighting.gd"))
+		add_child(lighting)
+		var foreground := Node2D.new()
+		foreground.set_script(load("res://scripts/boot_foreground.gd"))
+		foreground.world = self
+		add_child(foreground)
 	if screen_id=="POP-UP":
 		var dressing:=PopupDressing.new();dressing.world=self;add_child(dressing)
 	if screen_id in ["RECYCLE","SIGNAL"]:
